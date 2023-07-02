@@ -41,6 +41,7 @@ android {
 def hilt_version = "2.44"
 def retrofit_version = "2.9.0"
 def glide_version = "4.14.2"
+def coroutine_version = "1.5.2"
 
 dependencies {
 
@@ -54,6 +55,9 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
 
     implementation "androidx.fragment:fragment-ktx:1.6.0"
+
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutine_version"
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutine_version"
 
     implementation("com.google.dagger:hilt-android:$hilt_version")
     kapt("com.google.dagger:hilt-android-compiler:$hilt_version")
