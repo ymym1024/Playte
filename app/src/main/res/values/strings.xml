@@ -6,4 +6,7 @@
     <string name="recipe">레시피</string>
     <string name="community">커뮤니티</string>
     <string name="mypage">마이페이지</string>
+    <string name="login">로그인</string>
+    <string name="register">회원가입</string>
+
 </resources>

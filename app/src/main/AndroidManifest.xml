@@ -11,9 +11,9 @@
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:supportsRtl="true"
-        android:theme="@style/Theme.Recipe_Android.Splash"
         tools:targetApi="31">
         <activity
+            android:theme="@style/Theme.Recipe_Android.Splash"
             android:name=".ui.activity.MainActivity"
             android:exported="true">
             <intent-filter>
