@@ -9,8 +9,16 @@
     <string name="login">로그인</string>
     <string name="register">회원가입</string>
     <string name="refrigerator">냉장/냉동</string>
+    <string name="ambient">실온</string>
     <string name="foodPriceTrends">식재료 물가 추이</string>
     <string name="viewAll">전체보기</string>
     <string name="myRecipe">My 재료 활용 레시피</string>
     <string name="recommendIngredients">My 재료 관리법 추천</string>
+    <string name="ingredientAdd">식재료 등록</string>
+
+    <!--공통-->
+    <string name="cancle">취소</string>
+    <string name="ingredientName">재료 이름</string>
+    <string name="save">등록</string>
+
 </resources>
