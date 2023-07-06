@@ -8,5 +8,9 @@
     <string name="mypage">마이페이지</string>
     <string name="login">로그인</string>
     <string name="register">회원가입</string>
-
+    <string name="refrigerator">냉장/냉동</string>
+    <string name="foodPriceTrends">식재료 물가 추이</string>
+    <string name="viewAll">전체보기</string>
+    <string name="myRecipe">My 재료 활용 레시피</string>
+    <string name="recommendIngredients">My 재료 관리법 추천</string>
 </resources>
