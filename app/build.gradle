@@ -76,5 +76,5 @@ dependencies {
     kapt "com.github.bumptech.glide:compiler:$glide_version"
 
     //indicator library
-    implementation("com.tbuonomo:dotsindicator:5.0")
+    implementation "com.tbuonomo:dotsindicator:4.3"
 }
