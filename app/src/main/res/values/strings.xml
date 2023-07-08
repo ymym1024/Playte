@@ -20,5 +20,16 @@
     <string name="cancle">취소</string>
     <string name="ingredientName">재료 이름</string>
     <string name="save">등록</string>
+    <string name="etc">기타</string>
+
+    <!-- 홈 -->
+    <string name="fresh_food">신선식품</string>
+    <string name="spices">양념</string>
+    <string name="baking">빵/과자</string>
+    <string name="drinking">음료</string>
+    <string name="meal_kit">밀키트</string>
+    <string name="side_dish">반찬</string>
+    <string name="can">통조림</string>
+    <string name="instant">인스턴트</string>
 
 </resources>
