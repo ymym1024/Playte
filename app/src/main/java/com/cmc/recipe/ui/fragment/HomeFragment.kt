@@ -2,6 +2,8 @@ package com.cmc.recipe.ui.fragment
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
+import com.cmc.recipe.R
 import com.cmc.recipe.base.BaseFragment
 import com.cmc.recipe.databinding.FragmentHomeBinding
 import com.cmc.recipe.ui.MainActivity
@@ -21,6 +23,8 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::infl
             ingredientBottomSheet.show(parentFragmentManager,ingredientBottomSheet.tag)
         }
 
+        gotoFoodTrendsPage()
+
         // 냉장고 UI - viewPager2 연결
         val innerFragmentList:ArrayList<Fragment> = arrayListOf(InnerViewFragment1(),InnerViewFragment2())
         val viewPager2Adapter = RefrigeratorViewAdapter(childFragmentManager,lifecycle,innerFragmentList)
@@ -34,6 +38,12 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::infl
         }
         binding.tvAmbient.setOnClickListener {
             viewpager.currentItem = 1
+        }
+    }
+
+    private fun gotoFoodTrendsPage(){
+        binding.tvTrendAll.setOnClickListener {
+            findNavController().navigate(R.id.action_homeFragment_to_ingredientTrendFragment)
         }
     }
 
