@@ -25,5 +25,4 @@ class RefrigeratorItemHolder(viewBinding: ItemRefrigeratorBinding):BaseHolder<St
             }
         }
     }
-
 }
