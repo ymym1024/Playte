@@ -59,4 +59,5 @@ class InnerViewFragment1 : BaseFragment<FragmentInnerView1Binding>(FragmentInner
         })
         binding.rvRefrigerator.isNestedScrollingEnabled = false
     }
+
 }
