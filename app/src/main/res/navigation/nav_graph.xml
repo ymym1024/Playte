@@ -21,7 +21,7 @@
         tools:layout="@layout/fragment_login" />
     <fragment
         android:id="@+id/ingredientTrendFragment"
-        android:name="com.cmc.recipe.ui.fragment.IngredientTrendFragment"
+        android:name="com.cmc.recipe.ui.fragment.TrendDetailFragment"
         android:label="@string/food_price_trends"
-        tools:layout="@layout/fragment_ingredient_trend" />
+        tools:layout="@layout/fragment_trend_detail" />
 </navigation>
