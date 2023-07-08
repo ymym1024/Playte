@@ -1,13 +1,20 @@
 package com.cmc.recipe.ui.fragment
 
-import android.widget.TextView
+import android.os.Bundle
 import androidx.fragment.app.Fragment
 import com.cmc.recipe.base.BaseFragment
 import com.cmc.recipe.databinding.FragmentHomeBinding
+import com.cmc.recipe.ui.MainActivity
 
 class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::inflate) {
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        val mainActivity = activity as MainActivity
+        mainActivity.hideToolbar(true)
+    }
     override fun initFragment() {
+
         // TODO : 수정예정
         binding.btnAdd.setOnClickListener {
             val ingredientBottomSheet = IngredientBottomSheetFragment(requireContext())
@@ -19,6 +26,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::infl
         val viewPager2Adapter = RefrigeratorViewAdapter(childFragmentManager,lifecycle,innerFragmentList)
         val viewpager = binding.vpRefrigerator
         viewpager.adapter = viewPager2Adapter
+        binding.indicator.attachTo(binding.vpRefrigerator)
 
         // 냉장, 실온 클릭 시 viewpager 이동
         binding.tvRefrigerator.setOnClickListener {
@@ -29,5 +37,9 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::infl
         }
     }
 
-
+    override fun onDestroy() {
+        super.onDestroy()
+        val mainActivity = activity as MainActivity
+        mainActivity.hideToolbar(true)
+    }
 }
