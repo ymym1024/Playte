@@ -9,10 +9,19 @@
         android:id="@+id/homeFragment"
         android:name="com.cmc.recipe.ui.fragment.HomeFragment"
         android:label="@string/home"
-        tools:layout="@layout/fragment_home" />
+        tools:layout="@layout/fragment_home" >
+        <action
+            android:id="@+id/action_homeFragment_to_ingredientTrendFragment"
+            app:destination="@id/ingredientTrendFragment" />
+    </fragment>
     <fragment
         android:id="@+id/loginFragment"
         android:name="com.cmc.recipe.ui.fragment.LoginFragment"
         android:label="@string/login"
         tools:layout="@layout/fragment_login" />
+    <fragment
+        android:id="@+id/ingredientTrendFragment"
+        android:name="com.cmc.recipe.ui.fragment.TrendDetailFragment"
+        android:label="@string/food_price_trends"
+        tools:layout="@layout/fragment_trend_detail" />
 </navigation>
