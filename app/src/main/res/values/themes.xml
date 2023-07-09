@@ -16,8 +16,8 @@
     </style>
     <style name="Theme.Recipe_Android.Splash" parent="Theme.SplashScreen">
         <item name="windowSplashScreenBackground">@color/white</item>
-        <item name="windowSplashScreenAnimatedIcon">@drawable/ic_logo</item>
-        <item name="windowSplashScreenAnimationDuration">500</item>
+        <item name="windowSplashScreenAnimatedIcon">@drawable/splash_content</item>
+        <item name="windowSplashScreenAnimationDuration">2000</item>
         <item name="postSplashScreenTheme">@style/Theme.Recipe_Android</item>
     </style>
     <style name="BottomSheetDialog" parent="Theme.Design.Light.BottomSheetDialog">
