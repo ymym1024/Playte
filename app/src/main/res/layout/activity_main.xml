@@ -43,6 +43,8 @@
         android:id="@+id/bottom_nav"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="@drawable/bg_bottom_radius"
+        android:elevation="15dp"
         app:itemIconSize="17dp"
         app:labelVisibilityMode="labeled"
         app:menu="@menu/menu_bottom_nav"
