@@ -1,10 +1,10 @@
-package com.cmc.recipe.ui.fragment
+package com.cmc.recipe.presentation.ui.home
 
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import com.cmc.recipe.base.BaseAdapter
-import com.cmc.recipe.base.BaseHolder
+import com.cmc.recipe.presentation.ui.base.BaseAdapter
+import com.cmc.recipe.presentation.ui.base.BaseHolder
 import com.cmc.recipe.databinding.ItemRefrigeratorBinding
 
 class RefrigeratorItemAdapter(private val context:Context):
@@ -16,7 +16,8 @@ class RefrigeratorItemAdapter(private val context:Context):
     }
 }
 
-class RefrigeratorItemHolder(viewBinding: ItemRefrigeratorBinding):BaseHolder<String,ItemRefrigeratorBinding>(viewBinding){
+class RefrigeratorItemHolder(viewBinding: ItemRefrigeratorBinding):
+    BaseHolder<String, ItemRefrigeratorBinding>(viewBinding){
     override fun bind(binding: ItemRefrigeratorBinding, item: String?) {
         item?.let {
             binding.btnTitle.text = it

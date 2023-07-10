@@ -1,4 +1,4 @@
-package com.cmc.recipe.ui.fragment
+package com.cmc.recipe.presentation.ui.home
 
 import android.content.Context
 import android.os.Bundle

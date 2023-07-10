@@ -1,4 +1,4 @@
-package com.cmc.recipe.ui.fragment
+package com.cmc.recipe.presentation.ui.home
 
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager

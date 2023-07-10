@@ -1,4 +1,4 @@
-package com.cmc.recipe.base
+package com.cmc.recipe.presentation.ui.base
 
 import android.os.Bundle
 import android.view.LayoutInflater
