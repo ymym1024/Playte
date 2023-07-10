@@ -23,11 +23,14 @@
     <string name="ingredient_name">재료 이름</string>
     <string name="save">등록</string>
     <string name="etc">기타</string>
+    <string name="next">다음</string>
 
     <!-- 온보딩 -->
     <string name="simple_login">간편 로그인</string>
     <string name="login">로그인</string>
     <string name="onboard_info">당신을 위한 레시피 제공 서비스</string>
+    <string name="onboard_input_nickname">사용하실 닉네임을 입력해주세요</string>
+    <string name="onboard_check_nickname">사용가능한 닉네임</string>
 
     <!-- 홈 -->
     <string name="fresh_food">신선식품</string>
@@ -38,5 +41,7 @@
     <string name="side_dish">반찬</string>
     <string name="can">통조림</string>
     <string name="instant">인스턴트</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 
 </resources>
