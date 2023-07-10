@@ -1,4 +1,4 @@
-package com.cmc.recipe.base
+package com.cmc.recipe.presentation.ui.base
 
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewbinding.ViewBinding

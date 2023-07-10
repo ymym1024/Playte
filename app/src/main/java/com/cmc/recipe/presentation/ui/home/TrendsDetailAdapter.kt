@@ -1,13 +1,12 @@
-package com.cmc.recipe.ui.fragment
+package com.cmc.recipe.presentation.ui.home
 
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import com.bumptech.glide.Glide
-import com.cmc.recipe.base.BaseAdapter
-import com.cmc.recipe.base.BaseHolder
+import com.cmc.recipe.presentation.ui.base.BaseAdapter
+import com.cmc.recipe.presentation.ui.base.BaseHolder
 import com.cmc.recipe.databinding.ItemIngredientDetailBinding
-import com.cmc.recipe.model.TrendsItem
+import com.cmc.recipe.data.model.TrendsItem
 import com.cmc.recipe.utils.loadImagesWithGlide
 
 class TrendsDetailAdapter(private val context: Context):

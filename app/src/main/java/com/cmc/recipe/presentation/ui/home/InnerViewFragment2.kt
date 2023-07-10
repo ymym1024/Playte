@@ -1,27 +1,26 @@
-package com.cmc.recipe.ui.fragment
+package com.cmc.recipe.presentation.ui.home
 
 import android.graphics.Rect
 import android.view.View
-import android.widget.LinearLayout
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.cmc.recipe.R
-import com.cmc.recipe.base.BaseFragment
-import com.cmc.recipe.databinding.FragmentInnerView1Binding
+import com.cmc.recipe.presentation.ui.base.BaseFragment
+import com.cmc.recipe.databinding.FragmentInnerView2Binding
 
-class InnerViewFragment1 : BaseFragment<FragmentInnerView1Binding>(FragmentInnerView1Binding::inflate) {
+
+class InnerViewFragment2 : BaseFragment<FragmentInnerView2Binding>(FragmentInnerView2Binding::inflate) {
     override fun initFragment() {
         val adapter = RefrigeratorItemAdapter(requireContext())
 
         val itemList = arrayListOf(
-            getString(R.string.fresh_food),getString(R.string.spices),
-            getString(R.string.baking),getString(R.string.drinking),
-            getString(R.string.meal_kit),getString(R.string.side_dish),getString(R.string.etc)
+            getString(R.string.spices),getString(R.string.baking),
+            getString(R.string.can),getString(R.string.instant), getString(R.string.etc)
         )
         adapter.replaceData(itemList)
-        binding.rvRefrigerator.setHasFixedSize(true)
+        binding.rvAmbient.setHasFixedSize(true)
         val gridLayoutManager = GridLayoutManager(context,2)
-        gridLayoutManager.spanSizeLookup = object :GridLayoutManager.SpanSizeLookup(){
+        gridLayoutManager.spanSizeLookup = object : GridLayoutManager.SpanSizeLookup(){
             override fun getSpanSize(position: Int): Int {
                 val size = itemList.size
                 return if(size%2 ==1 && position == size-1){
@@ -32,10 +31,10 @@ class InnerViewFragment1 : BaseFragment<FragmentInnerView1Binding>(FragmentInner
             }
 
         }
-        binding.rvRefrigerator.adapter = adapter
-        binding.rvRefrigerator.layoutManager = gridLayoutManager
+        binding.rvAmbient.adapter = adapter
+        binding.rvAmbient.layoutManager = gridLayoutManager
 
-        binding.rvRefrigerator.addItemDecoration(object:RecyclerView.ItemDecoration(){
+        binding.rvAmbient.addItemDecoration(object: RecyclerView.ItemDecoration(){
             override fun getItemOffsets(
                 outRect: Rect,
                 view: View,
@@ -57,7 +56,6 @@ class InnerViewFragment1 : BaseFragment<FragmentInnerView1Binding>(FragmentInner
                 outRect.bottom = space
             }
         })
-        binding.rvRefrigerator.isNestedScrollingEnabled = false
+        binding.rvAmbient.isNestedScrollingEnabled = false
     }
-
 }

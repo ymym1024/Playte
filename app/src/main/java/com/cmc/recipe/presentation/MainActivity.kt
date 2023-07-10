@@ -1,4 +1,4 @@
-package com.cmc.recipe.ui
+package com.cmc.recipe.presentation
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle

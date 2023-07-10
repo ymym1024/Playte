@@ -1,4 +1,4 @@
-package com.cmc.recipe.base
+package com.cmc.recipe.presentation.ui.base
 
 import android.annotation.SuppressLint
 import androidx.annotation.NonNull

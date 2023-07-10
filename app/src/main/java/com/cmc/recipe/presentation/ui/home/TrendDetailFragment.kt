@@ -1,11 +1,10 @@
-package com.cmc.recipe.ui.fragment
+package com.cmc.recipe.presentation.ui.home
 
-import android.widget.LinearLayout
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.cmc.recipe.base.BaseFragment
+import com.cmc.recipe.presentation.ui.base.BaseFragment
 import com.cmc.recipe.databinding.FragmentTrendDetailBinding
-import com.cmc.recipe.model.TrendsItem
+import com.cmc.recipe.data.model.TrendsItem
 
 
 class TrendDetailFragment : BaseFragment<FragmentTrendDetailBinding>(FragmentTrendDetailBinding::inflate) {

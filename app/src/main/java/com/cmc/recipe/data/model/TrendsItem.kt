@@ -1,4 +1,4 @@
-package com.cmc.recipe.model
+package com.cmc.recipe.data.model
 
 data class TrendsItem(
     val image_url : String,

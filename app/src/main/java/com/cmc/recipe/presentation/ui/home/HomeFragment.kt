@@ -1,12 +1,12 @@
-package com.cmc.recipe.ui.fragment
+package com.cmc.recipe.presentation.ui.home
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.cmc.recipe.R
-import com.cmc.recipe.base.BaseFragment
+import com.cmc.recipe.presentation.ui.base.BaseFragment
 import com.cmc.recipe.databinding.FragmentHomeBinding
-import com.cmc.recipe.ui.MainActivity
+import com.cmc.recipe.presentation.MainActivity
 
 class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::inflate) {
 
@@ -26,7 +26,10 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::infl
         gotoFoodTrendsPage()
 
         // 냉장고 UI - viewPager2 연결
-        val innerFragmentList:ArrayList<Fragment> = arrayListOf(InnerViewFragment1(),InnerViewFragment2())
+        val innerFragmentList:ArrayList<Fragment> = arrayListOf(
+            InnerViewFragment1(),
+            InnerViewFragment2()
+        )
         val viewPager2Adapter = RefrigeratorViewAdapter(childFragmentManager,lifecycle,innerFragmentList)
         val viewpager = binding.vpRefrigerator
         viewpager.adapter = viewPager2Adapter

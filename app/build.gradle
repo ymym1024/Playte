@@ -91,5 +91,5 @@ dependencies {
 
     //indicator library
     implementation "com.tbuonomo:dotsindicator:4.3"
-가
+
 }
