@@ -24,6 +24,7 @@
     <string name="save">등록</string>
     <string name="etc">기타</string>
     <string name="next">다음</string>
+    <string name="complete">완료</string>
 
     <!-- 온보딩 -->
     <string name="simple_login">간편 로그인</string>
@@ -31,6 +32,8 @@
     <string name="onboard_info">당신을 위한 레시피 제공 서비스</string>
     <string name="onboard_input_nickname">사용하실 닉네임을 입력해주세요</string>
     <string name="onboard_check_nickname">사용가능한 닉네임</string>
+    <string name="onboard_complete">RE:cipe\n가입을 축하드려요</string>
+    <string name="onboard_complete1">당신만을 위한 맛있는 레시피를 제공해드려요.</string>
 
     <!-- 홈 -->
     <string name="fresh_food">신선식품</string>
