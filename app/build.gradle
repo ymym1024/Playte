@@ -6,6 +6,9 @@ plugins {
     id 'com.google.gms.google-services'
 }
 
+def localProperties = new Properties()
+localProperties.load(new FileInputStream(rootProject.file("local.properties")))
+
 android {
     namespace 'com.cmc.recipe'
     compileSdk 33
@@ -21,6 +24,9 @@ android {
     }
 
     buildTypes {
+        debug {
+            buildConfigField("String", "CLIENT_ID", "" + localProperties['oauth.clientid'] + "")
+        }
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
