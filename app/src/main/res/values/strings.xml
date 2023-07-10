@@ -6,7 +6,6 @@
     <string name="recipe">레시피</string>
     <string name="community">커뮤니티</string>
     <string name="mypage">마이페이지</string>
-    <string name="login">로그인</string>
     <string name="register">회원가입</string>
     <string name="refrigerator">냉장/냉동</string>
     <string name="ambient">실온</string>
@@ -24,6 +23,11 @@
     <string name="ingredient_name">재료 이름</string>
     <string name="save">등록</string>
     <string name="etc">기타</string>
+
+    <!-- 온보딩 -->
+    <string name="simple_login">간편 로그인</string>
+    <string name="login">로그인</string>
+    <string name="onboard_info">당신을 위한 레시피 제공 서비스</string>
 
     <!-- 홈 -->
     <string name="fresh_food">신선식품</string>
