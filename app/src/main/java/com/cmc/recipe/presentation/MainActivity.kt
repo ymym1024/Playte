@@ -58,4 +58,13 @@ class MainActivity : AppCompatActivity() {
             binding.toolbar.visibility = View.VISIBLE
         }
     }
+
+    // bottomnavigation show flag
+    fun hideBottomNavigation(state:Boolean){
+        if(state){
+            binding.bottomNav.visibility = View.GONE
+        }else{
+            binding.bottomNav.visibility = View.VISIBLE
+        }
+    }
 }
