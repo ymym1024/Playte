@@ -14,7 +14,6 @@ abstract class BaseFragment<T:ViewBinding>(private val inflate: Inflate<T>) : Fr
 
     private var _binding : T? = null
     val binding get() = _binding!!
-    val navController = findNavController()
 
     abstract fun initFragment()
     open fun observe() {}
