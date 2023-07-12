@@ -1,24 +1,27 @@
 package com.cmc.recipe.presentation.ui.recipe
 
-import android.os.Bundle
-import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
-import com.cmc.recipe.R
+import androidx.recyclerview.widget.LinearLayoutManager
+import com.cmc.recipe.data.model.RecipeItem
+import com.cmc.recipe.databinding.FragmentRecipeMainBinding
+import com.cmc.recipe.presentation.ui.base.BaseFragment
 
-class RecipeMainFragment : Fragment() {
+class RecipeMainFragment : BaseFragment<FragmentRecipeMainBinding>(FragmentRecipeMainBinding::inflate) {
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
+    override fun initFragment() {
+        //TODO : 네트워크 연결 후 삭제
+        val itemList = arrayListOf(
+            RecipeItem(image_url = "", name = "토마토 계란 볶음밥", time = 10, ingredient1 = "토마토", ingredient2 = "계란", ingredient3 = "밥"),
+            RecipeItem(image_url = "", name = "토마토 계란 볶음밥", time = 10, ingredient1 = "토마토", ingredient2 = "계란", ingredient3 = "밥"),
+            RecipeItem(image_url = "", name = "토마토 계란 볶음밥", time = 10, ingredient1 = "토마토", ingredient2 = "계란", ingredient3 = "밥"),
+            RecipeItem(image_url = "", name = "토마토 계란 볶음밥", time = 10, ingredient1 = "토마토", ingredient2 = "계란", ingredient3 = "밥"),
+        )
+        recipeRecyclerview(itemList)
     }
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-
-        return inflater.inflate(R.layout.fragment_recipe_main, container, false)
+    private fun recipeRecyclerview(itemList:ArrayList<RecipeItem>){
+        val adapter = RecipeListAdapter(requireContext())
+        binding.rvRecipe.adapter = adapter
+        binding.rvRecipe.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
+        adapter.replaceData(itemList)
     }
 }

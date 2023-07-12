@@ -52,8 +52,8 @@
         app:layout_constraintEnd_toStartOf="@+id/tv_recipe_time"
         app:srcCompat="@drawable/ic_stopwatch" />
 
-    <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/btn_recipe_ingrdient1"
+    <TextView
+        android:id="@+id/tv_recipe_ingrdient1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="11dp"
@@ -64,12 +64,13 @@
         android:paddingEnd="16dp"
         android:paddingBottom="3dp"
         android:text="토마토"
+        android:textColor="@color/primary_color"
         android:textSize="12sp"
         app:layout_constraintStart_toEndOf="@+id/iv_recipe_main"
         app:layout_constraintTop_toBottomOf="@+id/tv_recipe_name" />
 
-    <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/btn_recipe_ingrdient2"
+    <TextView
+        android:id="@+id/tv_recipe_ingrdient2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
@@ -80,12 +81,13 @@
         android:paddingEnd="16dp"
         android:paddingBottom="3dp"
         android:text="계란"
+        android:textColor="@color/primary_color"
         android:textSize="12sp"
-        app:layout_constraintStart_toEndOf="@+id/btn_recipe_ingrdient1"
+        app:layout_constraintStart_toEndOf="@+id/tv_recipe_ingrdient1"
         app:layout_constraintTop_toBottomOf="@+id/tv_recipe_name" />
 
-    <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/btn_recipe_ingrdient3"
+    <TextView
+        android:id="@+id/tv_recipe_ingrdient3"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
@@ -96,7 +98,8 @@
         android:paddingEnd="16dp"
         android:paddingBottom="3dp"
         android:text="밥"
+        android:textColor="@color/primary_color"
         android:textSize="12sp"
-        app:layout_constraintStart_toEndOf="@+id/btn_recipe_ingrdient2"
+        app:layout_constraintStart_toEndOf="@+id/tv_recipe_ingrdient2"
         app:layout_constraintTop_toBottomOf="@+id/tv_recipe_name" />
 </androidx.constraintlayout.widget.ConstraintLayout>
