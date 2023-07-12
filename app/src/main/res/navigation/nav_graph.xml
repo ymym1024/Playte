@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/loginFragment">
+    app:startDestination="@id/recipeMainFragment">
 
     <fragment
         android:id="@+id/homeFragment"
@@ -37,4 +37,9 @@
         android:label=""
         tools:layout="@layout/fragment_signup">
     </fragment>
+    <fragment
+        android:id="@+id/recipeMainFragment"
+        android:name="com.cmc.recipe.presentation.ui.recipe.RecipeMainFragment"
+        android:label="@string/recipe"
+        tools:layout="@layout/fragment_recipe_main" />
 </navigation>
