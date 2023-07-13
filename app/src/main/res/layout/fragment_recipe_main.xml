@@ -5,11 +5,12 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context=".presentation.ui.recipe.RecipeMainFragment"
     android:layout_height="match_parent"
-    android:layout_width="match_parent">
+    android:layout_width="match_parent"
+    android:fillViewport="true">
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        tools:context=".presentation.ui.recipe.RecipeMainFragment">
+        android:layout_height="match_parent">
 
         <SearchView
             android:id="@+id/searchView"
@@ -119,26 +120,12 @@
                 android:textColor="@color/ic_main_background" />
 
             <androidx.appcompat.widget.AppCompatButton
-                android:id="@+id/btn_ingredients"
-                android:layout_width="wrap_content"
-                android:layout_height="29dp"
-                android:layout_marginEnd="9dp"
-                android:enabled="false"
-                android:background="@drawable/btn_selected_color"
-                android:paddingStart="14dp"
-                android:paddingTop="6dp"
-                android:paddingEnd="14dp"
-                android:paddingBottom="6dp"
-                android:text="@string/ingredients_included"
-                android:textColor="@color/ic_main_background" />
-
-            <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/btn_minimum"
                 android:layout_width="wrap_content"
                 android:layout_height="29dp"
                 android:layout_marginEnd="9dp"
-                android:enabled="false"
                 android:background="@drawable/btn_selected_color"
+                android:enabled="false"
                 android:paddingStart="14dp"
                 android:paddingTop="6dp"
                 android:paddingEnd="14dp"
@@ -150,11 +137,27 @@
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rv_recipe"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="0dp"
             android:layout_marginTop="10dp"
+            android:overScrollMode="never"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/linearLayout" />
+            app:layout_constraintTop_toBottomOf="@+id/linearLayout"
+            app:layout_constraintVertical_bias="0.0" />
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/floatingActionButton2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="20dp"
+            android:layout_marginBottom="30dp"
+            android:clickable="true"
+            android:src="@drawable/ic_recipe_add"
+            app:backgroundTint="@color/primary_color"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.core.widget.NestedScrollView>
