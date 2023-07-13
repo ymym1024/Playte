@@ -14,6 +14,7 @@
     <string name="my_recipe">My 재료 활용 레시피</string>
     <string name="recommend_ingredients">My 재료 관리법 추천</string>
     <string name="ingredient_add">식재료 등록</string>
+    <string name="shortform">숏폼</string>
 
     <!-- 식재료 물가 추이 -->
     <string name="trends_search_hint">식재료를 검색해보세요.</string>
