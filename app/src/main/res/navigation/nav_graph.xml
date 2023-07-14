@@ -41,5 +41,14 @@
         android:id="@+id/shortsFragment"
         android:name="com.cmc.recipe.presentation.ui.shortform.ShortsFragment"
         android:label="@string/shortform"
-        tools:layout="@layout/fragment_shorts" />
+        tools:layout="@layout/fragment_shorts" >
+        <action
+            android:id="@+id/action_shortsFragment_to_shortsDetailActivity"
+            app:destination="@id/shortsDetailActivity" />
+    </fragment>
+    <activity
+        android:id="@+id/shortsDetailActivity"
+        android:name="com.cmc.recipe.presentation.ui.shortform.ShortsDetailActivity"
+        android:label="activity_shorts_detail"
+        tools:layout="@layout/activity_shorts_detail" />
 </navigation>
