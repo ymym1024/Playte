@@ -45,7 +45,9 @@
     <string name="side_dish">반찬</string>
     <string name="can">통조림</string>
     <string name="instant">인스턴트</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <!--  숏폼  -->
+    <string name="shorts_time">00:21</string>
+    <string name="shorts_play_time">00:49</string>
 
 </resources>
