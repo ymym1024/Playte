@@ -45,59 +45,65 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:columnCount="2"
-                android:rowCount="3">
+                android:rowCount="2">
 
-                <ImageButton
+                <com.cmc.recipe.presentation.component.RecommendThemeButton
                     android:id="@+id/imageButton"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="14dp"
                     android:layout_marginTop="20dp"
                     android:layout_marginEnd="10dp"
-                    android:background="@color/transparent"
-                    android:src="@drawable/img_recipe_theme_button"
                     app:layout_constraintEnd_toStartOf="@+id/imageButton2"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/searchView" />
+                    app:layout_constraintTop_toBottomOf="@+id/searchView"
+                    app:bgTitle="소중한 가족과 함께"
+                    app:bgImg="@drawable/img_recommend_theme"
+                    app:borderColor="#F7A593"
+                    app:backgroundColor="#40FFDAD2"/>
 
-                <ImageButton
+                <com.cmc.recipe.presentation.component.RecommendThemeButton
                     android:id="@+id/imageButton2"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="10dp"
                     android:layout_marginTop="20dp"
-                    android:layout_marginEnd="14dp"
-                    android:background="@color/transparent"
-                    android:src="@drawable/img_recipe_theme_button"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toEndOf="@+id/imageButton"
-                    app:layout_constraintTop_toBottomOf="@+id/searchView" />
+                    android:layout_marginEnd="10dp"
+                    app:layout_constraintEnd_toStartOf="@+id/imageButton2"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/searchView"
+                    app:bgTitle="건강한 식습관"
+                    app:bgImg="@drawable/img_recommend_theme1"
+                    app:borderColor="#B353B175"
+                    app:backgroundColor="#1A53B175"/>
 
-                <ImageButton
+                <com.cmc.recipe.presentation.component.RecommendThemeButton
                     android:id="@+id/imageButton3"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="14dp"
-                    android:layout_marginTop="14dp"
+                    android:layout_marginTop="20dp"
                     android:layout_marginEnd="10dp"
-                    android:background="@color/transparent"
-                    android:src="@drawable/img_recipe_theme_button"
-                    app:layout_constraintEnd_toStartOf="@+id/imageButton4"
+                    app:layout_constraintEnd_toStartOf="@+id/imageButton2"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/imageButton" />
+                    app:layout_constraintTop_toBottomOf="@+id/searchView"
+                    app:bgTitle="알뜰살뜰 만원의 행복"
+                    app:bgImg="@drawable/img_recommend_theme2"
+                    app:borderColor="#FDE598"
+                    app:backgroundColor="#40FFEDB2"/>
 
-                <ImageButton
+                <com.cmc.recipe.presentation.component.RecommendThemeButton
                     android:id="@+id/imageButton4"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="10dp"
-                    android:layout_marginTop="14dp"
-                    android:layout_marginEnd="14dp"
-                    android:background="@color/transparent"
-                    android:src="@drawable/img_recipe_theme_button"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toEndOf="@+id/imageButton3"
-                    app:layout_constraintTop_toBottomOf="@+id/imageButton2" />
+                    android:layout_marginTop="20dp"
+                    android:layout_marginEnd="10dp"
+                    app:layout_constraintEnd_toStartOf="@+id/imageButton2"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/searchView"
+                    app:bgTitle="내가 바로 미슐랭 스타"
+                    app:bgImg="@drawable/img_recommend_theme3"
+                    app:borderColor="#5373B1"
+                    app:backgroundColor="#89A7E2"/>
             </GridLayout>
 
             <LinearLayout
