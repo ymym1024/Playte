@@ -42,8 +42,9 @@ class ShortsDetailActivity : AppCompatActivity() {
 
                 if (previousIndex != -1) {
                     val player = exoPlayerItems[previousIndex].exoPlayer
-                    player.release()
+                    player.pause()
                     player.playWhenReady = false
+                    player.seekTo(0)
                 }
                 val newIndex = exoPlayerItems.indexOfFirst { it.position == position }
                 if (newIndex != -1) {
@@ -84,8 +85,8 @@ class ShortsDetailActivity : AppCompatActivity() {
         if (exoPlayerItems.isNotEmpty()) {
             for (item in exoPlayerItems) {
                 val player = item.exoPlayer
-                player.stop()
                 player.clearMediaItems()
+                player.release()
             }
         }
     }
