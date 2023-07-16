@@ -29,49 +29,19 @@
         android:layout_marginEnd="24dp"
         android:background="@drawable/bg_custom_input"
         android:minHeight="56dp"
+        app:boxBackgroundMode="none"
         app:endIconMode="clear_text"
+        app:endIconTint="@color/transparent_60"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView7">
+
         <com.google.android.material.textfield.TextInputEditText
             android:layout_width="match_parent"
-            android:layout_height="50dp"
+            android:layout_height="match_parent"
             android:background="@color/transparent"
-            android:hint="hint" />
+            android:textColor="@color/white" />
     </com.google.android.material.textfield.TextInputLayout>
-
-    <TextView
-        android:id="@+id/textView17"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="14dp"
-        android:layout_marginEnd="36dp"
-        android:text="@string/onboard_check_nickname"
-        android:textColor="@color/white"
-        android:textSize="12sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/et_nickName" />
-
-    <ImageView
-        android:id="@+id/imageView6"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="14dp"
-        android:layout_marginEnd="12dp"
-        android:src="@drawable/ic_round_check"
-        app:layout_constraintEnd_toStartOf="@+id/textView17"
-        app:layout_constraintTop_toBottomOf="@+id/et_nickName" />
-
-<!--    <EditText-->
-<!--        android:id="@+id/et_nickName"-->
-<!--        android:layout_width="wrap_content"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:ems="10"-->
-<!--        android:inputType="textPersonName"-->
-<!--        android:text="Name"-->
-<!--        tools:ignore="MissingConstraints"-->
-<!--        tools:layout_editor_absoluteX="24dp"-->
-<!--        tools:layout_editor_absoluteY="134dp" />-->
 
     <Button
         android:id="@+id/button2"
@@ -82,6 +52,7 @@
         android:layout_marginBottom="46dp"
         android:background="@drawable/btn_selected_color"
         android:clickable="false"
+        android:enabled="false"
         android:minHeight="47dp"
         android:text="@string/next"
         android:textColor="@color/white"
@@ -89,5 +60,31 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="14dp"
+        android:layout_marginEnd="36dp"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:visibility="invisible"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/et_nickName">
+
+        <ImageView
+            android:id="@+id/imageView6"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_round_check" />
+
+        <TextView
+            android:id="@+id/textView17"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/onboard_check_nickname"
+            android:textColor="@color/white"
+            android:textSize="12sp" />
+    </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

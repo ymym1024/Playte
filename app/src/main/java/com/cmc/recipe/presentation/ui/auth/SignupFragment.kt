@@ -1,25 +1,21 @@
 package com.cmc.recipe.presentation.ui.auth
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
-import com.cmc.recipe.R
+import com.cmc.recipe.databinding.FragmentSignupBinding
+import com.cmc.recipe.presentation.MainActivity
+import com.cmc.recipe.presentation.ui.base.BaseFragment
 
-class SignupFragment : Fragment() {
+class SignupFragment : BaseFragment<FragmentSignupBinding>(FragmentSignupBinding::inflate) {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
+        val mainActivity = activity as MainActivity
+        mainActivity.hideToolbar(true)
+        mainActivity.hideBottomNavigation(true)
     }
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_signup, container, false)
+    override fun initFragment() {
+
     }
 
 }
