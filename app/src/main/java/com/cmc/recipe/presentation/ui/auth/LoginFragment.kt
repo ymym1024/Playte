@@ -52,7 +52,7 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(FragmentLoginBinding::i
 
             Log.d("account",account.id.toString())
             Log.d("userName",account.displayName.toString())
-            Log.d("idToken",account.toString())
+            Log.d("idToken",account.idToken.toString())
 
             firebaseAuthWithGoogle(account)
 
@@ -63,8 +63,8 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(FragmentLoginBinding::i
 
     private fun getGoogleClient(): GoogleSignInClient {
         val googleSignInOption = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-            .requestScopes(Scope("https://www.googleapis.com/auth/pubsub"))
-          //  .requestServerAuthCode("${BuildConfig.CLIENT_ID}") // server authcode를 요청
+          //  .requestScopes(Scope("https://www.googleapis.com/auth/pubsub"))
+            .requestServerAuthCode("${BuildConfig.CLIENT_ID}") // server authcode를 요청
             .requestIdToken("${BuildConfig.CLIENT_ID}")
             .requestEmail() // 이메일 요청
             .build()
@@ -74,14 +74,21 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(FragmentLoginBinding::i
 
     private fun firebaseAuthWithGoogle(account: GoogleSignInAccount){
         Log.d("firebaseAuthWithGoogle", account.id!!)
+        Log.d("idToken", account.idToken!!)
 
         val credential = GoogleAuthProvider.getCredential(account.idToken, null)
         googleAuth.signInWithCredential(credential).addOnCompleteListener { task ->
             if(task.isSuccessful){
-                if(task.result.additionalUserInfo?.isNewUser == true){
-                    moveSignUpFragment()
-                }else{
-                    // 사용자가 회원가입 후 간편로그인 클릭 했을 때 홈화면으로 바로 이동
+                googleAuth.currentUser?.getIdToken(true)?.addOnCompleteListener { tokenTask ->
+                    if(tokenTask.isSuccessful()){
+                        val accessToken = tokenTask.result.token
+                        Log.d("accessToken","${accessToken}")
+                        if(task.result.additionalUserInfo?.isNewUser == true){
+                            moveSignUpFragment()
+                        }else{
+                            // 사용자가 회원가입 후 간편로그인 클릭 했을 때 홈화면으로 바로 이동
+                        }
+                    }
                 }
             }else{
                 Log.e("isError",task.toString())

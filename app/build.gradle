@@ -26,6 +26,7 @@ android {
     buildTypes {
         debug {
             buildConfigField("String", "CLIENT_ID", "" + localProperties['oauth.clientid'] + "")
+            buildConfigField("String", "BASE_URL", "" + localProperties['BASE_URL'] + "")
         }
         release {
             minifyEnabled false
