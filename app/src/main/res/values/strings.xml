@@ -36,6 +36,8 @@
     <string name="spices">양념</string>
     <string name="recipe_recommend_info">이런 레시피는 어때요?</string>
     <string name="recipe_review">리뷰작성하기</string>
+    <string name="recipe_recent_search">최근 검색어</string>
+    <string name="recipe_popular_search">인기 검색어</string>
 
     <!-- 온보딩 -->
     <string name="simple_login">간편 로그인</string>
