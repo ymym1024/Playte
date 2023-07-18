@@ -32,6 +32,10 @@
 
     <!-- 레시피 -->
     <string name="recipe_searchview_hint">레시피 및 재료를 검색해보세요.</string>
+    <string name="ingredient">재료</string>
+    <string name="spices">양념</string>
+    <string name="recipe_recommend_info">이런 레시피는 어때요?</string>
+    <string name="recipe_review">리뷰작성하기</string>
 
     <!-- 온보딩 -->
     <string name="simple_login">간편 로그인</string>
@@ -44,14 +48,12 @@
 
     <!-- 홈 -->
     <string name="fresh_food">신선식품</string>
-    <string name="spices">양념</string>
+
     <string name="baking">빵/과자</string>
     <string name="drinking">음료</string>
     <string name="meal_kit">밀키트</string>
     <string name="side_dish">반찬</string>
     <string name="can">통조림</string>
     <string name="instant">인스턴트</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
 
 </resources>
