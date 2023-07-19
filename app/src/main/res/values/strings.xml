@@ -38,6 +38,10 @@
     <string name="recipe_review">리뷰작성하기</string>
     <string name="recipe_recent_search">최근 검색어</string>
     <string name="recipe_popular_search">인기 검색어</string>
+    <string name="recipe_review_msg">레시피는 어떠셨나요?</string>
+    <string name="recipe_review_1">솔직한 후기를 남겨주세요.</string>
+    <string name="recipe_review_hint">최소 10자 이상 입력해주세요.</string>
+    <string name="recipe_review_photo">사진 후기</string>
 
     <!-- 온보딩 -->
     <string name="simple_login">간편 로그인</string>
@@ -50,12 +54,12 @@
 
     <!-- 홈 -->
     <string name="fresh_food">신선식품</string>
-
     <string name="baking">빵/과자</string>
     <string name="drinking">음료</string>
     <string name="meal_kit">밀키트</string>
     <string name="side_dish">반찬</string>
     <string name="can">통조림</string>
     <string name="instant">인스턴트</string>
+
 
 </resources>
