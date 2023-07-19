@@ -19,7 +19,7 @@
     <string name="trends_search_hint">식재료를 검색해보세요.</string>
 
     <!--공통-->
-    <string name="cancle">취소</string>
+    <string name="cancel">취소</string>
     <string name="ingredient_name">재료 이름</string>
     <string name="save">등록</string>
     <string name="etc">기타</string>
@@ -42,6 +42,16 @@
     <string name="recipe_review_1">솔직한 후기를 남겨주세요.</string>
     <string name="recipe_review_hint">최소 10자 이상 입력해주세요.</string>
     <string name="recipe_review_photo">사진 후기</string>
+    <string name="recipe_register_title">레시피 이름</string>
+    <string name="recipe_register_description">레시피 설명</string>
+    <string name="recipe_register_ingredient">재료/양념</string>
+    <string name="recipe_register_time">조리시간</string>
+    <string name="recipe_register_people">인분</string>
+    <string name="recipe_register_order">조리단계</string>
+    <string name="recipe_register_title_hint">레시피 이름을 입력해주세요.</string>
+    <string name="recipe_register_description_hint">레시피에 대한 설명을 간략히 입력해주세요</string>
+    <string name="recipe_register_minutes">분</string>
+    <string name="recipe_register_step_info">레시피를 입력해주세요.</string>
 
     <!-- 온보딩 -->
     <string name="simple_login">간편 로그인</string>
