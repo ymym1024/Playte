@@ -27,7 +27,7 @@ class RecipeRecommendItemHolder(viewBinding: ItemRecipeRecommendBinding):
             item?.let { recipe ->
                 view.ivThumbnail.loadImagesWithGlide(recipe.image_url)
                 view.tvRecommendTitle.text = recipe.name
-                view.tvRecommendTime.text = recipe.time.toString()
+                view.tvRecommendTime.text = "조리시간 ${recipe.time}분"
             }
         }
 

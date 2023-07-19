@@ -29,7 +29,7 @@ class RecipeItemHolder(viewBinding: ItemRecipeBinding, val clickListener: OnClic
 
         binding.let {
             item?.let { recipe ->
-                it.ivRecipeMain.loadImagesWithGlide(recipe.image_url)
+                it.ivRecipeMain.loadImagesWithGlide("https://recipe1.ezmember.co.kr/cache/recipe/2022/02/02/dbb3f34bfe348a4bb4d142ff353815651.jpg")
                 it.tvRecipeName.text = recipe.name
                 it.tvRecipeTime.text = "${recipe.time}분"
                 it.tvRecipeIngrdient1.text = recipe.ingredient1
