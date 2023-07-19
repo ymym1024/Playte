@@ -41,5 +41,14 @@
         android:id="@+id/recipeMainFragment"
         android:name="com.cmc.recipe.presentation.ui.recipe.RecipeMainFragment"
         android:label="@string/recipe"
-        tools:layout="@layout/fragment_recipe_main" />
+        tools:layout="@layout/fragment_recipe_main" >
+        <action
+            android:id="@+id/action_recipeMainFragment_to_recipeDetailFragment"
+            app:destination="@id/recipeDetailFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/recipeDetailFragment"
+        android:name="com.cmc.recipe.presentation.ui.recipe.RecipeDetailFragment"
+        android:label="fragment_recipe_detail"
+        tools:layout="@layout/fragment_recipe_detail" />
 </navigation>
