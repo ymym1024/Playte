@@ -14,6 +14,7 @@
     <string name="my_recipe">My 재료 활용 레시피</string>
     <string name="recommend_ingredients">My 재료 관리법 추천</string>
     <string name="ingredient_add">식재료 등록</string>
+    <string name="my_recipe_register">나의 레시피 등록</string>
 
     <!-- 식재료 물가 추이 -->
     <string name="trends_search_hint">식재료를 검색해보세요.</string>
@@ -52,6 +53,7 @@
     <string name="recipe_register_description_hint">레시피에 대한 설명을 간략히 입력해주세요</string>
     <string name="recipe_register_minutes">분</string>
     <string name="recipe_register_step_info">레시피를 입력해주세요.</string>
+    <string name="recipe_register_ingredient_info">재료 및 양념을 입력해주세요.</string>
 
     <!-- 온보딩 -->
     <string name="simple_login">간편 로그인</string>
