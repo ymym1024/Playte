@@ -54,6 +54,8 @@
     <string name="recipe_register_minutes">분</string>
     <string name="recipe_register_step_info">레시피를 입력해주세요.</string>
     <string name="recipe_register_ingredient_info">재료 및 양념을 입력해주세요.</string>
+    <string name="recipe_order_best">베스트순</string>
+    <string name="recipe_order_recent">최신순</string>
 
     <!-- 온보딩 -->
     <string name="simple_login">간편 로그인</string>
