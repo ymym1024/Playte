@@ -29,19 +29,20 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
-            <EditText
+            <com.cmc.recipe.presentation.component.CustomEditText
                 android:id="@+id/editTextTextPassword"
-                android:layout_width="0dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="19dp"
                 android:layout_marginTop="8dp"
                 android:layout_marginEnd="20dp"
-                android:ems="10"
-                android:hint="@string/recipe_register_title_hint"
-                android:inputType="textPassword"
+                android:minHeight="46dp"
+                app:maxLength="10"
+                app:hint="@string/recipe_register_title_hint"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/textView26" />
+                app:layout_constraintTop_toBottomOf="@+id/textView26"
+                app:layout_constraintBottom_toTopOf="@+id/textView32"/>
 
             <TextView
                 android:id="@+id/textView32"
@@ -53,16 +54,15 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/editTextTextPassword" />
 
-            <EditText
+            <com.cmc.recipe.presentation.component.CustomEditText
                 android:id="@+id/editTextTextPersonName3"
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                android:layout_height="100dp"
                 android:layout_marginStart="19dp"
                 android:layout_marginTop="8dp"
                 android:layout_marginEnd="20dp"
-                android:ems="10"
-                android:hint="@string/recipe_register_description_hint"
-                android:inputType="textPersonName"
+                app:maxLength="100"
+                app:hint="@string/recipe_register_description_hint"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/textView32" />

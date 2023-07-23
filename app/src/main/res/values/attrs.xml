@@ -6,4 +6,8 @@
         <attr name="bgTitle" format="reference|string"/>
         <attr name="bgImg" format="reference|integer"/>
     </declare-styleable>
+    <declare-styleable name="CustomEditText">
+        <attr name="hint" format="reference|string" />
+        <attr name="maxLength" format="reference|integer" />
+    </declare-styleable>
 </resources>
