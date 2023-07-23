@@ -52,7 +52,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView6" />
 
-    <EditText
+    <com.cmc.recipe.presentation.component.CustomEditText
         android:id="@+id/editTextTextPersonName2"
         android:layout_width="0dp"
         android:layout_height="203dp"
@@ -60,26 +60,14 @@
         android:layout_marginTop="15dp"
         android:layout_marginEnd="20dp"
         android:background="@drawable/bg_input_radius"
-        android:ems="10"
         android:gravity="top"
-        android:hint="@string/recipe_review_hint"
-        android:inputType="textPersonName"
+        app:hint="@string/recipe_review_hint"
+        app:maxLength="1000"
         android:paddingStart="23dp"
         android:paddingTop="18dp"
-        android:textSize="14sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView8" />
-
-    <TextView
-        android:id="@+id/textView9"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="19dp"
-        android:layout_marginBottom="15dp"
-        android:text="TextView"
-        app:layout_constraintBottom_toBottomOf="@+id/editTextTextPersonName2"
-        app:layout_constraintEnd_toEndOf="@+id/editTextTextPersonName2" />
 
     <TextView
         android:id="@+id/textView10"
