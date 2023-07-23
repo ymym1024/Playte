@@ -3,9 +3,8 @@ package com.cmc.recipe.presentation.component
 import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Color
-import android.text.Editable
-import android.text.InputFilter
-import android.text.TextWatcher
+import android.text.*
+import android.text.style.ForegroundColorSpan
 import android.util.AttributeSet
 import android.view.View
 import android.widget.EditText
@@ -70,7 +69,6 @@ class CustomEditText @JvmOverloads constructor(
     private fun setAlign(){
         val editTextParams = LayoutParams(LayoutParams.MATCH_CONSTRAINT, LayoutParams.MATCH_CONSTRAINT)
         editTextParams.setMargins(14, 0, 14, 0)
-      //  editTextParams.setMargins(13.dpToPx(), 0, 13.dpToPx(), 0)
         editText.layoutParams = editTextParams
 
         editTextParams.startToStart = LayoutParams.PARENT_ID
@@ -91,10 +89,22 @@ class CustomEditText @JvmOverloads constructor(
         editText.addTextChangedListener(CommonTextWatcher(
             afterChanged = {text ->
                 text?.let {
-                    textLength.text = "${text.length} / ${count}"
+                    textLength.text = getTextStyle("${text.length} / ${count}")
                 }
             }
         ))
+    }
+
+    private fun getTextStyle(text:String):SpannableString{
+        var endIndex = text.indexOf(" ")
+        val spannableString = SpannableString(text)
+        spannableString.setSpan(
+            ForegroundColorSpan(Color.RED), // Set the color to red
+            0, // Starting index of the specific text
+            endIndex,   // Ending index of the specific text
+            Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
+        )
+        return spannableString
     }
 
     fun setMaxLength(count:Int){
