@@ -4,6 +4,7 @@
     <color name="black_1">#565656</color>
     <color name="black_2">#181725</color>
     <color name="black_3">#373737</color>
+    <color name="black_transparent">#DB34343C</color>
     <color name="white">#FFFFFF</color>
     <color name="transparent">@android:color/transparent</color>
     <color name="gray">#D2D2D2</color>
@@ -20,6 +21,7 @@
     <color name="gray_11">#F1F1F1</color>
     <color name="yellow">#FFC700</color>
     <color name="primary_color">#FF5520</color>
+    <color name="primary_color_30">#4DFF5520</color>
     <color name="purple_200">#FFBB86FC</color>
     <color name="purple_500">#FF6200EE</color>
     <color name="purple_700">#FF3700B3</color>

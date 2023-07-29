@@ -15,6 +15,7 @@
     <string name="recommend_ingredients">My 재료 관리법 추천</string>
     <string name="ingredient_add">식재료 등록</string>
     <string name="my_recipe_register">나의 레시피 등록</string>
+    <string name="shortform">숏폼</string>
 
     <!-- 식재료 물가 추이 -->
     <string name="trends_search_hint">식재료를 검색해보세요.</string>
@@ -78,5 +79,8 @@
     <string name="can">통조림</string>
     <string name="instant">인스턴트</string>
 
+    <!--  숏폼  -->
+    <string name="shorts_time">00:21</string>
+    <string name="shorts_play_time">00:49</string>
 
 </resources>

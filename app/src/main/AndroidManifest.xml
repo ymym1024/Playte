@@ -15,9 +15,14 @@
         android:supportsRtl="true"
         tools:targetApi="31">
         <activity
-            android:theme="@style/Theme.Recipe_Android.Splash"
+            android:name=".presentation.ui.shortform.ShortsDetailActivity"
+            android:exported="true"
+            android:theme="@style/Theme.Recipe_Android">
+        </activity>
+        <activity
             android:name=".presentation.MainActivity"
-            android:exported="true">
+            android:exported="true"
+            android:theme="@style/Theme.Recipe_Android.Splash">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
