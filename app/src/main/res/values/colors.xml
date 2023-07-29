@@ -7,6 +7,7 @@
     <color name="black_transparent">#DB34343C</color>
     <color name="white">#FFFFFF</color>
     <color name="transparent">@android:color/transparent</color>
+    <color name="transparent_60">#99FFFFFF</color>
     <color name="gray">#D2D2D2</color>
     <color name="gray_1">#CFCFCF</color>
     <color name="gray_2">#F8F8F8</color>
