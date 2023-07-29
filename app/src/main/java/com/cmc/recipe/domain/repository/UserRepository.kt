@@ -5,6 +5,6 @@ import com.cmc.recipe.data.source.remote.request.RequestVerifyNickname
 import com.cmc.recipe.utils.NetworkState
 import kotlinx.coroutines.flow.Flow
 
-interface AuthRepository {
+interface UserRepository {
     fun getVerifyNickname(nickname:RequestVerifyNickname) : Flow<NetworkState<BaseResponse>>
 }

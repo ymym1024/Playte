@@ -1,6 +1,6 @@
 package com.cmc.recipe.di
 
-import com.cmc.recipe.data.source.remote.api.AuthService
+import com.cmc.recipe.data.source.remote.api.UserService
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -14,6 +14,6 @@ object ServiceModule {
 
     @Singleton
     @Provides
-    fun providesUserService(retrofit: Retrofit): AuthService =
-        retrofit.create(AuthService::class.java)
+    fun providesUserService(retrofit: Retrofit): UserService =
+        retrofit.create(UserService::class.java)
 }
