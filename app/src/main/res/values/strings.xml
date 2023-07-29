@@ -14,17 +14,52 @@
     <string name="my_recipe">My 재료 활용 레시피</string>
     <string name="recommend_ingredients">My 재료 관리법 추천</string>
     <string name="ingredient_add">식재료 등록</string>
+    <string name="my_recipe_register">나의 레시피 등록</string>
+    <string name="shortform">숏폼</string>
 
     <!-- 식재료 물가 추이 -->
     <string name="trends_search_hint">식재료를 검색해보세요.</string>
 
     <!--공통-->
-    <string name="cancle">취소</string>
+    <string name="cancel">취소</string>
     <string name="ingredient_name">재료 이름</string>
     <string name="save">등록</string>
     <string name="etc">기타</string>
     <string name="next">다음</string>
     <string name="complete">완료</string>
+    <string name="newest">최신순</string>
+    <string name="popular">인기순</string>
+    <string name="ingredients_included">재료 포함순</string>
+    <string name="minimum_time">최소 시간순</string>
+    <string name="comment">댓글</string>
+    <string name="reply">답글</string>
+
+    <!-- 레시피 -->
+    <string name="recipe_searchview_hint">레시피 및 재료를 검색해보세요.</string>
+    <string name="ingredient">재료</string>
+    <string name="spices">양념</string>
+    <string name="recipe_recommend_info">이런 레시피는 어때요?</string>
+    <string name="recipe_review">리뷰작성하기</string>
+    <string name="recipe_recent_search">최근 검색어</string>
+    <string name="recipe_popular_search">인기 검색어</string>
+    <string name="recipe_review_msg">레시피는 어떠셨나요?</string>
+    <string name="recipe_review_1">솔직한 후기를 남겨주세요.</string>
+    <string name="recipe_review_hint">최소 10자 이상 입력해주세요.</string>
+    <string name="recipe_review_photo">사진 후기</string>
+    <string name="recipe_register_title">레시피 이름</string>
+    <string name="recipe_register_description">레시피 설명</string>
+    <string name="recipe_register_ingredient">재료/양념</string>
+    <string name="recipe_register_time">조리시간</string>
+    <string name="recipe_register_people">인분</string>
+    <string name="recipe_register_order">조리단계</string>
+    <string name="recipe_register_title_hint">레시피 이름을 입력해주세요.</string>
+    <string name="recipe_register_description_hint">레시피에 대한 설명을 간략히 입력해주세요</string>
+    <string name="recipe_register_minutes">분</string>
+    <string name="recipe_register_step_info">레시피를 입력해주세요.</string>
+    <string name="recipe_register_ingredient_info">재료 및 양념을 입력해주세요.</string>
+    <string name="recipe_order_best">베스트순</string>
+    <string name="recipe_order_recent">최신순</string>
+    <string name="recipe_comment_info">댓글을 적어보세요.</string>
 
     <!-- 온보딩 -->
     <string name="simple_login">간편 로그인</string>
@@ -37,14 +72,15 @@
 
     <!-- 홈 -->
     <string name="fresh_food">신선식품</string>
-    <string name="spices">양념</string>
     <string name="baking">빵/과자</string>
     <string name="drinking">음료</string>
     <string name="meal_kit">밀키트</string>
     <string name="side_dish">반찬</string>
     <string name="can">통조림</string>
     <string name="instant">인스턴트</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <!--  숏폼  -->
+    <string name="shorts_time">00:21</string>
+    <string name="shorts_play_time">00:49</string>
 
 </resources>

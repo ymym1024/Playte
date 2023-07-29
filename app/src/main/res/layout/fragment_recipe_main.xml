@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".presentation.ui.recipe.RecipeMainFragment"
+    android:layout_height="match_parent"
+    android:layout_width="match_parent">
+
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:fillViewport="true">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <SearchView
+                android:id="@+id/searchView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="13dp"
+                android:layout_marginTop="1dp"
+                android:layout_marginEnd="13dp"
+                android:background="@color/gray_2"
+                android:iconifiedByDefault="false"
+                android:minHeight="51dp"
+                android:queryBackground="@null"
+                android:queryHint="@string/recipe_searchview_hint"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <GridLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:columnCount="2"
+                android:rowCount="2">
+
+                <com.cmc.recipe.presentation.component.RecommendThemeButton
+                    android:id="@+id/imageButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="14dp"
+                    android:layout_marginTop="20dp"
+                    android:layout_marginEnd="10dp"
+                    app:layout_constraintEnd_toStartOf="@+id/imageButton2"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/searchView"
+                    app:bgTitle="소중한 가족과 함께"
+                    app:bgImg="@drawable/img_recommend_theme"
+                    app:borderColor="#F7A593"
+                    app:backgroundColor="#40FFDAD2"/>
+
+                <com.cmc.recipe.presentation.component.RecommendThemeButton
+                    android:id="@+id/imageButton2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:layout_marginEnd="10dp"
+                    app:layout_constraintEnd_toStartOf="@+id/imageButton2"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/searchView"
+                    app:bgTitle="건강한 식습관"
+                    app:bgImg="@drawable/img_recommend_theme1"
+                    app:borderColor="#B353B175"
+                    app:backgroundColor="#1A53B175"/>
+
+                <com.cmc.recipe.presentation.component.RecommendThemeButton
+                    android:id="@+id/imageButton3"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="14dp"
+                    android:layout_marginTop="20dp"
+                    android:layout_marginEnd="10dp"
+                    app:layout_constraintEnd_toStartOf="@+id/imageButton2"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/searchView"
+                    app:bgTitle="알뜰살뜰 만원의 행복"
+                    app:bgImg="@drawable/img_recommend_theme2"
+                    app:borderColor="#FDE598"
+                    app:backgroundColor="#40FFEDB2"/>
+
+                <com.cmc.recipe.presentation.component.RecommendThemeButton
+                    android:id="@+id/imageButton4"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:layout_marginEnd="10dp"
+                    app:layout_constraintEnd_toStartOf="@+id/imageButton2"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/searchView"
+                    app:bgTitle="내가 바로 미슐랭 스타"
+                    app:bgImg="@drawable/img_recommend_theme3"
+                    app:borderColor="#5373B1"
+                    app:backgroundColor="#89A7E2"/>
+            </GridLayout>
+
+            <LinearLayout
+                android:id="@+id/linearLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="23dp"
+                android:layout_marginEnd="20dp"
+                android:orientation="horizontal"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/imageButton3">
+
+                <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/btn_newest"
+                    android:layout_width="wrap_content"
+                    android:layout_height="29dp"
+                    android:layout_marginEnd="9dp"
+                    android:background="@drawable/btn_selected_color"
+                    android:paddingStart="14dp"
+                    android:paddingTop="6dp"
+                    android:paddingEnd="14dp"
+                    android:paddingBottom="6dp"
+                    android:text="@string/newest"
+                    android:textColor="@color/ic_main_background" />
+
+                <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/btn_popular"
+                    android:layout_width="wrap_content"
+                    android:layout_height="29dp"
+                    android:layout_marginEnd="9dp"
+                    android:background="@drawable/btn_selected_color"
+                    android:enabled="false"
+                    android:paddingStart="14dp"
+                    android:paddingTop="6dp"
+                    android:paddingEnd="14dp"
+                    android:paddingBottom="6dp"
+                    android:text="@string/popular"
+                    android:textColor="@color/ic_main_background" />
+
+                <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/btn_minimum"
+                    android:layout_width="wrap_content"
+                    android:layout_height="29dp"
+                    android:layout_marginEnd="9dp"
+                    android:background="@drawable/btn_selected_color"
+                    android:enabled="false"
+                    android:paddingStart="14dp"
+                    android:paddingTop="6dp"
+                    android:paddingEnd="14dp"
+                    android:paddingBottom="6dp"
+                    android:text="@string/minimum_time"
+                    android:textColor="@color/ic_main_background" />
+            </LinearLayout>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rv_recipe"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="10dp"
+                android:overScrollMode="never"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/linearLayout"
+                app:layout_constraintVertical_bias="0.0" />
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/floatingActionButton2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="20dp"
+        android:layout_marginBottom="30dp"
+        android:clickable="true"
+        android:src="@drawable/ic_recipe_add"
+        app:backgroundTint="@color/primary_color"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

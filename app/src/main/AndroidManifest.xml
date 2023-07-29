@@ -3,6 +3,8 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
 
     <application
         android:name=".MainApplication"
@@ -14,9 +16,14 @@
         android:supportsRtl="true"
         tools:targetApi="31">
         <activity
-            android:theme="@style/Theme.Recipe_Android.Splash"
+            android:name=".presentation.ui.shortform.ShortsDetailActivity"
+            android:exported="true"
+            android:theme="@style/Theme.Recipe_Android">
+        </activity>
+        <activity
             android:name=".presentation.MainActivity"
-            android:exported="true">
+            android:exported="true"
+            android:theme="@style/Theme.Recipe_Android.Splash">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

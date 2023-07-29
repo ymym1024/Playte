@@ -3,6 +3,8 @@
     <color name="black">#FF000000</color>
     <color name="black_1">#565656</color>
     <color name="black_2">#181725</color>
+    <color name="black_3">#373737</color>
+    <color name="black_transparent">#DB34343C</color>
     <color name="white">#FFFFFF</color>
     <color name="transparent">@android:color/transparent</color>
     <color name="transparent_60">#99FFFFFF</color>
@@ -12,10 +14,20 @@
     <color name="gray_3">#C0C0C0</color>
     <color name="gray_4">#787878</color>
     <color name="gray_5">#E3E3E3</color>
+    <color name="gray_6">#B8B8B8</color>
+    <color name="gray_7">#A0A0A0</color>
+    <color name="gray_8">#B6B6B6</color>
+    <color name="gray_9">#F8F8F8</color>
+    <color name="gray_10">#F0F0F0</color>
+    <color name="gray_11">#F1F1F1</color>
+    <color name="yellow">#FFC700</color>
     <color name="primary_color">#FF5520</color>
+    <color name="primary_color_30">#4DFF5520</color>
     <color name="purple_200">#FFBB86FC</color>
     <color name="purple_500">#FF6200EE</color>
     <color name="purple_700">#FF3700B3</color>
     <color name="teal_200">#FF03DAC5</color>
     <color name="teal_700">#FF018786</color>
+    <color name="black_4">#404040</color>
+    <color name="black_5">#464646</color>
 </resources>

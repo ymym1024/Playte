@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/bg"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:minWidth="174dp"
+    android:minHeight="80dp"
+    app:strokeColor="@color/black"
+    app:strokeWidth="1dp"
+    app:cardCornerRadius="10dp">
+
+    <TextView
+        android:id="@+id/bgTitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:elevation="1dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="32dp"
+        android:layout_marginBottom="32dp"
+        android:textFontWeight="600"
+        android:text="TextView"
+        android:textColor="@color/black_4"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:id="@+id/bgImg"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginStart="100dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="5dp"
+        android:maxHeight="46dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/img_recommend_theme" />
+</com.google.android.material.card.MaterialCardView>
