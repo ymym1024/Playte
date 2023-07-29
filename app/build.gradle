@@ -26,7 +26,9 @@ android {
     buildTypes {
         debug {
             buildConfigField("String", "CLIENT_ID", "" + localProperties['oauth.clientid'] + "")
+            buildConfigField("String", "CLIENT_SECRET_ID", "" + localProperties['oauth.secret.clientid'] + "")
             buildConfigField("String", "BASE_URL", "" + localProperties['BASE_URL'] + "")
+            buildConfigField("String", "GOOGLE_BASE_URL", "" + localProperties['GOOGLE_BASE_URL'] + "")
         }
         release {
             minifyEnabled false
