@@ -1,5 +1,5 @@
 package com.cmc.recipe.data.source.remote.request
 
-data class RequestVerifyNickname(
+data class RequestNickname(
     val nickname: String
 )

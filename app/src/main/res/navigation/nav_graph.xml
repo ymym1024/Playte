@@ -36,5 +36,30 @@
         android:name="com.cmc.recipe.presentation.ui.auth.SignupFragment"
         android:label=""
         tools:layout="@layout/fragment_signup">
+        <argument
+            android:name="access_token"
+            app:argType="string" />
+        <action
+            android:id="@+id/action_signupFragment_to_signupCompleteFragment"
+            app:destination="@id/signupCompleteFragment" />
     </fragment>
+    <fragment
+        android:id="@+id/recipeMainFragment"
+        android:name="com.cmc.recipe.presentation.ui.recipe.RecipeMainFragment"
+        android:label="@string/recipe"
+        tools:layout="@layout/fragment_recipe_main" >
+        <action
+            android:id="@+id/action_recipeMainFragment_to_recipeDetailFragment"
+            app:destination="@id/recipeDetailFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/recipeDetailFragment"
+        android:name="com.cmc.recipe.presentation.ui.recipe.RecipeDetailFragment"
+        android:label=""
+        tools:layout="@layout/fragment_recipe_detail" />
+    <fragment
+        android:id="@+id/signupCompleteFragment"
+        android:name="com.cmc.recipe.presentation.ui.auth.SignupCompleteFragment"
+        android:label="fragment_signup_complete"
+        tools:layout="@layout/fragment_signup_complete" />
 </navigation>
