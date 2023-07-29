@@ -30,6 +30,8 @@
     <string name="popular">인기순</string>
     <string name="ingredients_included">재료 포함순</string>
     <string name="minimum_time">최소 시간순</string>
+    <string name="comment">댓글</string>
+    <string name="reply">답글</string>
 
     <!-- 레시피 -->
     <string name="recipe_searchview_hint">레시피 및 재료를 검색해보세요.</string>
@@ -56,6 +58,7 @@
     <string name="recipe_register_ingredient_info">재료 및 양념을 입력해주세요.</string>
     <string name="recipe_order_best">베스트순</string>
     <string name="recipe_order_recent">최신순</string>
+    <string name="recipe_comment_info">댓글을 적어보세요.</string>
 
     <!-- 온보딩 -->
     <string name="simple_login">간편 로그인</string>
