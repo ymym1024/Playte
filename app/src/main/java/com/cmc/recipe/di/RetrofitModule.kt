@@ -10,6 +10,7 @@ import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.util.concurrent.TimeUnit
+import javax.inject.Named
 import javax.inject.Singleton
 
 @Module
@@ -31,11 +32,25 @@ object RetrofitModule {
 
     @Provides
     @Singleton
+    @Named("RecipeApi")
     fun provideRetrofit(
         client: OkHttpClient.Builder
     ): Retrofit {
         return Retrofit.Builder()
             .baseUrl("${BuildConfig.BASE_URL}")
+            .addConverterFactory(GsonConverterFactory.create())
+            .client(client.build())
+            .build()
+    }
+
+    @Provides
+    @Singleton
+    @Named("GoogleLogin")
+    fun provideRetrofitForGoogle(
+        client: OkHttpClient.Builder
+    ): Retrofit {
+        return Retrofit.Builder()
+            .baseUrl("${BuildConfig.GOOGLE_BASE_URL}")
             .addConverterFactory(GsonConverterFactory.create())
             .client(client.build())
             .build()

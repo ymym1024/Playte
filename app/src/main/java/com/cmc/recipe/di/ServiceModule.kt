@@ -1,11 +1,13 @@
 package com.cmc.recipe.di
 
+import com.cmc.recipe.data.source.remote.api.GoogleService
 import com.cmc.recipe.data.source.remote.api.UserService
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import retrofit2.Retrofit
+import javax.inject.Named
 import javax.inject.Singleton
 
 @Module
@@ -14,6 +16,11 @@ object ServiceModule {
 
     @Singleton
     @Provides
-    fun providesUserService(retrofit: Retrofit): UserService =
+    fun providesUserService(@Named("RecipeApi")retrofit: Retrofit): UserService =
         retrofit.create(UserService::class.java)
+
+    @Singleton
+    @Provides
+    fun providesGoogleService(@Named("GoogleLogin") retrofit: Retrofit): GoogleService =
+        retrofit.create(GoogleService::class.java)
 }
