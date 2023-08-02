@@ -65,7 +65,9 @@
     <string name="simple_login">간편 로그인</string>
     <string name="login">로그인</string>
     <string name="onboard_info">당신을 위한 레시피 제공 서비스</string>
-    <string name="onboard_input_nickname">사용하실 닉네임을 입력해주세요</string>
+    <string name="onboard_input_nickname">반가워요!\n제가 뭐라고 부르면 될까요?</string>
+    <string name="onboard_input_nickname_hint">닉네임을 입력해주세요.</string>
+    <string name="onboard_input_nickname_next">렛츠 플레이트!</string>
     <string name="onboard_check_nickname">사용가능한 닉네임</string>
     <string name="onboard_complete">RE:cipe\n가입을 축하드려요</string>
     <string name="onboard_complete1">당신만을 위한 맛있는 레시피를 제공해드려요.</string>
