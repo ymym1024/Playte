@@ -4,7 +4,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/black"
     tools:context=".presentation.ui.auth.SignupCompleteFragment">
 
 
@@ -15,7 +14,7 @@
         android:layout_marginTop="226dp"
         android:gravity="center"
         android:text="@string/onboard_complete"
-        android:textColor="@color/white"
+        android:textColor="@color/black"
         android:textSize="24sp"
         android:textFontWeight="700"
         app:layout_constraintEnd_toEndOf="parent"
@@ -28,13 +27,13 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="24dp"
         android:text="@string/onboard_complete1"
-        android:textColor="@color/white"
+        android:textColor="@color/black"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView18" />
 
     <Button
-        android:id="@+id/button4"
+        android:id="@+id/btn_complete"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="24dp"

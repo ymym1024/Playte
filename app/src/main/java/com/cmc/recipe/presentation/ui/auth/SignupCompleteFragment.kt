@@ -5,21 +5,19 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.navigation.fragment.findNavController
 import com.cmc.recipe.R
+import com.cmc.recipe.databinding.FragmentSignupBinding
+import com.cmc.recipe.databinding.FragmentSignupCompleteBinding
+import com.cmc.recipe.presentation.ui.base.BaseFragment
 
-class SignupCompleteFragment : Fragment() {
+class SignupCompleteFragment : BaseFragment<FragmentSignupCompleteBinding>(FragmentSignupCompleteBinding::inflate) {
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
+    override fun initFragment() {
+        binding.btnComplete.setOnClickListener {
+            findNavController().navigate(R.id.action_signupCompleteFragment_to_recipeMainFragment)
+        }
     }
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_signup_complete, container, false)
-    }
 
 }
