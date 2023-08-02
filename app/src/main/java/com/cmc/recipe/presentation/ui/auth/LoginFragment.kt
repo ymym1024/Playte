@@ -5,13 +5,17 @@ import android.os.Bundle
 import android.util.Log
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import com.cmc.recipe.BuildConfig
+import com.cmc.recipe.MainApplication
 import com.cmc.recipe.R
 import com.cmc.recipe.databinding.FragmentLoginBinding
 import com.cmc.recipe.presentation.MainActivity
 import com.cmc.recipe.presentation.ui.base.BaseFragment
+import com.cmc.recipe.presentation.viewmodel.AuthViewModel
 import com.cmc.recipe.presentation.viewmodel.GoogleViewModel
 import com.cmc.recipe.utils.NetworkState
 import com.google.android.gms.auth.api.signin.GoogleSignIn
@@ -31,6 +35,7 @@ import kotlinx.coroutines.launch
 class LoginFragment : BaseFragment<FragmentLoginBinding>(FragmentLoginBinding::inflate){
 
     private val googleViewModel : GoogleViewModel by viewModels()
+    private val authViewModel : AuthViewModel by viewModels()
 
     private val googleSignInClient: GoogleSignInClient by lazy { getGoogleClient() }
     private lateinit var googleAuth: FirebaseAuth
@@ -86,8 +91,7 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(FragmentLoginBinding::i
                                 accessToken = result.data.access_token
                                 Log.d("accessToken",accessToken)
 
-                                //TODO : 회원존재 api 요청 후 조건 분기 처리
-                                moveSignUpFragment(accessToken)
+                                login(accessToken)
                             }
                             is NetworkState.Error -> {
                                 showToastMessage(result.message.toString())
@@ -96,7 +100,6 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(FragmentLoginBinding::i
                         }
                     }
                 }
-
             }
         }catch (e: ApiException) {
             Log.d("로그인 실패","${e.statusCode}")
@@ -127,8 +130,53 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(FragmentLoginBinding::i
         }
     }
 
+
+    private fun login(accessToken:String){
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED){
+                authViewModel.login(accessToken)
+                authViewModel.loginResult.collect{
+                    when(it){
+                        is NetworkState.Success -> {
+                            it.data?.let { data ->
+                                if(data.code == "SUCCESS"){ // TODO : 변경
+                                    if(data.data.isMember){
+                                        val accessToken = data.data.jwtTokens.accessToken
+                                        val refreshToken = data.data.jwtTokens.refreshToken
+
+                                        saveTokens(accessToken,refreshToken)
+                                        moveMainFragment()
+                                    } else {
+                                        moveSignUpFragment(accessToken)
+                                    }
+                                }else{
+                                    Log.d("data","${data.data}")
+                                }
+                            }
+                            authViewModel._loginResult.value = NetworkState.Loading
+                        }
+                        is NetworkState.Error ->{
+                            showToastMessage(it.message.toString())
+                            authViewModel._loginResult.value = NetworkState.Loading
+                        }
+                        else -> {}
+                    }
+                }
+            }
+        }
+    }
+
     private fun moveSignUpFragment(accessToken:String) {
         val directions = LoginFragmentDirections.actionLoginFragmentToSignupFragment(accessToken)
         findNavController().navigate(directions)
+    }
+
+    private fun moveMainFragment() {
+        findNavController().navigate(R.id.action_loginFragment_to_recipeMainFragment)
+    }
+
+    private fun saveTokens(accessToken: String, refreshToken: String) {
+        MainApplication.tokenManager.saveAccessToken(accessToken)
+        MainApplication.tokenManager.saveRefreshToken(refreshToken)
     }
 }

@@ -1,5 +1,6 @@
 package com.cmc.recipe.data.source.remote.api
 
+import com.cmc.recipe.data.model.response.LoginResponse
 import com.cmc.recipe.data.model.response.SignupResponse
 import com.cmc.recipe.data.source.remote.request.RequestNickname
 import retrofit2.Response
@@ -11,4 +12,8 @@ interface AuthService {
 
     @POST("/api/v1/auth/google/signup")
     suspend fun signup(@Header("auth-token") accessToken: String?, @Body nickname: RequestNickname) : Response<SignupResponse>
+
+    @POST("/api/v1/auth/google/signin")
+    suspend fun login(@Header("auth-token") accessToken: String?) : Response<LoginResponse>
+
 }

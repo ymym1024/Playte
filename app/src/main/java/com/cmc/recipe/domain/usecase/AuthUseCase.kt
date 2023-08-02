@@ -8,5 +8,7 @@ import javax.inject.Inject
 class AuthUseCase @Inject constructor(
     private val repository: AuthRepository
     ) {
-    suspend fun signup(accessToken:String,nickname: RequestNickname) = repository.signup(accessToken,nickname)
+    fun signup(accessToken:String,nickname: RequestNickname) = repository.signup(accessToken,nickname)
+
+    fun login(accessToken:String) = repository.login(accessToken)
 }
