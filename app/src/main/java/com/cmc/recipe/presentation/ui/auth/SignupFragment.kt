@@ -42,6 +42,11 @@ class SignupFragment : BaseFragment<FragmentSignupBinding>(FragmentSignupBinding
         onClickSignup()
     }
 
+    override fun onDestroyView() {
+        super.onDestroyView()
+        searchJob?.cancel()
+    }
+
     private fun onActiveButton(){
         binding.etNickName.addTextChangedListener(CommonTextWatcher(
             onChanged = { text,_,_,_ ->
