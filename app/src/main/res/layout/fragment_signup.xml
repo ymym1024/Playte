@@ -30,6 +30,7 @@
         android:layout_marginTop="24dp"
         android:layout_marginEnd="24dp"
         android:textSize="16sp"
+        android:textColor="@color/primary_color"
         android:background="@drawable/bg_custom_edittext"
         android:hint="@string/onboard_input_nickname_hint"
         android:minHeight="56dp"

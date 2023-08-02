@@ -45,7 +45,6 @@ class SignupFragment : BaseFragment<FragmentSignupBinding>(FragmentSignupBinding
     private fun onActiveButton(){
         binding.etNickName.addTextChangedListener(CommonTextWatcher(
             onChanged = { text,_,_,_ ->
-
                 searchJob?.cancel()
 
                 searchJob = CoroutineScope(Dispatchers.Main).launch {
@@ -58,6 +57,8 @@ class SignupFragment : BaseFragment<FragmentSignupBinding>(FragmentSignupBinding
 
     private fun requestVerifyNickname(nickname:String){
         if(nickname.isNotBlank()){
+            binding.llValidateMsg.visibility = View.VISIBLE
+            binding.ivEditIcon.visibility = View.VISIBLE
             lifecycleScope.launch {
                 repeatOnLifecycle(Lifecycle.State.STARTED){
                     userViewModel.verifyNickname(nickname)
@@ -66,13 +67,14 @@ class SignupFragment : BaseFragment<FragmentSignupBinding>(FragmentSignupBinding
                             is NetworkState.Success -> {
                                 it.data?.let {data ->
                                     Log.d("SUCCESS","${it.data}")
-                                    if(data.code == "SUCCESS"){ // TODO : 변경
-                                        binding.llValidateMsg.visibility = View.VISIBLE
+                                    if(data.code == "SUCCESS"){
+                                        binding.llValidateMsg.text = "사용 가능한 닉네임입니다"
+                                        binding.ivEditIcon.setImageResource(R.drawable.ic_check)
                                         binding.btnNext.isEnabled = true
                                     }else{
-                                        binding.llValidateMsg.visibility = View.INVISIBLE
+                                        binding.llValidateMsg.text = "중복된 닉네임입니다"
+                                        binding.ivEditIcon.setImageResource(R.drawable.ic_check)
                                         binding.btnNext.isEnabled = false
-                                        showToastMessage("닉네임을 다시 입력해 주세요") //TODO : 추후 수정예정
                                     }
                                 }
                                 userViewModel._verifyResult.value = NetworkState.Loading
