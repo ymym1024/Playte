@@ -12,7 +12,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="17dp"
-        android:layout_marginBottom="135dp"
+        android:layout_marginBottom="140dp"
         android:background="@color/transparent"
         android:src="@drawable/ic_google_login"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -25,13 +25,12 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="100dp"
-        android:layout_marginTop="222dp"
         android:layout_marginEnd="100dp"
         android:gravity="center"
         android:orientation="horizontal"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tv_title">
+        tools:layout_editor_absoluteY="502dp">
 
         <View
             android:id="@+id/view2"
@@ -57,25 +56,16 @@
             android:background="@color/white" />
     </LinearLayout>
 
-    <TextView
-        android:id="@+id/tv_title"
-        android:layout_width="wrap_content"
-        android:layout_height="19dp"
-        android:layout_marginTop="3dp"
-        android:text="@string/onboard_info"
-        android:textColor="@color/white"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/iv_title" />
-
     <ImageView
         android:id="@+id/iv_title"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="200dp"
-        android:layout_marginBottom="20dp"
-        android:src="@drawable/ic_logo_white"
-        app:layout_constraintBottom_toTopOf="@+id/tv_title"
+        android:layout_marginStart="75dp"
+        android:layout_marginTop="270dp"
+        android:layout_marginEnd="75dp"
+        android:layout_marginBottom="210dp"
+        android:src="@drawable/main_logo"
+        app:layout_constraintBottom_toTopOf="@+id/linearLayout"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
