@@ -2,6 +2,7 @@ package com.cmc.recipe.presentation
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.navigation.NavController
@@ -29,24 +30,45 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun navSetting(){
-        setSupportActionBar(binding.toolbar)
+        val toolbar = binding.toolbar
+        setSupportActionBar(toolbar)
         supportActionBar?.setDisplayShowTitleEnabled(false)
 
         val navHostFragment =
             supportFragmentManager.findFragmentById(R.id.fragmentContainerView) as NavHostFragment
         navController = navHostFragment.navController
         navController.addOnDestinationChangedListener {
-                _, _, _ ->
-            binding.toolbarTitle.text = navController.currentDestination?.label.toString()
+                _, destination, _ ->
+
+            binding.toolbarTitle.text = ""
+            when(destination.id){
+                R.id.recipeMainFragment -> {
+                    binding.toolbarLogo.visibility = View.VISIBLE
+                    binding.toolbarLogo.setImageResource(R.drawable.img_recipe_logo)
+                }
+                R.id.shortsFragment -> {
+                    binding.toolbarLogo.visibility = View.VISIBLE
+                    binding.toolbarLogo.setImageResource(R.drawable.img_shorts_logo)
+                }
+                R.id.mypageFragment -> {
+                    binding.toolbarLogo.visibility = View.VISIBLE
+                    binding.toolbarLogo.setImageResource(R.drawable.img_mypage_logo)
+                }
+                else -> {
+                    binding.toolbarLogo.visibility = View.GONE
+                    binding.toolbarTitle.text = navController.currentDestination?.label.toString()
+                }
+            }
         }
+
         val graph = navController.navInflater.inflate(R.navigation.nav_graph)
 
         navController.graph = graph
 
-        val appBarConfiguration = AppBarConfiguration(navController.graph)
+        val appBarConfiguration = AppBarConfiguration(setOf(R.id.recipeMainFragment,R.id.shortsFragment,R.id.uploadFragment,R.id.mypageFragment))
         setupActionBarWithNavController(navController,appBarConfiguration)
-        binding.bottomNav.itemIconTintList = null
         binding.bottomNav.setupWithNavController(navController)
+        binding.bottomNav.itemIconTintList = null
     }
 
     override fun onSupportNavigateUp(): Boolean {
