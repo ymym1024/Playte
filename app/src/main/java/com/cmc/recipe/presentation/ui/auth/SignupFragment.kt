@@ -47,6 +47,13 @@ class SignupFragment : BaseFragment<FragmentSignupBinding>(FragmentSignupBinding
         searchJob?.cancel()
     }
 
+    override fun onStop() {
+        super.onStop()
+        val mainActivity = activity as MainActivity
+        mainActivity.hideToolbar(false)
+        mainActivity.hideBottomNavigation(false)
+    }
+
     private fun onActiveButton(){
         binding.etNickName.addTextChangedListener(CommonTextWatcher(
             onChanged = { text,_,_,_ ->
