@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
+        android:id="@+id/shortsFragment"
         android:icon="@drawable/ic_shorts_custom"
         android:title="@string/shortform"/>
     <item
@@ -8,9 +9,11 @@
         android:icon="@drawable/ic_recipe_custom"
         android:title="@string/recipe"/>
     <item
+        android:id="@+id/uploadFragment"
         android:icon="@drawable/ic_upload_custom"
         android:title="@string/upload"/>
     <item
+        android:id="@+id/mypageFragment"
         android:icon="@drawable/ic_mypage_custom"
         android:title="@string/mypage"/>
 </menu>
