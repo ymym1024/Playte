@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/loginFragment">
+    app:startDestination="@id/shortsFragment">
 
     <fragment
         android:id="@+id/loginFragment"
@@ -69,4 +69,12 @@
         android:name="com.cmc.recipe.presentation.ui.shortform.ShortsDetailActivity"
         android:label="activity_shorts_detail"
         tools:layout="@layout/activity_shorts_detail" />
+    <fragment
+        android:id="@+id/mypageFragment"
+        android:name="com.cmc.recipe.presentation.ui.mypage.MypageFragment"
+        android:label="MypageFragment" />
+    <fragment
+        android:id="@+id/uploadFragment"
+        android:name="com.cmc.recipe.presentation.ui.upload.UploadFragment"
+        android:label="UploadFragment" />
 </navigation>

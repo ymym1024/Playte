@@ -52,6 +52,13 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(FragmentLoginBinding::i
         initListener()
     }
 
+    override fun onStop() {
+        super.onStop()
+        val mainActivity = activity as MainActivity
+        mainActivity.hideToolbar(false)
+        mainActivity.hideBottomNavigation(false)
+    }
+
     private fun initListener(){
         binding.btnGoogleLogin.setOnClickListener {
             googleSignInClient.signOut()
