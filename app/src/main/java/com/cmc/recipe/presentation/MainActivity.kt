@@ -45,6 +45,7 @@ class MainActivity : AppCompatActivity() {
 
         val appBarConfiguration = AppBarConfiguration(navController.graph)
         setupActionBarWithNavController(navController,appBarConfiguration)
+        binding.bottomNav.itemIconTintList = null
         binding.bottomNav.setupWithNavController(navController)
     }
 

@@ -4,6 +4,7 @@
     <!-- 메뉴 -->
     <string name="home">홈</string>
     <string name="recipe">레시피</string>
+    <string name="upload">업로드</string>
     <string name="community">커뮤니티</string>
     <string name="mypage">마이페이지</string>
     <string name="register">회원가입</string>

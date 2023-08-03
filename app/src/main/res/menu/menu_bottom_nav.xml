@@ -1,13 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
-        android:id="@+id/homeFragment"
-        android:icon="@drawable/ic_menu_shortform"
+        android:icon="@drawable/ic_shorts_custom"
         android:title="@string/shortform"/>
     <item
-        android:icon="@drawable/ic_menu_recipe"
+        android:id="@+id/recipeMainFragment"
+        android:icon="@drawable/ic_recipe_custom"
         android:title="@string/recipe"/>
     <item
-        android:icon="@drawable/ic_menu_mypage"
+        android:icon="@drawable/ic_upload_custom"
+        android:title="@string/upload"/>
+    <item
+        android:icon="@drawable/ic_mypage_custom"
         android:title="@string/mypage"/>
 </menu>
