@@ -77,7 +77,6 @@
     <string name="upload_write">글로 게시</string>
     <string name="upload_shorts">숏폼으로 게시</string>
 
-
     <!-- 홈 -->
     <string name="fresh_food">신선식품</string>
     <string name="baking">빵/과자</string>
@@ -90,5 +89,7 @@
     <!--  숏폼  -->
     <string name="shorts_time">00:21</string>
     <string name="shorts_play_time">00:49</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 
 </resources>
