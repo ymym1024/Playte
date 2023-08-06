@@ -11,6 +11,8 @@ class UploadShortsFragment : BaseFragment<FragmentUploadShortsBinding>(FragmentU
     override fun initFragment() {
         initAdapter()
         editScroll()
+        settingToolbar()
+        uploadShorts()
     }
 
     private fun initAdapter(){
@@ -50,6 +52,16 @@ class UploadShortsFragment : BaseFragment<FragmentUploadShortsBinding>(FragmentU
                     binding.scrollView.scrollTo(0, binding.etRecipeIngredient.bottom)
                 }
             }
+        }
+    }
+
+    private fun settingToolbar(){
+
+    }
+
+    private fun uploadShorts(){
+        binding.btnUploadShorts.setOnClickListener {
+
         }
     }
 

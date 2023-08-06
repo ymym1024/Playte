@@ -89,6 +89,7 @@
     <!--  숏폼  -->
     <string name="shorts_time">00:21</string>
     <string name="shorts_play_time">00:49</string>
+    <string name="shorts_upload">커버편집</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
 
