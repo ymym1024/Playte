@@ -1,128 +1,134 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView
+    android:id="@+id/scrollView"
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".presentation.ui.upload.UploadShortsFragment">
+    android:layout_width="match_parent">
 
-
-    <ImageView
-        android:id="@+id/imageView6"
-        android:layout_width="202dp"
-        android:layout_height="300dp"
-        android:layout_marginStart="90dp"
-        android:layout_marginTop="15dp"
-        android:layout_marginEnd="90dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:src="@drawable/main_logo" />
-
-    <TextView
-        android:id="@+id/textView17"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textColor="@color/gray_12"
-        android:textFontWeight="600"
-        android:layout_marginStart="20dp"
-        android:layout_marginTop="20dp"
-        android:text="@string/recipe_register_title"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imageView6" />
-
-    <com.cmc.recipe.presentation.component.CustomEditText
-        android:id="@+id/et_recipe_desc"
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="19dp"
-        android:layout_marginTop="20dp"
-        android:layout_marginEnd="20dp"
-        android:minHeight="92dp"
-        app:hint="@string/recipe_register_description_hint"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView18"
-        app:maxLength="20" />
+        android:layout_height="match_parent"
+        tools:context=".presentation.ui.upload.UploadShortsFragment">
 
-    <TextView
-        android:id="@+id/textView18"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="20dp"
-        android:layout_marginTop="20dp"
-        android:text="@string/recipe_register_description"
-        android:textColor="@color/gray_12"
-        android:textFontWeight="600"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/et_recipe_name" />
+        <ImageView
+            android:id="@+id/imageView6"
+            android:layout_width="202dp"
+            android:layout_height="300dp"
+            android:layout_marginStart="90dp"
+            android:layout_marginTop="15dp"
+            android:layout_marginEnd="90dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:src="@drawable/main_logo" />
 
-    <com.cmc.recipe.presentation.component.CustomEditText
-        android:id="@+id/et_recipe_name"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="19dp"
-        android:layout_marginTop="10dp"
-        android:layout_marginEnd="20dp"
-        android:minHeight="46dp"
-        app:hint="@string/recipe_register_title_hint"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView17"
-        app:maxLength="20" />
+        <TextView
+            android:id="@+id/textView17"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/gray_12"
+            android:textFontWeight="600"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="20dp"
+            android:text="@string/recipe_register_title"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/imageView6" />
 
-    <TextView
-        android:id="@+id/textView19"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="20dp"
-        android:layout_marginTop="20dp"
-        android:text="@string/recipe_register_ingredient"
-        android:textColor="@color/gray_12"
-        android:textFontWeight="600"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/et_recipe_desc" />
+        <com.cmc.recipe.presentation.component.CustomEditText
+            android:id="@+id/et_recipe_desc"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="19dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginEnd="20dp"
+            android:minHeight="92dp"
+            app:hint="@string/recipe_register_description_hint"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="1.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textView18"
+            app:maxLength="20" />
 
-    <AutoCompleteTextView
-        android:id="@+id/et_recipe_ingredient"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="19dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="19dp"
-        android:completionThreshold="1"
-        android:padding="14dp"
-        android:textSize="14sp"
-        android:background="@drawable/bg_gray_radius"
-        android:hint="@string/recipe_register_ingredient_info"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView19"
-        app:maxLength="20" />
+        <TextView
+            android:id="@+id/textView18"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="20dp"
+            android:text="@string/recipe_register_description"
+            android:textColor="@color/gray_12"
+            android:textFontWeight="600"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/et_recipe_name" />
 
-    <TextView
-        android:id="@+id/tv_ingredient_cnt"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="20dp"
-        android:text="0/4"
-        android:textFontWeight="500"
-        app:layout_constraintStart_toEndOf="@+id/textView19"
-        app:layout_constraintTop_toBottomOf="@+id/et_recipe_desc" />
+        <com.cmc.recipe.presentation.component.CustomEditText
+            android:id="@+id/et_recipe_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="19dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginEnd="20dp"
+            android:minHeight="46dp"
+            app:hint="@string/recipe_register_title_hint"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textView17"
+            app:maxLength="20" />
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rv_complete_ingredient"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="19dp"
-        android:layout_marginTop="10dp"
-        android:layout_marginEnd="19dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/et_recipe_ingredient" />
+        <TextView
+            android:id="@+id/textView19"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="20dp"
+            android:text="@string/recipe_register_ingredient"
+            android:textColor="@color/gray_12"
+            android:textFontWeight="600"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/et_recipe_desc" />
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+        <AutoCompleteTextView
+            android:id="@+id/et_recipe_ingredient"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="19dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="19dp"
+            android:completionThreshold="1"
+            android:padding="14dp"
+            android:textSize="14sp"
+            android:background="@drawable/bg_gray_radius"
+            android:hint="@string/recipe_register_ingredient_info"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textView19"
+            app:maxLength="20" />
+
+        <TextView
+            android:id="@+id/tv_ingredient_cnt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="20dp"
+            android:text="0/4"
+            android:textFontWeight="500"
+            app:layout_constraintStart_toEndOf="@+id/textView19"
+            app:layout_constraintTop_toBottomOf="@+id/et_recipe_desc" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rv_complete_ingredient"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="19dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginEnd="19dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/et_recipe_ingredient" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</ScrollView>

@@ -1,6 +1,6 @@
 package com.cmc.recipe.presentation.ui.upload
 
-import android.util.Log
+import android.view.View
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.cmc.recipe.data.model.Ingredient
 import com.cmc.recipe.databinding.FragmentUploadShortsBinding
@@ -10,6 +10,7 @@ class UploadShortsFragment : BaseFragment<FragmentUploadShortsBinding>(FragmentU
 
     override fun initFragment() {
         initAdapter()
+        editScroll()
     }
 
     private fun initAdapter(){
@@ -39,6 +40,16 @@ class UploadShortsFragment : BaseFragment<FragmentUploadShortsBinding>(FragmentU
             ingredientAdapter.addItem(selectedData.name)
             binding.etRecipeIngredient.setText("")
             hideKeyboard(v)
+        }
+    }
+
+    private fun editScroll(){
+        binding.etRecipeIngredient.onFocusChangeListener = View.OnFocusChangeListener { _, hasFocus ->
+            if (hasFocus) {
+                binding.scrollView.post {
+                    binding.scrollView.scrollTo(0, binding.etRecipeIngredient.bottom)
+                }
+            }
         }
     }
 
