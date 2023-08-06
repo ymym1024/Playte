@@ -27,6 +27,12 @@ import com.cmc.recipe.utils.convertLongToTime
 
 class UploadShortsFragment : BaseFragment<FragmentUploadShortsBinding>(FragmentUploadShortsBinding::inflate) {
 
+    override fun onDestroyView() {
+        super.onDestroyView()
+        val mainActivity = activity as MainActivity
+        mainActivity.clearToolbarAndIcon()
+    }
+
     override fun initFragment() {
         initAdapter()
         editScroll()
@@ -77,7 +83,6 @@ class UploadShortsFragment : BaseFragment<FragmentUploadShortsBinding>(FragmentU
         ActivityResultContracts.RequestPermission()
     ) { isGranted: Boolean ->
         if (isGranted) {
-            // Permission is granted, proceed with the video picker
             openVideoPicker()
         }
     }
@@ -89,14 +94,12 @@ class UploadShortsFragment : BaseFragment<FragmentUploadShortsBinding>(FragmentU
             permissions[Manifest.permission.READ_MEDIA_VIDEO] == true &&
             permissions[Manifest.permission.READ_MEDIA_AUDIO] == true
         ) {
-            // All media permissions are granted, proceed with the video picker
             openVideoPicker()
         }
     }
 
     private fun checkPermissionsAndPickVideo() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-            // On Android 13 and above, request the new media permissions
             requestMediaPermissionLauncher.launch(
                 arrayOf(
                     Manifest.permission.READ_MEDIA_IMAGES,
@@ -105,7 +108,6 @@ class UploadShortsFragment : BaseFragment<FragmentUploadShortsBinding>(FragmentU
                 )
             )
         } else {
-            // On Android 12 and below, request READ_EXTERNAL_STORAGE permission
             if (ContextCompat.checkSelfPermission(
                     requireContext(),
                     Manifest.permission.READ_EXTERNAL_STORAGE

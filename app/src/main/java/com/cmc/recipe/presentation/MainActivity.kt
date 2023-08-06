@@ -92,6 +92,10 @@ class MainActivity : AppCompatActivity() {
         binding.toolbarTitle.compoundDrawablePadding = padding
     }
 
+    fun clearToolbarAndIcon(){
+        binding.toolbarTitle.setCompoundDrawablesWithIntrinsicBounds(null, null, null, null)
+    }
+
     // bottomnavigation show flag
     fun hideBottomNavigation(state:Boolean){
         if(state){
