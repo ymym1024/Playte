@@ -1,9 +1,11 @@
 package com.cmc.recipe.presentation
 
+import android.graphics.drawable.Drawable
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import android.widget.TextView
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
@@ -82,6 +84,12 @@ class MainActivity : AppCompatActivity() {
         }else{
             binding.toolbar.visibility = View.VISIBLE
         }
+    }
+
+    fun setToolbarAndIcon(icon : Drawable, string: String,padding:Int){
+        binding.toolbarTitle.setCompoundDrawablesWithIntrinsicBounds(icon, null, null, null)
+        binding.toolbarTitle.text = string
+        binding.toolbarTitle.compoundDrawablePadding = padding
     }
 
     // bottomnavigation show flag

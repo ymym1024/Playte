@@ -24,3 +24,11 @@ fun ImageView.loadImagesWithGlide(url: String) {
 fun String.convertTimestampToDate(time: Long){
    SimpleDateFormat("yy.MM.dd").format(time).toString()
 }
+
+fun Long.convertLongToTime(durationMillis: Long): String {
+    val seconds = (durationMillis / 1000).toInt()
+    val minutes = seconds / 60
+    val remainingSeconds = seconds % 60
+
+    return String.format("%02d:%02d", minutes, remainingSeconds)
+}
