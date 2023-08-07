@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     tools:context=".presentation.ui.shortform.ShortsFragment">
 
-    <SearchView
+    <EditText
         android:id="@+id/searchView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -14,16 +14,30 @@
         android:layout_marginTop="1dp"
         android:layout_marginEnd="13dp"
         android:layout_marginBottom="18dp"
-        android:background="@color/gray_2"
+        android:background="@drawable/bg_custom_searchview"
         android:iconifiedByDefault="false"
+        android:hint="@string/recipe_searchview_hint"
+        android:textSize="16dp"
+        android:textColor="@color/gray_13"
+        android:paddingStart="15dp"
         android:minHeight="51dp"
         android:queryBackground="@null"
         app:layout_constraintBottom_toTopOf="@+id/vp_exoplayer"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" >
+        app:layout_constraintTop_toTopOf="parent" />
 
-    </SearchView>
+    <ImageButton
+        android:id="@+id/button10"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="14dp"
+        android:layout_marginEnd="14dp"
+        android:layout_marginBottom="14dp"
+        android:background="@drawable/ic_search"
+        app:layout_constraintBottom_toBottomOf="@+id/searchView"
+        app:layout_constraintEnd_toEndOf="@+id/searchView"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <androidx.viewpager2.widget.ViewPager2
         android:id="@+id/vp_exoplayer"
@@ -51,5 +65,6 @@
         app:backgroundTint="@color/primary_color"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>
