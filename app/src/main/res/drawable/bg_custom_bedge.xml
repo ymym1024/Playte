@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- bedge 비활성화 -->
+    <item android:state_pressed="false"
+        android:color="@color/primary_color">
+        <shape xmlns:android="http://schemas.android.com/apk/res/android"
+            android:shape="rectangle">
+            <solid android:color="@color/sub_color1"/>
+            <corners android:radius="20dp" />
+        </shape>
+    </item>
+    <!-- bedge 활성화 -->
+   <item android:state_pressed="true"
+       android:color="@color/white">
+       <shape xmlns:android="http://schemas.android.com/apk/res/android"
+           android:shape="rectangle">
+           <solid android:color="@color/primary_color"/>
+           <corners android:radius="20dp" />
+       </shape>
+   </item>
+</selector>

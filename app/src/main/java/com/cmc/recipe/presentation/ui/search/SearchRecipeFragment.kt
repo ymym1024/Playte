@@ -1,15 +1,16 @@
-package com.cmc.recipe.presentation.ui.recipe
+package com.cmc.recipe.presentation.ui.search
 
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.cmc.recipe.R
 import com.cmc.recipe.data.model.RecipeItem
-import com.cmc.recipe.databinding.FragmentRecipeMainBinding
+import com.cmc.recipe.databinding.FragmentSearchRecipeBinding
 import com.cmc.recipe.presentation.ui.base.BaseFragment
 import com.cmc.recipe.presentation.ui.base.OnClickListener
+import com.cmc.recipe.presentation.ui.recipe.RecipeListAdapter
 
-class RecipeMainFragment : BaseFragment<FragmentRecipeMainBinding>(FragmentRecipeMainBinding::inflate) {
 
+class SearchRecipeFragment : BaseFragment<FragmentSearchRecipeBinding>(FragmentSearchRecipeBinding::inflate) {
     override fun initFragment() {
         //TODO : 네트워크 연결 후 삭제
         val itemList = arrayListOf(
@@ -24,7 +25,7 @@ class RecipeMainFragment : BaseFragment<FragmentRecipeMainBinding>(FragmentRecip
     private fun recipeRecyclerview(itemList:ArrayList<RecipeItem>){
         val clickListener = object : OnClickListener {
             override fun onMovePage(id: Int) {
-                findNavController().navigate(R.id.action_recipeMainFragment_to_recipeDetailFragment)
+               // findNavController().navigate(R.id.action_recipeMainFragment_to_recipeDetailFragment)
             }
         }
 
@@ -33,4 +34,5 @@ class RecipeMainFragment : BaseFragment<FragmentRecipeMainBinding>(FragmentRecip
         binding.rvRecipe.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
         adapter.replaceData(itemList)
     }
+
 }
