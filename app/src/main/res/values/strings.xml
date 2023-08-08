@@ -90,7 +90,13 @@
     <string name="shorts_time">00:21</string>
     <string name="shorts_play_time">00:49</string>
     <string name="shorts_upload">커버편집</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <!--  마이페이지  -->
+    <string name="mypage_title">님 맛있는 식사 하세요!</string>
+    <string name="mypage_save_recipe">저장 레시피</string>
+    <string name="mypage_write_recipe">작성 레시피</string>
+    <string name="mypage_my_review">내가 쓴 리뷰</string>
+    <string name="mypage_recent_shorts">최근에 시청한 숏폼</string>
+    <string name="mypage_recent_recipe">최근에 본 레시피</string>
 
 </resources>
