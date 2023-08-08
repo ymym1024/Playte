@@ -11,12 +11,24 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners
+import com.bumptech.glide.request.RequestOptions
 import java.text.SimpleDateFormat
 
 fun ImageView.loadImagesWithGlide(url: String) {
     Glide.with(this)
         .load(url)
         .centerCrop()
+        .diskCacheStrategy(DiskCacheStrategy.ALL)
+        .into(this)
+}
+
+fun ImageView.loadImagesWithGlideRound(url: String,radius:Int) {
+
+    Glide.with(this)
+        .load(url)
+        .centerCrop()
+        .transform(RoundedCorners(radius))
         .diskCacheStrategy(DiskCacheStrategy.ALL)
         .into(this)
 }
