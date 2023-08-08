@@ -10,7 +10,7 @@ import com.cmc.recipe.presentation.ui.base.BaseHolder
 import com.cmc.recipe.presentation.ui.base.OnClickListener
 import com.cmc.recipe.utils.loadImagesWithGlide
 
-class RecipeListAdapter(private val context:Context,val clickListener: OnClickListener):
+class RecipeListAdapter(val clickListener: OnClickListener):
     BaseAdapter<RecipeItem, ItemRecipeBinding, RecipeItemHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecipeItemHolder {
         return RecipeItemHolder(
@@ -32,9 +32,8 @@ class RecipeItemHolder(viewBinding: ItemRecipeBinding, val clickListener: OnClic
                 it.ivRecipeMain.loadImagesWithGlide("https://recipe1.ezmember.co.kr/cache/recipe/2022/02/02/dbb3f34bfe348a4bb4d142ff353815651.jpg")
                 it.tvRecipeName.text = recipe.name
                 it.tvRecipeTime.text = "${recipe.time}분"
-                it.tvRecipeIngrdient1.text = recipe.ingredient1
-                it.tvRecipeIngrdient2.text = recipe.ingredient2
-                it.tvRecipeIngrdient3.text = recipe.ingredient3
+                it.tvTimeNickname.text = "3분전 | 닉네임"
+                it.tvStarCnt.text = "4.7(104)"
             }
         }
     }

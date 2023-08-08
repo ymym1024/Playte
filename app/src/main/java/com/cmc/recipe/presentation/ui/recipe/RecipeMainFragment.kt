@@ -28,7 +28,7 @@ class RecipeMainFragment : BaseFragment<FragmentRecipeMainBinding>(FragmentRecip
             }
         }
 
-        val adapter = RecipeListAdapter(requireContext(),clickListener)
+        val adapter = RecipeListAdapter(clickListener)
         binding.rvRecipe.adapter = adapter
         binding.rvRecipe.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
         adapter.replaceData(itemList)
