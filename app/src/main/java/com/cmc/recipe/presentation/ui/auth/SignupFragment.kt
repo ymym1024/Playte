@@ -1,5 +1,6 @@
 package com.cmc.recipe.presentation.ui.auth
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.View
@@ -30,13 +31,6 @@ class SignupFragment : BaseFragment<FragmentSignupBinding>(FragmentSignupBinding
 
     private var searchJob: Job? = null
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        val mainActivity = activity as MainActivity
-        mainActivity.hideToolbar(true)
-        mainActivity.hideBottomNavigation(true)
-    }
-
     override fun initFragment() {
         onActiveButton()
         onClickSignup()
@@ -45,13 +39,6 @@ class SignupFragment : BaseFragment<FragmentSignupBinding>(FragmentSignupBinding
     override fun onDestroyView() {
         super.onDestroyView()
         searchJob?.cancel()
-    }
-
-    override fun onStop() {
-        super.onStop()
-        val mainActivity = activity as MainActivity
-        mainActivity.hideToolbar(false)
-        mainActivity.hideBottomNavigation(false)
     }
 
     private fun onActiveButton(){
@@ -113,7 +100,7 @@ class SignupFragment : BaseFragment<FragmentSignupBinding>(FragmentSignupBinding
                         is NetworkState.Success -> {
                             it.data?.let {data ->
                                 if(data.code == "SUCCESS"){ // TODO : 변경
-                                    movePage(R.id.action_signupFragment_to_shortsFragment)
+                                    moveMainActivity()
                                 }else{
                                     Log.d("data","${data.data}")
                                 }
@@ -129,6 +116,11 @@ class SignupFragment : BaseFragment<FragmentSignupBinding>(FragmentSignupBinding
                 }
             }
         }
+    }
+
+    private fun moveMainActivity() {
+        val intent = Intent(activity,MainActivity::class.java)
+        startActivity(intent)
     }
 
     private fun onClickSignup(){
