@@ -85,7 +85,7 @@ class SignupFragment : BaseFragment<FragmentSignupBinding>(FragmentSignupBinding
                                         binding.btnNext.isEnabled = true
                                     }else{
                                         binding.llValidateMsg.text = "중복된 닉네임입니다"
-                                        binding.ivEditIcon.setImageResource(R.drawable.ic_check)
+                                        binding.ivEditIcon.setImageResource(R.drawable.ic_validate_error)
                                         binding.btnNext.isEnabled = false
                                     }
                                 }
@@ -113,9 +113,7 @@ class SignupFragment : BaseFragment<FragmentSignupBinding>(FragmentSignupBinding
                         is NetworkState.Success -> {
                             it.data?.let {data ->
                                 if(data.code == "SUCCESS"){ // TODO : 변경
-                                    Log.d("accesstoken","${data.data.accessToken}")
-                                    Log.d("refreshToken","${data.data.refreshToken}")
-                                    moveNextPage()
+                                    movePage(R.id.action_signupFragment_to_shortsFragment)
                                 }else{
                                     Log.d("data","${data.data}")
                                 }
@@ -140,7 +138,4 @@ class SignupFragment : BaseFragment<FragmentSignupBinding>(FragmentSignupBinding
         }
     }
 
-    private fun moveNextPage(){
-        findNavController().navigate(R.id.action_signupFragment_to_signupCompleteFragment)
-    }
 }
