@@ -1,5 +1,6 @@
 package com.cmc.recipe.presentation.viewmodel
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.cmc.recipe.data.model.response.BaseResponse
@@ -9,6 +10,7 @@ import com.cmc.recipe.data.source.remote.request.RequestNickname
 import com.cmc.recipe.domain.usecase.AuthUseCase
 import com.cmc.recipe.domain.usecase.UserUseCase
 import com.cmc.recipe.utils.NetworkState
+import com.google.gson.Gson
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch

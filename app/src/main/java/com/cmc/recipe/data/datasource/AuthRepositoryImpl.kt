@@ -7,6 +7,7 @@ import com.cmc.recipe.data.source.remote.api.AuthService
 import com.cmc.recipe.data.source.remote.request.RequestNickname
 import com.cmc.recipe.domain.repository.AuthRepository
 import com.cmc.recipe.utils.NetworkState
+import com.google.gson.Gson
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import java.io.IOException
@@ -69,7 +70,10 @@ class AuthRepositoryImpl @Inject constructor(
             }
         }else{
             try {
-                emit(NetworkState.Error(response.code(),response.errorBody()!!.string()))
+                val error = response.errorBody()!!.string().trimIndent()
+                val result = Gson().fromJson(error, BaseResponse::class.java)
+
+                emit(NetworkState.Error(result.code.toInt(),result.message))
             }catch (e: IOException) {
                 e.printStackTrace()
             }
