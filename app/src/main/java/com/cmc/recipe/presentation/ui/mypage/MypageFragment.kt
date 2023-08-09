@@ -27,10 +27,26 @@ class MypageFragment : BaseFragment<FragmentMypageBinding>(FragmentMypageBinding
 
         initMenu()
 
+        initView()
+
         recipeRecyclerview()
 
         shortsRecyclerview()
 
+    }
+
+    private fun initView() {
+        binding.let {
+            it.btnSaveRecipe.setOnClickListener {
+                movePage(R.id.action_mypageFragment_to_saveRecipeFragment)
+            }
+            it.btnWriteRecipe.setOnClickListener {
+                movePage(R.id.action_mypageFragment_to_writeRecipeFragment)
+            }
+            it.btnMyReview.setOnClickListener {
+                movePage(R.id.action_mypageFragment_to_myReviewFragment)
+            }
+        }
     }
 
     private fun initMenu(){
@@ -44,7 +60,7 @@ class MypageFragment : BaseFragment<FragmentMypageBinding>(FragmentMypageBinding
             override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
                 return when (menuItem.itemId) {
                     R.id.menu_edit_button -> {
-                        movePage()
+                        movePage(R.id.action_mypageFragment_to_settingFragment)
                         true
                     }
                     else -> false
@@ -53,16 +69,12 @@ class MypageFragment : BaseFragment<FragmentMypageBinding>(FragmentMypageBinding
         }, viewLifecycleOwner, Lifecycle.State.RESUMED)
     }
 
-    private fun movePage(){
-        findNavController().navigate(R.id.action_mypageFragment_to_settingFragment)
-    }
-
     private fun recipeRecyclerview(){
         val itemList = arrayListOf(
-            RecipeItem(image_url = "https://recipe1.ezmember.co.kr/cache/recipe/2022/02/02/dbb3f34bfe348a4bb4d142ff353815651.jpg", name = "토마토 계란 볶음밥", time = 10, ingredient1 = "토마토", ingredient2 = "계란", ingredient3 = "밥"),
-            RecipeItem(image_url = "https://recipe1.ezmember.co.kr/cache/recipe/2022/02/02/dbb3f34bfe348a4bb4d142ff353815651.jpg", name = "토마토 계란 볶음밥", time = 10, ingredient1 = "토마토", ingredient2 = "계란", ingredient3 = "밥"),
-            RecipeItem(image_url = "https://recipe1.ezmember.co.kr/cache/recipe/2022/02/02/dbb3f34bfe348a4bb4d142ff353815651.jpg", name = "토마토 계란 볶음밥", time = 10, ingredient1 = "토마토", ingredient2 = "계란", ingredient3 = "밥"),
-            RecipeItem(image_url = "https://recipe1.ezmember.co.kr/cache/recipe/2022/02/02/dbb3f34bfe348a4bb4d142ff353815651.jpg", name = "토마토 계란 볶음밥", time = 10, ingredient1 = "토마토", ingredient2 = "계란", ingredient3 = "밥"),
+            RecipeItem(image_url = "https://recipe1.ezmember.co.kr/cache/recipe/2022/02/02/dbb3f34bfe348a4bb4d142ff353815651.jpg", name = "토마토 계란 볶음밥", time = 10, nickName = "구땡뿡야",star=30, flag = true),
+            RecipeItem(image_url = "https://recipe1.ezmember.co.kr/cache/recipe/2022/02/02/dbb3f34bfe348a4bb4d142ff353815651.jpg", name = "토마토 계란 볶음밥", time = 10, nickName = "구땡뿡야",star=30, flag = false),
+            RecipeItem(image_url = "https://recipe1.ezmember.co.kr/cache/recipe/2022/02/02/dbb3f34bfe348a4bb4d142ff353815651.jpg", name = "토마토 계란 볶음밥", time = 10, nickName = "구땡뿡야",star=30, flag = false),
+            RecipeItem(image_url = "https://recipe1.ezmember.co.kr/cache/recipe/2022/02/02/dbb3f34bfe348a4bb4d142ff353815651.jpg", name = "토마토 계란 볶음밥", time = 10, nickName = "구땡뿡야",star=30, flag = true),
         )
 
         val adapter = RecipeRecommendAdapter(requireContext())
