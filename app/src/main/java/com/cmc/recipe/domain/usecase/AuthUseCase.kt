@@ -12,5 +12,5 @@ class AuthUseCase @Inject constructor(
 
     fun login(accessToken:String) = repository.login(accessToken)
 
-    fun logout(refreshToken:String) = repository.logout(refreshToken)
+    fun logout(accessToken:String,refreshToken:String) = repository.logout(accessToken,refreshToken)
 }

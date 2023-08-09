@@ -57,7 +57,9 @@ class SettingFragment : BaseFragment<FragmentSettingBinding>(FragmentSettingBind
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED){
                 val refreshToken = MainApplication.tokenManager.getRefreshToken()
-                authViewModel.logout(refreshToken)
+                val accessToken = MainApplication.tokenManager.getAccessToken()
+
+                authViewModel.logout(accessToken,refreshToken)
                 authViewModel.logoutResult.collect{
                     when(it){
                         is NetworkState.Success -> {
