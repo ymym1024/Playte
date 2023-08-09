@@ -62,7 +62,7 @@ class AuthRepositoryImpl @Inject constructor(
         }
     }
 
-    override fun refreshToken(refreshToken: String): Flow<NetworkState<LoginResponse>> = flow{
+    override fun refreshToken(refreshToken: String): Flow<NetworkState<SignupResponse>> = flow{
         val response = service.refreshToken(refreshToken)
         if(response.isSuccessful){
             response.body()?.let {
