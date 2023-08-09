@@ -3,6 +3,7 @@ package com.cmc.recipe.presentation.ui.auth
 import android.app.Activity
 import android.os.Bundle
 import android.util.Log
+import androidx.activity.addCallback
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
@@ -50,6 +51,10 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(FragmentLoginBinding::i
     override fun initFragment() {
         googleAuth = FirebaseAuth.getInstance()
         initListener()
+
+        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) {
+            requireActivity().finish()
+        }
     }
 
     override fun onStop() {

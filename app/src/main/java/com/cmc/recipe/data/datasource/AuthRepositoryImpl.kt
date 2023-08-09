@@ -1,5 +1,6 @@
 package com.cmc.recipe.data.datasource
 
+import com.cmc.recipe.data.model.response.BaseResponse
 import com.cmc.recipe.data.model.response.LoginResponse
 import com.cmc.recipe.data.model.response.SignupResponse
 import com.cmc.recipe.data.source.remote.api.AuthService
@@ -32,6 +33,21 @@ class AuthRepositoryImpl @Inject constructor(
 
     override fun login(accessToken: String): Flow<NetworkState<LoginResponse>> = flow {
         val response = service.login(accessToken)
+        if(response.isSuccessful){
+            response.body()?.let {
+                emit(NetworkState.Success(it))
+            }
+        }else{
+            try {
+                emit(NetworkState.Error(response.code(),response.errorBody()!!.string()))
+            }catch (e: IOException) {
+                e.printStackTrace()
+            }
+        }
+    }
+
+    override fun logout(refreshToken: String): Flow<NetworkState<BaseResponse>> = flow{
+        val response = service.logout(refreshToken)
         if(response.isSuccessful){
             response.body()?.let {
                 emit(NetworkState.Success(it))
