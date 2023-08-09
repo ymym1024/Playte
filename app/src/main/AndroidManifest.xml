@@ -30,6 +30,9 @@
         android:theme="@style/Theme.Recipe_Android"
         tools:targetApi="31">
         <activity
+            android:name=".presentation.ui.auth.AuthActivity"
+            android:exported="true" />
+        <activity
             android:name=".presentation.SplashActivity"
             android:exported="true">
             <intent-filter>
@@ -39,12 +42,10 @@
         </activity>
         <activity
             android:name=".presentation.ui.shortform.ShortsDetailActivity"
-            android:exported="true"/>
+            android:exported="true" />
         <activity
             android:name=".presentation.MainActivity"
-            android:exported="true">
-
-        </activity>
+            android:exported="true"></activity>
     </application>
 
 </manifest>
