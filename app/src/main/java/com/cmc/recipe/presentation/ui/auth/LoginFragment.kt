@@ -118,31 +118,6 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(FragmentLoginBinding::i
         }
     }
 
-    private fun firebaseAuthWithGoogle(account: GoogleSignInAccount){
-        Log.d("firebaseAuthWithGoogle", account.id!!)
-        Log.d("idToken", account.idToken!!)
-
-        val credential = GoogleAuthProvider.getCredential(account.idToken, null)
-        googleAuth.signInWithCredential(credential).addOnCompleteListener { task ->
-            if(task.isSuccessful){
-                googleAuth.currentUser?.getIdToken(true)?.addOnCompleteListener { tokenTask ->
-                    if(tokenTask.isSuccessful()){
-                        val accessToken = tokenTask.result.token
-                        Log.d("accessToken","${accessToken}")
-                        if(task.result.additionalUserInfo?.isNewUser == true){
-                            moveSignUpFragment(accessToken.toString())
-                        }else{
-                            // 사용자가 회원가입 후 간편로그인 클릭 했을 때 홈화면으로 바로 이동
-                        }
-                    }
-                }
-            }else{
-                Log.e("isError",task.toString())
-            }
-        }
-    }
-
-
     private fun login(accessToken:String){
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED){
