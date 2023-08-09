@@ -87,13 +87,13 @@
         app:layout_constraintTop_toBottomOf="@+id/tv_recipe_name" />
 
     <androidx.appcompat.widget.AppCompatImageButton
-        android:id="@+id/imageButton7"
+        android:id="@+id/btn_star"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="6dp"
         android:layout_marginEnd="20dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tv_time_nickname"
-        app:srcCompat="@drawable/ic_bookmark_deactive" />
+        android:background="@drawable/ic_bookmark_deactive"
+        app:layout_constraintTop_toBottomOf="@+id/tv_time_nickname" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -23,6 +23,9 @@ class AuthViewModel @Inject constructor(private val AuthUseCase: AuthUseCase) : 
     var _loginResult: MutableStateFlow<NetworkState<LoginResponse>> = MutableStateFlow(NetworkState.Loading)
     var loginResult: StateFlow<NetworkState<LoginResponse>> = _loginResult
 
+    var _logoutResult: MutableStateFlow<NetworkState<BaseResponse>> = MutableStateFlow(NetworkState.Loading)
+    var logoutResult: StateFlow<NetworkState<BaseResponse>> = _logoutResult
+
     fun signup(accessToken:String,name: String) = viewModelScope.launch {
         val nickname = RequestNickname(name)
         _signupResult.value = NetworkState.Loading
@@ -42,6 +45,17 @@ class AuthViewModel @Inject constructor(private val AuthUseCase: AuthUseCase) : 
                 _loginResult.value = NetworkState.Error(400,"${error.message}")
             }.collect { values ->
                 _loginResult.value = values
+            }
+
+    }
+
+    fun logout(refreshToken:String) = viewModelScope.launch {
+        _logoutResult.value = NetworkState.Loading
+        AuthUseCase.logout(refreshToken)
+            .catch { error ->
+                _logoutResult.value = NetworkState.Error(400,"${error.message}")
+            }.collect { values ->
+                _logoutResult.value = values
             }
 
     }

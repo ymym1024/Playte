@@ -10,6 +10,7 @@ import com.cmc.recipe.databinding.ItemRecipeRecommendBinding
 import com.cmc.recipe.presentation.ui.base.BaseAdapter
 import com.cmc.recipe.presentation.ui.base.BaseHolder
 import com.cmc.recipe.utils.loadImagesWithGlide
+import com.cmc.recipe.utils.loadImagesWithGlideRound
 
 class RecipeRecommendAdapter(private val context:Context):
     BaseAdapter<RecipeItem, ItemRecipeRecommendBinding, RecipeRecommendItemHolder>() {

@@ -11,4 +11,6 @@ class AuthUseCase @Inject constructor(
     fun signup(accessToken:String,nickname: RequestNickname) = repository.signup(accessToken,nickname)
 
     fun login(accessToken:String) = repository.login(accessToken)
+
+    fun logout(refreshToken:String) = repository.logout(refreshToken)
 }

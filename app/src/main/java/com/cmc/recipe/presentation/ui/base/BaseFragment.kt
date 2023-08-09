@@ -57,4 +57,8 @@ abstract class BaseFragment<T:ViewBinding>(private val inflate: Inflate<T>) : Fr
     fun showToastMessage(text:String){
         Toast.makeText(context,text, Toast.LENGTH_SHORT).show()
     }
+
+    fun movePage(naviRes:Int){
+        findNavController().navigate(naviRes)
+    }
 }
