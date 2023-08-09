@@ -59,4 +59,15 @@ class AuthViewModel @Inject constructor(private val AuthUseCase: AuthUseCase) : 
             }
 
     }
+
+    fun refreshToken(refreshToken:String) = viewModelScope.launch {
+        _loginResult.value = NetworkState.Loading
+        AuthUseCase.refreshToken(refreshToken)
+            .catch { error ->
+                _loginResult.value = NetworkState.Error(400,"${error.message}")
+            }.collect { values ->
+                _loginResult.value = values
+            }
+
+    }
 }

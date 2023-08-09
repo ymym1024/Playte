@@ -19,4 +19,8 @@ interface AuthService {
 
     @POST("/api/v1/auth/logout")
     suspend fun logout(@Header("Authorization") accessToken: String?,@Header("Refresh-Token") refreshToken: String?) : Response<BaseResponse>
+
+    @POST("/api/v1/auth/refresh")
+    suspend fun refreshToken(@Header("Refresh-Token") refreshToken: String?) : Response<LoginResponse>
+
 }
