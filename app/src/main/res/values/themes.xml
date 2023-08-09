@@ -2,7 +2,7 @@
     <!-- Base application theme. -->
     <style name="Theme.Recipe_Android" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <!-- Primary brand color. -->
-경        <item name="colorPrimary">@color/primary_color</item>
+        <item name="colorPrimary">@color/primary_color</item>
         <item name="colorPrimaryVariant">@color/purple_700</item>
         <item name="colorOnPrimary">@color/white</item>
         <!-- Secondary brand color. -->
@@ -14,12 +14,12 @@
         <item name="android:windowLightStatusBar">true</item>
         <!-- Customize your theme here. -->
     </style>
-    <style name="Theme.Recipe_Android.Splash" parent="Theme.SplashScreen">
-        <item name="windowSplashScreenBackground">@color/white</item>
-        <item name="windowSplashScreenAnimatedIcon">@drawable/splash_content</item>
-        <item name="windowSplashScreenAnimationDuration">2000</item>
-        <item name="postSplashScreenTheme">@style/Theme.Recipe_Android</item>
-    </style>
+<!--    <style name="Theme.Recipe_Android.Splash" parent="Theme.SplashScreen">-->
+<!--        <item name="windowSplashScreenBackground">@color/white</item>-->
+<!--        <item name="windowSplashScreenAnimatedIcon">@drawable/splash_content</item>-->
+<!--        <item name="windowSplashScreenAnimationDuration">2000</item>-->
+<!--        <item name="postSplashScreenTheme">@style/Theme.Recipe_Android</item>-->
+<!--    </style>-->
     <style name="BottomSheetDialog" parent="Theme.Design.Light.BottomSheetDialog">
         <item name="android:windowIsTranslucent">true</item>
         <item name="bottomSheetStyle">@style/bottomSheetStyleWrapper</item>
