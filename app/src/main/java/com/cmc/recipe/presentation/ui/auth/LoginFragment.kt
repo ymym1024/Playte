@@ -13,7 +13,7 @@ import androidx.navigation.fragment.findNavController
 import com.cmc.recipe.BuildConfig
 import com.cmc.recipe.MainApplication
 import com.cmc.recipe.databinding.FragmentLoginBinding
-import com.cmc.recipe.presentation.MainActivity
+import com.cmc.recipe.presentation.ui.MainActivity
 import com.cmc.recipe.presentation.ui.base.BaseFragment
 import com.cmc.recipe.presentation.viewmodel.AuthViewModel
 import com.cmc.recipe.presentation.viewmodel.GoogleViewModel
@@ -143,7 +143,7 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(FragmentLoginBinding::i
     }
 
     private fun moveMainActivity() {
-        val intent = Intent(activity,MainActivity::class.java)
+        val intent = Intent(activity, MainActivity::class.java)
         startActivity(intent)
     }
 

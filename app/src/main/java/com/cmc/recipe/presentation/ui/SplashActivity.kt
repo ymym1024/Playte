@@ -1,4 +1,4 @@
-package com.cmc.recipe.presentation
+package com.cmc.recipe.presentation.ui
 
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
@@ -110,7 +110,7 @@ class SplashActivity : AppCompatActivity() {
     }
 
     private fun goMain(){
-        val intent = Intent(this@SplashActivity,MainActivity::class.java)
+        val intent = Intent(this@SplashActivity, MainActivity::class.java)
         startActivity(intent)
         finish()
     }

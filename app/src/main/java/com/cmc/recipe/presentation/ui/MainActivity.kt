@@ -1,4 +1,4 @@
-package com.cmc.recipe.presentation
+package com.cmc.recipe.presentation.ui
 
 import android.graphics.drawable.Drawable
 import androidx.appcompat.app.AppCompatActivity

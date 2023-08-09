@@ -1,18 +1,16 @@
 package com.cmc.recipe.presentation.ui.auth
 
 import android.content.Intent
-import android.os.Bundle
 import android.util.Log
 import android.view.View
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
-import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.cmc.recipe.R
 import com.cmc.recipe.databinding.FragmentSignupBinding
-import com.cmc.recipe.presentation.MainActivity
+import com.cmc.recipe.presentation.ui.MainActivity
 import com.cmc.recipe.presentation.ui.base.BaseFragment
 import com.cmc.recipe.presentation.viewmodel.AuthViewModel
 import com.cmc.recipe.presentation.viewmodel.UserViewModel
@@ -119,7 +117,7 @@ class SignupFragment : BaseFragment<FragmentSignupBinding>(FragmentSignupBinding
     }
 
     private fun moveMainActivity() {
-        val intent = Intent(activity,MainActivity::class.java)
+        val intent = Intent(activity, MainActivity::class.java)
         startActivity(intent)
     }
 
