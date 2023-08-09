@@ -41,10 +41,6 @@ class SettingFragment : BaseFragment<FragmentSettingBinding>(FragmentSettingBind
         binding.textView50.text = "CMC냉파"
     }
 
-    private fun movePage(naviRes:Int){
-        findNavController().navigate(naviRes)
-    }
-
     private fun logout(){
 
     }
