@@ -46,7 +46,7 @@ class RecipeItemHolder(viewBinding: ItemRecipeBinding, val type:String,val click
             clickListener.onMovePage(0)
         }
 
-        if(type ==Constant.WRITE){
+        if(type == Constant.WRITE){
             binding.btnStar.setBackgroundResource(R.drawable.ic_trash)
         }
 
