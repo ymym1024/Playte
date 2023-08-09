@@ -2,7 +2,6 @@ package com.cmc.recipe.presentation.ui.upload
 
 import android.Manifest
 import android.app.Activity
-import android.app.AlertDialog
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
@@ -16,7 +15,6 @@ import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.view.MenuHost
 import androidx.core.view.MenuProvider
@@ -25,10 +23,9 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.cmc.recipe.R
 import com.cmc.recipe.data.model.Ingredient
 import com.cmc.recipe.databinding.FragmentUploadShortsBinding
-import com.cmc.recipe.presentation.MainActivity
+import com.cmc.recipe.presentation.ui.MainActivity
 import com.cmc.recipe.presentation.ui.base.BaseFragment
 import com.cmc.recipe.utils.Constant.PICK_VIDEO_REQUEST
-import com.cmc.recipe.utils.Constant.READ_EXTERNAL_STORAGE_REQUEST
 import com.cmc.recipe.utils.convertLongToTime
 
 class UploadShortsFragment : BaseFragment<FragmentUploadShortsBinding>(FragmentUploadShortsBinding::inflate) {

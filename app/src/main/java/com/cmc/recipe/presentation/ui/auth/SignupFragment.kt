@@ -1,17 +1,16 @@
 package com.cmc.recipe.presentation.ui.auth
 
-import android.os.Bundle
+import android.content.Intent
 import android.util.Log
 import android.view.View
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
-import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.cmc.recipe.R
 import com.cmc.recipe.databinding.FragmentSignupBinding
-import com.cmc.recipe.presentation.MainActivity
+import com.cmc.recipe.presentation.ui.MainActivity
 import com.cmc.recipe.presentation.ui.base.BaseFragment
 import com.cmc.recipe.presentation.viewmodel.AuthViewModel
 import com.cmc.recipe.presentation.viewmodel.UserViewModel
@@ -30,13 +29,6 @@ class SignupFragment : BaseFragment<FragmentSignupBinding>(FragmentSignupBinding
 
     private var searchJob: Job? = null
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        val mainActivity = activity as MainActivity
-        mainActivity.hideToolbar(true)
-        mainActivity.hideBottomNavigation(true)
-    }
-
     override fun initFragment() {
         onActiveButton()
         onClickSignup()
@@ -45,13 +37,6 @@ class SignupFragment : BaseFragment<FragmentSignupBinding>(FragmentSignupBinding
     override fun onDestroyView() {
         super.onDestroyView()
         searchJob?.cancel()
-    }
-
-    override fun onStop() {
-        super.onStop()
-        val mainActivity = activity as MainActivity
-        mainActivity.hideToolbar(false)
-        mainActivity.hideBottomNavigation(false)
     }
 
     private fun onActiveButton(){
@@ -85,7 +70,7 @@ class SignupFragment : BaseFragment<FragmentSignupBinding>(FragmentSignupBinding
                                         binding.btnNext.isEnabled = true
                                     }else{
                                         binding.llValidateMsg.text = "중복된 닉네임입니다"
-                                        binding.ivEditIcon.setImageResource(R.drawable.ic_check)
+                                        binding.ivEditIcon.setImageResource(R.drawable.ic_validate_error)
                                         binding.btnNext.isEnabled = false
                                     }
                                 }
@@ -113,9 +98,7 @@ class SignupFragment : BaseFragment<FragmentSignupBinding>(FragmentSignupBinding
                         is NetworkState.Success -> {
                             it.data?.let {data ->
                                 if(data.code == "SUCCESS"){ // TODO : 변경
-                                    Log.d("accesstoken","${data.data.accessToken}")
-                                    Log.d("refreshToken","${data.data.refreshToken}")
-                                    moveNextPage()
+                                    moveMainActivity()
                                 }else{
                                     Log.d("data","${data.data}")
                                 }
@@ -133,6 +116,11 @@ class SignupFragment : BaseFragment<FragmentSignupBinding>(FragmentSignupBinding
         }
     }
 
+    private fun moveMainActivity() {
+        val intent = Intent(activity, MainActivity::class.java)
+        startActivity(intent)
+    }
+
     private fun onClickSignup(){
         binding.btnNext.setOnClickListener {
             val nickname = binding.etNickName.text.toString()
@@ -140,7 +128,4 @@ class SignupFragment : BaseFragment<FragmentSignupBinding>(FragmentSignupBinding
         }
     }
 
-    private fun moveNextPage(){
-        findNavController().navigate(R.id.action_signupFragment_to_signupCompleteFragment)
-    }
 }

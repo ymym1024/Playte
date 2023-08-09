@@ -1,7 +1,7 @@
 package com.cmc.recipe.presentation.ui.auth
 
 import android.app.Activity
-import android.os.Bundle
+import android.content.Intent
 import android.util.Log
 import androidx.activity.addCallback
 import androidx.activity.result.contract.ActivityResultContracts
@@ -12,9 +12,8 @@ import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import com.cmc.recipe.BuildConfig
 import com.cmc.recipe.MainApplication
-import com.cmc.recipe.R
 import com.cmc.recipe.databinding.FragmentLoginBinding
-import com.cmc.recipe.presentation.MainActivity
+import com.cmc.recipe.presentation.ui.MainActivity
 import com.cmc.recipe.presentation.ui.base.BaseFragment
 import com.cmc.recipe.presentation.viewmodel.AuthViewModel
 import com.cmc.recipe.presentation.viewmodel.GoogleViewModel
@@ -28,7 +27,6 @@ import com.google.android.gms.common.api.ApiException
 import com.google.android.gms.common.api.Scope
 import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.GoogleAuthProvider
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
@@ -41,13 +39,6 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(FragmentLoginBinding::i
     private val googleSignInClient: GoogleSignInClient by lazy { getGoogleClient() }
     private lateinit var googleAuth: FirebaseAuth
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        val mainActivity = activity as MainActivity
-        mainActivity.hideToolbar(true)
-        mainActivity.hideBottomNavigation(true)
-    }
-
     override fun initFragment() {
         googleAuth = FirebaseAuth.getInstance()
         initListener()
@@ -55,13 +46,6 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(FragmentLoginBinding::i
         requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) {
             requireActivity().finish()
         }
-    }
-
-    override fun onStop() {
-        super.onStop()
-        val mainActivity = activity as MainActivity
-        mainActivity.hideToolbar(false)
-        mainActivity.hideBottomNavigation(false)
     }
 
     private fun initListener(){
@@ -118,31 +102,6 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(FragmentLoginBinding::i
         }
     }
 
-    private fun firebaseAuthWithGoogle(account: GoogleSignInAccount){
-        Log.d("firebaseAuthWithGoogle", account.id!!)
-        Log.d("idToken", account.idToken!!)
-
-        val credential = GoogleAuthProvider.getCredential(account.idToken, null)
-        googleAuth.signInWithCredential(credential).addOnCompleteListener { task ->
-            if(task.isSuccessful){
-                googleAuth.currentUser?.getIdToken(true)?.addOnCompleteListener { tokenTask ->
-                    if(tokenTask.isSuccessful()){
-                        val accessToken = tokenTask.result.token
-                        Log.d("accessToken","${accessToken}")
-                        if(task.result.additionalUserInfo?.isNewUser == true){
-                            moveSignUpFragment(accessToken.toString())
-                        }else{
-                            // 사용자가 회원가입 후 간편로그인 클릭 했을 때 홈화면으로 바로 이동
-                        }
-                    }
-                }
-            }else{
-                Log.e("isError",task.toString())
-            }
-        }
-    }
-
-
     private fun login(accessToken:String){
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED){
@@ -157,7 +116,7 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(FragmentLoginBinding::i
                                         val refreshToken = data.data.jwtTokens.refreshToken
 
                                         saveTokens(accessToken,refreshToken)
-                                        moveMainFragment()
+                                        moveMainActivity()
                                     } else {
                                         moveSignUpFragment(accessToken)
                                     }
@@ -183,8 +142,9 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(FragmentLoginBinding::i
         findNavController().navigate(directions)
     }
 
-    private fun moveMainFragment() {
-        findNavController().navigate(R.id.action_loginFragment_to_recipeMainFragment)
+    private fun moveMainActivity() {
+        val intent = Intent(activity, MainActivity::class.java)
+        startActivity(intent)
     }
 
     private fun saveTokens(accessToken: String, refreshToken: String) {

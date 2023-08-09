@@ -1,5 +1,6 @@
 package com.cmc.recipe.domain.usecase
 
+import android.util.Log
 import com.cmc.recipe.data.source.remote.request.RequestNickname
 import com.cmc.recipe.domain.repository.AuthRepository
 import com.cmc.recipe.domain.repository.UserRepository
@@ -12,5 +13,8 @@ class AuthUseCase @Inject constructor(
 
     fun login(accessToken:String) = repository.login(accessToken)
 
-    fun logout(refreshToken:String) = repository.logout(refreshToken)
+    fun logout(accessToken:String,refreshToken:String) = repository.logout(accessToken,refreshToken)
+
+    fun refreshToken(refreshToken:String) = repository.refreshToken(refreshToken)
+
 }

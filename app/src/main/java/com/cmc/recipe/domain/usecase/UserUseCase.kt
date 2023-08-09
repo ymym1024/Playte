@@ -7,5 +7,7 @@ import javax.inject.Inject
 class UserUseCase @Inject constructor(
     private val repository: UserRepository
     ) {
-    suspend fun verifyNickname(nickname: RequestNickname) = repository.getVerifyNickname(nickname)
+    fun verifyNickname(nickname: RequestNickname) = repository.getVerifyNickname(nickname)
+
+    fun getMyInfo() = repository.getMyInfo()
 }

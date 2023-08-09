@@ -1,6 +1,7 @@
 package com.cmc.recipe.di
 
 import com.cmc.recipe.BuildConfig
+import com.cmc.recipe.MainApplication
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -18,6 +19,18 @@ import javax.inject.Singleton
 @InstallIn(SingletonComponent::class)
 object RetrofitModule {
 
+    @Singleton
+    @Provides
+    fun providesNetworkInterceptor() = Interceptor { chain ->
+        val token = MainApplication.tokenManager.getAccessToken()
+        val newRequest = chain.request().newBuilder()
+            .addHeader("Authorization", "$token")
+            .build()
+        val response = chain.proceed(newRequest)
+
+        response.newBuilder().build()
+    }
+
     @Provides
     @Singleton
     fun provideOkHttpClient(): OkHttpClient.Builder {
@@ -25,6 +38,7 @@ object RetrofitModule {
             connectTimeout(5, TimeUnit.SECONDS)
             readTimeout(5, TimeUnit.SECONDS)
             writeTimeout(5, TimeUnit.SECONDS)
+            addInterceptor(providesNetworkInterceptor())
             addInterceptor(HttpLoggingInterceptor().apply {
                 level = HttpLoggingInterceptor.Level.BODY
             })

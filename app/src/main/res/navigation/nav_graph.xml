@@ -3,33 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/settingFragment">
-
-    <fragment
-        android:id="@+id/loginFragment"
-        android:name="com.cmc.recipe.presentation.ui.auth.LoginFragment"
-        android:label="@string/login"
-        tools:layout="@layout/fragment_login" >
-        <action
-            android:id="@+id/action_loginFragment_to_signupFragment"
-            app:destination="@id/signupFragment" />
-        <action
-            android:id="@+id/action_loginFragment_to_recipeMainFragment"
-            app:destination="@id/recipeMainFragment" />
-    </fragment>
-
-    <fragment
-        android:id="@+id/signupFragment"
-        android:name="com.cmc.recipe.presentation.ui.auth.SignupFragment"
-        android:label=""
-        tools:layout="@layout/fragment_signup">
-        <argument
-            android:name="access_token"
-            app:argType="string" />
-        <action
-            android:id="@+id/action_signupFragment_to_signupCompleteFragment"
-            app:destination="@id/signupCompleteFragment" />
-    </fragment>
+    app:startDestination="@id/shortsFragment">
 
     <fragment
         android:id="@+id/recipeMainFragment"
@@ -46,15 +20,6 @@
         android:label=""
         tools:layout="@layout/fragment_recipe_detail" />
 
-    <fragment
-        android:id="@+id/signupCompleteFragment"
-        android:name="com.cmc.recipe.presentation.ui.auth.SignupCompleteFragment"
-        android:label="fragment_signup_complete"
-        tools:layout="@layout/fragment_signup_complete" >
-        <action
-            android:id="@+id/action_signupCompleteFragment_to_recipeMainFragment"
-            app:destination="@id/recipeMainFragment" />
-    </fragment>
     <fragment
         android:id="@+id/shortsFragment"
         android:name="com.cmc.recipe.presentation.ui.shortform.ShortsFragment"

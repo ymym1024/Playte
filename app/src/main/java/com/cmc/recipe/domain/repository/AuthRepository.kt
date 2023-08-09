@@ -12,5 +12,7 @@ interface AuthRepository {
 
     fun login(accessToken:String) : Flow<NetworkState<LoginResponse>>
 
-    fun logout(refreshToken:String) : Flow<NetworkState<BaseResponse>>
+    fun logout(accessToken:String,refreshToken:String) : Flow<NetworkState<BaseResponse>>
+
+    fun refreshToken(refreshToken:String) : Flow<NetworkState<SignupResponse>>
 }

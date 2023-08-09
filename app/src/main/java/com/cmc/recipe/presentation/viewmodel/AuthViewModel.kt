@@ -1,5 +1,6 @@
 package com.cmc.recipe.presentation.viewmodel
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.cmc.recipe.data.model.response.BaseResponse
@@ -9,6 +10,7 @@ import com.cmc.recipe.data.source.remote.request.RequestNickname
 import com.cmc.recipe.domain.usecase.AuthUseCase
 import com.cmc.recipe.domain.usecase.UserUseCase
 import com.cmc.recipe.utils.NetworkState
+import com.google.gson.Gson
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
@@ -25,6 +27,9 @@ class AuthViewModel @Inject constructor(private val AuthUseCase: AuthUseCase) : 
 
     var _logoutResult: MutableStateFlow<NetworkState<BaseResponse>> = MutableStateFlow(NetworkState.Loading)
     var logoutResult: StateFlow<NetworkState<BaseResponse>> = _logoutResult
+
+    var _refreshResult: MutableStateFlow<NetworkState<SignupResponse>> = MutableStateFlow(NetworkState.Loading)
+    var refreshResult: StateFlow<NetworkState<SignupResponse>> = _refreshResult
 
     fun signup(accessToken:String,name: String) = viewModelScope.launch {
         val nickname = RequestNickname(name)
@@ -49,13 +54,24 @@ class AuthViewModel @Inject constructor(private val AuthUseCase: AuthUseCase) : 
 
     }
 
-    fun logout(refreshToken:String) = viewModelScope.launch {
+    fun logout(accessToken:String,refreshToken:String) = viewModelScope.launch {
         _logoutResult.value = NetworkState.Loading
-        AuthUseCase.logout(refreshToken)
+        AuthUseCase.logout(accessToken,refreshToken)
             .catch { error ->
                 _logoutResult.value = NetworkState.Error(400,"${error.message}")
             }.collect { values ->
                 _logoutResult.value = values
+            }
+
+    }
+
+    fun refreshToken(refreshToken:String) = viewModelScope.launch {
+        _refreshResult.value = NetworkState.Loading
+        AuthUseCase.refreshToken(refreshToken)
+            .catch { error ->
+                _refreshResult.value = NetworkState.Error(400,"${error.message}")
+            }.collect { values ->
+                _refreshResult.value = values
             }
 
     }
