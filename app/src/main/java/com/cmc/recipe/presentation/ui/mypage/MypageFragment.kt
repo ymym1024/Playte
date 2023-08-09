@@ -1,8 +1,17 @@
 package com.cmc.recipe.presentation.ui.mypage
 
 
+import android.util.Log
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
+import androidx.core.view.MenuHost
+import androidx.core.view.MenuProvider
+import androidx.lifecycle.Lifecycle
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.cmc.recipe.R
 import com.cmc.recipe.data.model.RecipeItem
 import com.cmc.recipe.data.model.SearchShorts
 import com.cmc.recipe.databinding.FragmentMypageBinding
@@ -16,10 +25,36 @@ class MypageFragment : BaseFragment<FragmentMypageBinding>(FragmentMypageBinding
 
     override fun initFragment() {
 
+        initMenu()
+
         recipeRecyclerview()
 
         shortsRecyclerview()
 
+    }
+
+    private fun initMenu(){
+        val menuHost: MenuHost = requireActivity()
+        menuHost.addMenuProvider(object : MenuProvider {
+            override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
+                // Add menu items here
+                menuInflater.inflate(R.menu.menu_mypage, menu)
+            }
+
+            override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
+                return when (menuItem.itemId) {
+                    R.id.menu_edit_button -> {
+                        movePage()
+                        true
+                    }
+                    else -> false
+                }
+            }
+        }, viewLifecycleOwner, Lifecycle.State.RESUMED)
+    }
+
+    private fun movePage(){
+        findNavController().navigate(R.id.action_mypageFragment_to_settingFragment)
     }
 
     private fun recipeRecyclerview(){

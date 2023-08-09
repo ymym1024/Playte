@@ -94,6 +94,7 @@
 
     <!--  마이페이지  -->
     <string name="mypage_title">님 맛있는 식사 하세요!</string>
+    <string name="setting">설정</string>
     <string name="mypage_save_recipe">저장 레시피</string>
     <string name="mypage_write_recipe">작성 레시피</string>
     <string name="mypage_my_review">내가 쓴 리뷰</string>
