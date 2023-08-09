@@ -3,6 +3,7 @@ package com.cmc.recipe.presentation.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.cmc.recipe.data.model.response.BaseResponse
+import com.cmc.recipe.data.model.response.MyInfoResponse
 import com.cmc.recipe.data.source.remote.request.RequestNickname
 import com.cmc.recipe.domain.usecase.UserUseCase
 import com.cmc.recipe.utils.NetworkState
@@ -17,6 +18,9 @@ class UserViewModel @Inject constructor(private val userUseCase: UserUseCase) : 
     var _verifyResult: MutableStateFlow<NetworkState<BaseResponse>> = MutableStateFlow(NetworkState.Loading)
     var verifyResult: StateFlow<NetworkState<BaseResponse>> = _verifyResult
 
+    var _myInfoResult: MutableStateFlow<NetworkState<MyInfoResponse>> = MutableStateFlow(NetworkState.Loading)
+    var myInfoResult: StateFlow<NetworkState<MyInfoResponse>> = _myInfoResult
+
     fun verifyNickname(name: String) = viewModelScope.launch {
         val nickname = RequestNickname(name)
         _verifyResult.value = NetworkState.Loading
@@ -25,6 +29,17 @@ class UserViewModel @Inject constructor(private val userUseCase: UserUseCase) : 
                 _verifyResult.value = NetworkState.Error(400,"${error.message}")
             }.collect { values ->
                 _verifyResult.value = values
+            }
+
+    }
+
+    fun getMyInfo() = viewModelScope.launch {
+        _myInfoResult.value = NetworkState.Loading
+        userUseCase.getMyInfo()
+            .catch { error ->
+                _myInfoResult.value = NetworkState.Error(400,"${error.message}")
+            }.collect { values ->
+                _myInfoResult.value = values
             }
 
     }
