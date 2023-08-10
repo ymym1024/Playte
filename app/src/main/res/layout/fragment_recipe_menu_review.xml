@@ -41,7 +41,7 @@
                     android:layout_marginTop="27dp"
                     android:layout_marginBottom="31dp"
                     android:background="@color/black"
-                    app:layout_constraintBottom_toTopOf="@+id/recyclerView2"
+                    app:layout_constraintBottom_toTopOf="@+id/rv_image"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
@@ -71,23 +71,60 @@
                     android:layout_marginTop="15dp"
                     android:layout_marginEnd="40dp"
                     android:layout_marginBottom="55dp"
-                    app:layout_constraintBottom_toTopOf="@+id/recyclerView2"
+                    app:layout_constraintBottom_toTopOf="@+id/rv_image"
                     app:layout_constraintEnd_toStartOf="@+id/view"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/textView34" />
 
                 <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/recyclerView2"
+                    android:id="@+id/rv_image"
                     android:layout_width="0dp"
                     android:layout_height="80dp"
                     android:layout_marginStart="15dp"
                     android:layout_marginTop="25dp"
-                    android:layout_marginEnd="15dp"
+                    android:layout_marginEnd="9dp"
                     android:layout_marginBottom="15dp"
                     app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintEnd_toStartOf="@+id/btn_img_review"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/ratingBar2" />
+
+                <androidx.appcompat.widget.AppCompatImageButton
+                    android:id="@+id/btn_img_review"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="31dp"
+                    android:layout_marginEnd="16dp"
+                    android:layout_marginBottom="16dp"
+                    android:background="@drawable/imagebtn"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/view" />
+
+                <TextView
+                    android:id="@+id/textView15"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="25dp"
+                    android:layout_marginEnd="8dp"
+                    android:text="57개"
+                    android:textColor="@color/white"
+                    android:textSize="12sp"
+                    app:layout_constraintEnd_toEndOf="@+id/btn_img_review"
+                    app:layout_constraintStart_toStartOf="@+id/btn_img_review"
+                    app:layout_constraintTop_toTopOf="@+id/btn_img_review" />
+
+                <androidx.appcompat.widget.AppCompatImageButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginBottom="10dp"
+                    android:background="@drawable/ic_next_white"
+                    app:layout_constraintBottom_toBottomOf="@+id/btn_img_review"
+                    app:layout_constraintEnd_toEndOf="@+id/btn_img_review"
+                    app:layout_constraintStart_toStartOf="@+id/btn_img_review" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 

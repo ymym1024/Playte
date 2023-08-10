@@ -10,6 +10,7 @@ import com.cmc.recipe.databinding.FragmentRecipeMenuBinding
 import com.cmc.recipe.databinding.FragmentRecipeMenuReviewBinding
 import com.cmc.recipe.presentation.ui.base.BaseFragment
 import com.cmc.recipe.presentation.ui.base.OnClickListener
+import com.cmc.recipe.presentation.ui.common.ImageAdapter
 
 class RecipeMenuReviewFragment : BaseFragment<FragmentRecipeMenuReviewBinding>(FragmentRecipeMenuReviewBinding::inflate) {
 
@@ -24,6 +25,21 @@ class RecipeMenuReviewFragment : BaseFragment<FragmentRecipeMenuReviewBinding>(F
         )
 
         initRV(itemList)
+
+        initImageRV()
+    }
+
+    private fun initImageRV(){
+        val imageList = arrayListOf(
+            "https://recipe1.ezmember.co.kr/cache/recipe/2022/02/02/dbb3f34bfe348a4bb4d142ff353815651.jpg",
+            "https://recipe1.ezmember.co.kr/cache/recipe/2022/02/02/dbb3f34bfe348a4bb4d142ff353815651.jpg",
+        )
+        val adapter = ImageAdapter()
+        binding.rv.adapter = adapter
+        binding.rvReview.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
+        val dividerItemDecoration = DividerItemDecoration(context, LinearLayoutManager.VERTICAL)
+        binding.rvReview.addItemDecoration(dividerItemDecoration)
+        adapter.replaceData(imageList)
     }
 
     private fun initRV(itemList:ArrayList<RecipeReview>){
