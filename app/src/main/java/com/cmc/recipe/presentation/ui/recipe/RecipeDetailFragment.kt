@@ -8,10 +8,13 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.cmc.recipe.R
 import com.cmc.recipe.data.IngredientItem
+import com.cmc.recipe.data.model.Product
 import com.cmc.recipe.data.model.RecipeItem
 import com.cmc.recipe.data.model.RecipeOrder
 import com.cmc.recipe.databinding.FragmentRecipeDetailBinding
 import com.cmc.recipe.presentation.ui.base.BaseFragment
+import com.cmc.recipe.presentation.ui.shortform.ShortsProductAdapter
+import com.cmc.recipe.presentation.ui.shortform.ShortsProductItemHolder
 import com.cmc.recipe.utils.loadImagesWithGlide
 
 
@@ -21,6 +24,7 @@ class RecipeDetailFragment : BaseFragment<FragmentRecipeDetailBinding>(FragmentR
         initRecipeRV()
         initRecipeIngredientRV()
         initRecommendRV()
+        initProductRV()
     }
 
     private fun initDatabinding(){
@@ -64,6 +68,23 @@ class RecipeDetailFragment : BaseFragment<FragmentRecipeDetailBinding>(FragmentR
         val adapter = RecipeOrderAdapter(requireContext())
         binding.rvRecipeList.adapter = adapter
         binding.rvRecipeList.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
+        adapter.replaceData(itemList)
+    }
+
+    private fun initProductRV(){
+        val itemList = arrayListOf(
+            Product(image = "https://recipe1.ezmember.co.kr/cache/recipe/2022/02/02/dbb3f34bfe348a4bb4d142ff353815651.jpg",name="전남 국내산 대추방...", price = 18000),
+            Product(image = "https://recipe1.ezmember.co.kr/cache/recipe/2022/02/02/dbb3f34bfe348a4bb4d142ff353815651.jpg",name="전남 국내산 대추방...", price = 18000),
+            Product(image = "https://recipe1.ezmember.co.kr/cache/recipe/2022/02/02/dbb3f34bfe348a4bb4d142ff353815651.jpg",name="전남 국내산 대추방...", price = 18000),
+        )
+
+        val adapter = ShortsProductAdapter(object : ShortsProductItemHolder.OnClickListener{
+            override fun onMoveSite(url: String) {
+
+            }
+        })
+        binding.rvRecipeProduct.adapter = adapter
+        binding.rvRecipeProduct.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
         adapter.replaceData(itemList)
     }
 
