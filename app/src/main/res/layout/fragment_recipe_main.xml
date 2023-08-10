@@ -139,45 +139,43 @@
                 app:layout_constraintTop_toBottomOf="@+id/imageButton3">
 
                 <androidx.appcompat.widget.AppCompatButton
-                    android:id="@+id/btn_newest"
+                    android:id="@+id/btn_new"
                     android:layout_width="wrap_content"
-                    android:layout_height="29dp"
-                    android:layout_marginEnd="9dp"
-                    android:background="@drawable/btn_selected_color"
-                    android:paddingStart="14dp"
-                    android:paddingTop="6dp"
-                    android:paddingEnd="14dp"
-                    android:paddingBottom="6dp"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/bg_custom_bedge"
+                    android:minWidth="57dp"
+                    android:minHeight="29dp"
+                    android:clickable="true"
+                    android:layout_marginEnd="10dp"
                     android:text="@string/newest"
-                    android:textColor="@color/ic_main_background" />
+                    android:textSize="14sp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
 
                 <androidx.appcompat.widget.AppCompatButton
                     android:id="@+id/btn_popular"
                     android:layout_width="wrap_content"
-                    android:layout_height="29dp"
-                    android:layout_marginEnd="9dp"
-                    android:background="@drawable/btn_selected_color"
-                    android:enabled="false"
-                    android:paddingStart="14dp"
-                    android:paddingTop="6dp"
-                    android:paddingEnd="14dp"
-                    android:paddingBottom="6dp"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/bg_custom_bedge"
+                    android:minWidth="57dp"
+                    android:minHeight="29dp"
+                    android:layout_marginEnd="10dp"
                     android:text="@string/popular"
-                    android:textColor="@color/ic_main_background" />
+                    android:textSize="14sp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
 
                 <androidx.appcompat.widget.AppCompatButton
                     android:id="@+id/btn_minimum"
                     android:layout_width="wrap_content"
-                    android:layout_height="29dp"
-                    android:layout_marginEnd="9dp"
-                    android:background="@drawable/btn_selected_color"
-                    android:enabled="false"
-                    android:paddingStart="14dp"
-                    android:paddingTop="6dp"
-                    android:paddingEnd="14dp"
-                    android:paddingBottom="6dp"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/bg_custom_bedge"
+                    android:minHeight="29dp"
+                    android:layout_marginEnd="10dp"
                     android:text="@string/minimum_time"
-                    android:textColor="@color/ic_main_background" />
+                    android:textSize="14sp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
             </LinearLayout>
 
             <androidx.recyclerview.widget.RecyclerView
@@ -194,16 +192,5 @@
                 app:layout_constraintVertical_bias="0.0" />
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/floatingActionButton2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="20dp"
-        android:layout_marginBottom="30dp"
-        android:clickable="true"
-        android:src="@drawable/ic_recipe_add"
-        app:backgroundTint="@color/primary_color"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

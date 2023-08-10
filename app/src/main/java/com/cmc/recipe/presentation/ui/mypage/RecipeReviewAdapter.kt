@@ -49,7 +49,7 @@ class RecipeReviewItemHolder(viewBinding: ItemMypageReviewBinding,val clickListe
                 it.ratingBar.rating = review.stars.toFloat()
                 it.tvReviewText.text = review.content
 
-                val adapter = ImageAdapter()
+                val adapter = ImageAdapter(80)
                 it.rvReviewImage.adapter = adapter
                 it.rvReviewImage.layoutManager = LinearLayoutManager(binding.root.context ,LinearLayoutManager.HORIZONTAL, false)
                 adapter.replaceData(review.image_list)

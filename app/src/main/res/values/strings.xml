@@ -35,13 +35,16 @@
     <string name="minimum_time">최소 시간순</string>
     <string name="comment">댓글</string>
     <string name="reply">답글</string>
+    <string name="no_favorite">관심 없음</string>
+    <string name="alert">신고하기</string>
+    <string name="send_reply">의견보내기</string>
 
     <!-- 레시피 -->
     <string name="recipe_searchview_hint">레시피 및 재료를 검색해보세요.</string>
     <string name="ingredient">재료</string>
     <string name="spices">양념</string>
     <string name="recipe_recommend_info">이런 레시피는 어때요?</string>
-    <string name="recipe_review">리뷰작성하기</string>
+    <string name="recipe_review">리뷰 작성</string>
     <string name="recipe_recent_search">최근 검색어</string>
     <string name="recipe_popular_search">인기 검색어</string>
     <string name="recipe_review_msg">레시피는 어떠셨나요?</string>

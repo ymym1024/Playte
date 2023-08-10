@@ -8,6 +8,7 @@ import com.cmc.recipe.databinding.ItemRecipeOrderBinding
 import com.cmc.recipe.presentation.ui.base.BaseAdapter
 import com.cmc.recipe.presentation.ui.base.BaseHolder
 import com.cmc.recipe.utils.loadImagesWithGlide
+import com.cmc.recipe.utils.loadImagesWithGlideRound
 
 class RecipeOrderAdapter(private val context:Context):
     BaseAdapter<RecipeOrder, ItemRecipeOrderBinding, RecipeOrderItemHolder>() {
@@ -23,10 +24,9 @@ class RecipeOrderItemHolder(viewBinding: ItemRecipeOrderBinding):
     override fun bind(binding: ItemRecipeOrderBinding, item: RecipeOrder?) {
         binding.let { view ->
             item?.let { order ->
-                view.ivThumbnail.loadImagesWithGlide(order.recipeImage)
+                view.ivThumbnail.loadImagesWithGlideRound(order.recipeImage,8)
                 view.tvOrder.text = "0${order.recipeOrder}"
                 view.tvOrderTitle.text = order.recipeInfo
-                view.tvOrderDetail.text = order.recipeDetail
             }
         }
 

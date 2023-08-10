@@ -1,24 +1,56 @@
 package com.cmc.recipe.presentation.ui.recipe
 
+import android.annotation.SuppressLint
+import android.content.Context
 import android.os.Bundle
+import android.util.Log
+import android.view.*
+import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import androidx.core.view.MenuHost
+import androidx.core.view.MenuProvider
+import androidx.core.view.ViewCompat
+import androidx.core.view.updatePadding
+import androidx.lifecycle.Lifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.cmc.recipe.R
+import com.cmc.recipe.data.IngredientItem
+import com.cmc.recipe.data.model.Product
 import com.cmc.recipe.data.model.RecipeItem
 import com.cmc.recipe.data.model.RecipeOrder
 import com.cmc.recipe.databinding.FragmentRecipeDetailBinding
+import com.cmc.recipe.presentation.ui.MainActivity
 import com.cmc.recipe.presentation.ui.base.BaseFragment
-import com.cmc.recipe.utils.loadImagesWithGlide
+import com.cmc.recipe.presentation.ui.common.RemoveBottomSheetFragment
+import com.cmc.recipe.presentation.ui.shortform.ShortsProductAdapter
+import com.cmc.recipe.presentation.ui.shortform.ShortsProductItemHolder
+import com.cmc.recipe.utils.*
+import com.google.android.material.bottomsheet.BottomSheetDialog
 
 
 class RecipeDetailFragment : BaseFragment<FragmentRecipeDetailBinding>(FragmentRecipeDetailBinding::inflate) {
+
+    override fun onStop() {
+        super.onStop()
+
+        val activity = activity as RecipeActivity
+        activity.hideToolbar(false)
+    }
+
     override fun initFragment() {
+
+        val activity = activity as RecipeActivity
+        activity.hideToolbar(true)
+
+
+        initMenu()
+
         initDatabinding()
         initRecipeRV()
+        initRecipeIngredientRV()
         initRecommendRV()
+        initProductRV()
+
     }
 
     private fun initDatabinding(){
@@ -28,17 +60,99 @@ class RecipeDetailFragment : BaseFragment<FragmentRecipeDetailBinding>(FragmentR
         binding.tvRecipeInfo.text = "토마토가 많아서 볶아먹고 삶아먹고 이젠 밥에도 넣어봤어요"
         binding.tvRecipeDate.text = "2023.02.12"
 
+        // 상세정보 바인딩
+        binding.tvScore.text = "${4.7}"
+        binding.tvPeople.text = "2인분"
+        binding.tvTime.text = "10분"
+
+        binding.tvPeople.setOnClickListener {
+            showBottomSheet()
+        }
+        binding.btnReview.setOnClickListener {
+            movePage(R.id.action_recipeDetailFragment_to_recipeMenuFragment)
+        }
+
+        binding.btnWriteReview.setOnClickListener {
+            movePage(R.id.action_recipeDetailFragment_to_recipeReviewFragment)
+        }
+
+    }
+
+    private fun initMenu(){
+        // 프래그먼트 내에서 투명한 상태 표시줄 설정
+        requireActivity().setStatusBarTransparent()
+        Log.d("initMenu test","${requireContext().navigationHeight()}")
+
+        binding.innerContainer.setPadding(
+            0,
+            requireContext().statusBarHeight(),
+            0,
+            0
+        )
+
+        binding.btnBack.setOnClickListener {
+            requireActivity().onBackPressed()
+        }
+
+        binding.btnMore.setOnClickListener {
+            showBottomSheet()
+        }
+
+    }
+
+    private fun showBottomSheet(){
+        BottomSheetDetailDialog().show(fragmentManager!!, "RemoveBottomSheetFragment")
+    }
+
+    private fun initRecipeIngredientRV(){
+        val itemList = arrayListOf(
+            IngredientItem(name = "토마토", cnt = "3개"),
+            IngredientItem(name = "계란", cnt = "3개"),
+            IngredientItem(name = "대파", cnt = "3개"),
+        )
+
+        val itemList1 = arrayListOf(
+            IngredientItem(name = "굴소스", cnt = "2T"),
+            IngredientItem(name = "소금", cnt = "2T"),
+        )
+
+        val adapter = RecipeIngredientAdapter()
+        binding.rvIngredient.adapter = adapter
+        binding.rvIngredient.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
+        adapter.replaceData(itemList)
+
+        val adapter1 = RecipeIngredientAdapter()
+        binding.rvSpices.adapter = adapter1
+        binding.rvSpices.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
+        adapter1.replaceData(itemList1)
     }
 
     private fun initRecipeRV(){
         val itemList = arrayListOf(
-            RecipeOrder(recipeImage = "", recipeInfo = "그릇에 옮기기", recipeOrder = 1, recipeDetail = "당근이 노릇노릇하게 익으면 다 익은 당근을 그릇에 옮겨 20분 정도 냉장고에서 식혀주세요."),
-            RecipeOrder(recipeImage = "", recipeInfo = "그릇에 옮기기", recipeOrder = 1, recipeDetail = "당근이 노릇노릇하게 익으면 다 익은 당근을 그릇에 옮겨 20분 정도 냉장고에서 식혀주세요."),
+            RecipeOrder(recipeImage = "https://recipe1.ezmember.co.kr/cache/recipe/2022/02/02/dbb3f34bfe348a4bb4d142ff353815651.jpg", recipeInfo = "그릇에 옮기기", recipeOrder = 1, recipeDetail = "당근이 노릇노릇하게 익으면 다 익은 당근을 그릇에 옮겨 20분 정도 냉장고에서 식혀주세요."),
+            RecipeOrder(recipeImage = "https://recipe1.ezmember.co.kr/cache/recipe/2022/02/02/dbb3f34bfe348a4bb4d142ff353815651.jpg", recipeInfo = "그릇에 옮기기", recipeOrder = 1, recipeDetail = "당근이 노릇노릇하게 익으면 다 익은 당근을 그릇에 옮겨 20분 정도 냉장고에서 식혀주세요."),
         )
 
         val adapter = RecipeOrderAdapter(requireContext())
         binding.rvRecipeList.adapter = adapter
         binding.rvRecipeList.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
+        adapter.replaceData(itemList)
+    }
+
+    private fun initProductRV(){
+        val itemList = arrayListOf(
+            Product(image = "https://recipe1.ezmember.co.kr/cache/recipe/2022/02/02/dbb3f34bfe348a4bb4d142ff353815651.jpg",name="전남 국내산 대추방...", price = 18000),
+            Product(image = "https://recipe1.ezmember.co.kr/cache/recipe/2022/02/02/dbb3f34bfe348a4bb4d142ff353815651.jpg",name="전남 국내산 대추방...", price = 18000),
+            Product(image = "https://recipe1.ezmember.co.kr/cache/recipe/2022/02/02/dbb3f34bfe348a4bb4d142ff353815651.jpg",name="전남 국내산 대추방...", price = 18000),
+        )
+
+        val adapter = ShortsProductAdapter(object : ShortsProductItemHolder.OnClickListener{
+            override fun onMoveSite(url: String) {
+
+            }
+        })
+        binding.rvRecipeProduct.adapter = adapter
+        binding.rvRecipeProduct.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
         adapter.replaceData(itemList)
     }
 
@@ -54,5 +168,10 @@ class RecipeDetailFragment : BaseFragment<FragmentRecipeDetailBinding>(FragmentR
         binding.rvRecommendRecipe.adapter = adapter
         binding.rvRecommendRecipe.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
         adapter.replaceData(itemList)
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        requireActivity().setStatusBarOrigin()
     }
 }

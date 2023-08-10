@@ -1,11 +1,13 @@
 package com.cmc.recipe.presentation.ui.recipe
 
+import android.content.Intent
 import android.net.wifi.p2p.WifiP2pManager.ActionListener
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.cmc.recipe.R
 import com.cmc.recipe.data.model.RecipeItem
 import com.cmc.recipe.databinding.FragmentRecipeMainBinding
+import com.cmc.recipe.presentation.ui.MainActivity
 import com.cmc.recipe.presentation.ui.base.BaseFragment
 import com.cmc.recipe.presentation.ui.base.OnClickListener
 
@@ -15,8 +17,8 @@ class RecipeMainFragment : BaseFragment<FragmentRecipeMainBinding>(FragmentRecip
         //TODO : 네트워크 연결 후 삭제
         val itemList = arrayListOf(
             RecipeItem(image_url = "", name = "토마토 계란 볶음밥", time = 10, nickName = "구땡뿡야",star=30, flag = true),
-            RecipeItem(image_url = "", name = "토마토 계란 볶음밥", time = 10, nickName = "구땡뿡야",star=30, flag = true),
-            RecipeItem(image_url = "", name = "토마토 계란 볶음밥", time = 10, nickName = "구땡뿡야",star=30, flag = true),
+            RecipeItem(image_url = "", name = "토마토 계란 볶음밥", time = 10, nickName = "구땡뿡야",star=30, flag = false),
+            RecipeItem(image_url = "", name = "토마토 계란 볶음밥", time = 10, nickName = "구땡뿡야",star=30, flag = false),
             RecipeItem(image_url = "", name = "토마토 계란 볶음밥", time = 10, nickName = "구땡뿡야",star=30, flag = true),
         )
         recipeRecyclerview(itemList)
@@ -25,7 +27,7 @@ class RecipeMainFragment : BaseFragment<FragmentRecipeMainBinding>(FragmentRecip
     private fun recipeRecyclerview(itemList:ArrayList<RecipeItem>){
         val clickListener = object : OnClickListener {
             override fun onMovePage(id: Int) {
-                findNavController().navigate(R.id.action_recipeMainFragment_to_recipeDetailFragment)
+                movePage(R.id.action_recipeMainFragment_to_recipeActivity)
             }
         }
 
@@ -40,4 +42,5 @@ class RecipeMainFragment : BaseFragment<FragmentRecipeMainBinding>(FragmentRecip
         binding.rvRecipe.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
         adapter.replaceData(itemList)
     }
+
 }

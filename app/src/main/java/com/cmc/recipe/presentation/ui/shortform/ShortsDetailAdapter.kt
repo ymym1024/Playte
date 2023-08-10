@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.cmc.recipe.data.model.ExoPlayerItem
+import com.cmc.recipe.data.model.Product
 import com.cmc.recipe.databinding.ItemShortsDetailBinding
 import com.cmc.recipe.presentation.ui.base.BaseAdapter
 import com.cmc.recipe.presentation.ui.base.BaseHolder
@@ -78,7 +79,13 @@ class ShortsDetailHolder(viewBinding: ItemShortsDetailBinding, val context: Cont
         binding.rvProduct.adapter = adapter
         binding.rvProduct.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
         //mock data
-        adapter.replaceData(arrayListOf("샤인머스켓","설탕","샤인머스켓","설탕"))
+        val itemList = arrayListOf(
+            Product(image = "https://recipe1.ezmember.co.kr/cache/recipe/2022/02/02/dbb3f34bfe348a4bb4d142ff353815651.jpg",name="전남 국내산 대추방...", price = 18000),
+            Product(image = "https://recipe1.ezmember.co.kr/cache/recipe/2022/02/02/dbb3f34bfe348a4bb4d142ff353815651.jpg",name="전남 국내산 대추방...", price = 18000),
+            Product(image = "https://recipe1.ezmember.co.kr/cache/recipe/2022/02/02/dbb3f34bfe348a4bb4d142ff353815651.jpg",name="전남 국내산 대추방...", price = 18000),
+        )
+
+        adapter.replaceData(itemList)
     }
 
 }

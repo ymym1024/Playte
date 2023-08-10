@@ -10,7 +10,9 @@
         android:id="@+id/iv_thumbnail"
         android:layout_width="172dp"
         android:layout_height="109dp"
-        android:src="@drawable/common_google_signin_btn_icon_dark_normal"
+        android:layout_marginBottom="12dp"
+        android:background="@drawable/bg_image_leftright"
+        app:layout_constraintBottom_toTopOf="@+id/tv_recommend_title"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
