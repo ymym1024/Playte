@@ -4,9 +4,13 @@ import android.app.Activity
 import android.content.Context
 import android.os.Build
 import android.util.TypedValue
+import android.view.View
 import android.view.WindowManager
 import android.widget.ImageView
+import androidx.core.view.ViewCompat
 import androidx.core.view.WindowCompat
+import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.WindowInsetsControllerCompat
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.load.resource.bitmap.CenterCrop
@@ -72,6 +76,7 @@ fun Activity.setStatusBarTransparent() {
     if(Build.VERSION.SDK_INT >= 30) {
         WindowCompat.setDecorFitsSystemWindows(window, false)
     }
+
 }
 
 fun Activity.setStatusBarOrigin() {

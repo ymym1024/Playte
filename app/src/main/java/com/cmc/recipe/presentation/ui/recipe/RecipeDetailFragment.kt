@@ -30,8 +30,8 @@ import com.google.android.material.bottomsheet.BottomSheetDialog
 
 class RecipeDetailFragment : BaseFragment<FragmentRecipeDetailBinding>(FragmentRecipeDetailBinding::inflate) {
 
-    override fun onDestroy() {
-        super.onDestroy()
+    override fun onStop() {
+        super.onStop()
 
         val activity = activity as RecipeActivity
         activity.hideToolbar(false)
@@ -81,11 +81,13 @@ class RecipeDetailFragment : BaseFragment<FragmentRecipeDetailBinding>(FragmentR
     private fun initMenu(){
         // 프래그먼트 내에서 투명한 상태 표시줄 설정
         requireActivity().setStatusBarTransparent()
+        Log.d("initMenu test","${requireContext().navigationHeight()}")
+
         binding.innerContainer.setPadding(
             0,
             requireContext().statusBarHeight(),
             0,
-            requireContext().navigationHeight()
+            0
         )
 
         binding.btnBack.setOnClickListener {
