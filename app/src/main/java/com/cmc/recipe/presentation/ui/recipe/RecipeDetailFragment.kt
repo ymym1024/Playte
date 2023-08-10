@@ -66,8 +66,8 @@ class RecipeDetailFragment : BaseFragment<FragmentRecipeDetailBinding>(FragmentR
 
     private fun initRecipeRV(){
         val itemList = arrayListOf(
-            RecipeOrder(recipeImage = "", recipeInfo = "그릇에 옮기기", recipeOrder = 1, recipeDetail = "당근이 노릇노릇하게 익으면 다 익은 당근을 그릇에 옮겨 20분 정도 냉장고에서 식혀주세요."),
-            RecipeOrder(recipeImage = "", recipeInfo = "그릇에 옮기기", recipeOrder = 1, recipeDetail = "당근이 노릇노릇하게 익으면 다 익은 당근을 그릇에 옮겨 20분 정도 냉장고에서 식혀주세요."),
+            RecipeOrder(recipeImage = "https://recipe1.ezmember.co.kr/cache/recipe/2022/02/02/dbb3f34bfe348a4bb4d142ff353815651.jpg", recipeInfo = "그릇에 옮기기", recipeOrder = 1, recipeDetail = "당근이 노릇노릇하게 익으면 다 익은 당근을 그릇에 옮겨 20분 정도 냉장고에서 식혀주세요."),
+            RecipeOrder(recipeImage = "https://recipe1.ezmember.co.kr/cache/recipe/2022/02/02/dbb3f34bfe348a4bb4d142ff353815651.jpg", recipeInfo = "그릇에 옮기기", recipeOrder = 1, recipeDetail = "당근이 노릇노릇하게 익으면 다 익은 당근을 그릇에 옮겨 20분 정도 냉장고에서 식혀주세요."),
         )
 
         val adapter = RecipeOrderAdapter(requireContext())
