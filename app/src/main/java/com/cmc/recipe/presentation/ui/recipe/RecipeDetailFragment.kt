@@ -35,6 +35,15 @@ class RecipeDetailFragment : BaseFragment<FragmentRecipeDetailBinding>(FragmentR
         binding.tvRecipeInfo.text = "토마토가 많아서 볶아먹고 삶아먹고 이젠 밥에도 넣어봤어요"
         binding.tvRecipeDate.text = "2023.02.12"
 
+        // 상세정보 바인딩
+        binding.tvScore.text = "${4.7}"
+        binding.tvPeople.text = "2인분"
+        binding.tvTime.text = "10분"
+
+        binding.btnReview.setOnClickListener {
+            movePage(R.id.action_recipeDetailFragment_to_recipeMenuFragment)
+        }
+
         binding.btnWriteReview.setOnClickListener {
             movePage(R.id.action_recipeDetailFragment_to_recipeReviewFragment)
         }
