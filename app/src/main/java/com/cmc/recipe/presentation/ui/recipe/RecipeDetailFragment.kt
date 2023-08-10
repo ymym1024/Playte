@@ -25,6 +25,7 @@ class RecipeDetailFragment : BaseFragment<FragmentRecipeDetailBinding>(FragmentR
         initRecipeIngredientRV()
         initRecommendRV()
         initProductRV()
+
     }
 
     private fun initDatabinding(){
@@ -33,6 +34,10 @@ class RecipeDetailFragment : BaseFragment<FragmentRecipeDetailBinding>(FragmentR
         binding.tvRecipeTitle.text = "토마토 계란볶음밥"
         binding.tvRecipeInfo.text = "토마토가 많아서 볶아먹고 삶아먹고 이젠 밥에도 넣어봤어요"
         binding.tvRecipeDate.text = "2023.02.12"
+
+        binding.btnWriteReview.setOnClickListener {
+            movePage(R.id.action_recipeDetailFragment_to_recipeReviewFragment)
+        }
 
     }
 

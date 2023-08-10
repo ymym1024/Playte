@@ -14,7 +14,7 @@
             android:id="@+id/action_recipeDetailFragment_to_recipeMenuFragment"
             app:destination="@id/recipeMenuFragment" />
         <action
-            android:id="@+id/action_recipeDetailFragment_to_recipeReviewFragment2"
+            android:id="@+id/action_recipeDetailFragment_to_recipeReviewFragment"
             app:destination="@id/recipeReviewFragment" />
     </fragment>
 
@@ -26,6 +26,6 @@
     <fragment
         android:id="@+id/recipeReviewFragment"
         android:name="com.cmc.recipe.presentation.ui.recipe.RecipeReviewFragment"
-        android:label="fragment_recipe_review"
+        android:label="@string/recipe_review"
         tools:layout="@layout/fragment_recipe_review" />
 </navigation>

@@ -10,16 +10,7 @@
         android:name="com.cmc.recipe.presentation.ui.recipe.RecipeMainFragment"
         android:label="@string/recipe"
         tools:layout="@layout/fragment_recipe_main" >
-        <action
-            android:id="@+id/action_recipeMainFragment_to_recipeDetailFragment"
-            app:destination="@id/recipeDetailFragment" />
     </fragment>
-    <fragment
-        android:id="@+id/recipeDetailFragment"
-        android:name="com.cmc.recipe.presentation.ui.recipe.RecipeDetailFragment"
-        android:label=""
-        tools:layout="@layout/fragment_recipe_detail" />
-
     <fragment
         android:id="@+id/shortsFragment"
         android:name="com.cmc.recipe.presentation.ui.shortform.ShortsFragment"

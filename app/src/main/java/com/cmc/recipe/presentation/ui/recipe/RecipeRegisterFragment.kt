@@ -52,7 +52,7 @@ class RecipeRegisterFragment : BaseFragment<FragmentRecipeRegisterBinding>(Fragm
     private fun initRecipeRv(){
         val clickListener = object : OnClickListener {
             override fun onMovePage(id: Int) {
-                findNavController().navigate(R.id.action_recipeMainFragment_to_recipeDetailFragment)
+               // findNavController().navigate(R.id.action_recipeDetailFragment_to_recipeReviewFragment)
             }
         }
 
