@@ -22,10 +22,19 @@
         android:id="@+id/recipeMenuFragment"
         android:name="com.cmc.recipe.presentation.ui.recipe.RecipeMenuFragment"
         android:label="fragment_recipe_menu"
-        tools:layout="@layout/fragment_recipe_menu" />
+        tools:layout="@layout/fragment_recipe_menu" >
+        <action
+            android:id="@+id/action_recipeMenuFragment_to_imageReviewActivity"
+            app:destination="@id/imageReviewActivity" />
+    </fragment>
     <fragment
         android:id="@+id/recipeReviewFragment"
         android:name="com.cmc.recipe.presentation.ui.recipe.RecipeReviewFragment"
         android:label="@string/recipe_review"
         tools:layout="@layout/fragment_recipe_review" />
+    <activity
+        android:id="@+id/imageReviewActivity"
+        android:name="com.cmc.recipe.presentation.ui.recipe.ImageReviewActivity"
+        android:label="activity_image_review"
+        tools:layout="@layout/activity_image_review" />
 </navigation>

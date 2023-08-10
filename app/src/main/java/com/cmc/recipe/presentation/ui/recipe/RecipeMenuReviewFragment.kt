@@ -29,6 +29,14 @@ class RecipeMenuReviewFragment : BaseFragment<FragmentRecipeMenuReviewBinding>(F
         initRV(itemList)
 
         initImageRV()
+
+        binding.btnImgReview.setOnClickListener {
+            goImageActivity()
+        }
+    }
+
+    private fun goImageActivity(){
+        movePage(R.id.action_recipeMenuFragment_to_imageReviewActivity)
     }
 
     private fun initImageRV(){
