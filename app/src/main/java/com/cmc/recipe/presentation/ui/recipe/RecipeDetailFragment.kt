@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.cmc.recipe.R
+import com.cmc.recipe.data.IngredientItem
 import com.cmc.recipe.data.model.RecipeItem
 import com.cmc.recipe.data.model.RecipeOrder
 import com.cmc.recipe.databinding.FragmentRecipeDetailBinding
@@ -18,6 +19,7 @@ class RecipeDetailFragment : BaseFragment<FragmentRecipeDetailBinding>(FragmentR
     override fun initFragment() {
         initDatabinding()
         initRecipeRV()
+        initRecipeIngredientRV()
         initRecommendRV()
     }
 
@@ -28,6 +30,29 @@ class RecipeDetailFragment : BaseFragment<FragmentRecipeDetailBinding>(FragmentR
         binding.tvRecipeInfo.text = "토마토가 많아서 볶아먹고 삶아먹고 이젠 밥에도 넣어봤어요"
         binding.tvRecipeDate.text = "2023.02.12"
 
+    }
+
+    private fun initRecipeIngredientRV(){
+        val itemList = arrayListOf(
+            IngredientItem(name = "토마토", cnt = "3개"),
+            IngredientItem(name = "계란", cnt = "3개"),
+            IngredientItem(name = "대파", cnt = "3개"),
+        )
+
+        val itemList1 = arrayListOf(
+            IngredientItem(name = "굴소스", cnt = "2T"),
+            IngredientItem(name = "소금", cnt = "2T"),
+        )
+
+        val adapter = RecipeIngredientAdapter()
+        binding.rvIngredient.adapter = adapter
+        binding.rvIngredient.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
+        adapter.replaceData(itemList)
+
+        val adapter1 = RecipeIngredientAdapter()
+        binding.rvSpices.adapter = adapter1
+        binding.rvSpices.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
+        adapter1.replaceData(itemList1)
     }
 
     private fun initRecipeRV(){
