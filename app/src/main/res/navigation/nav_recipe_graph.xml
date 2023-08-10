@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_recipe_graph"
+    app:startDestination="@id/recipeDetailFragment">
+
+    <fragment
+        android:id="@+id/recipeDetailFragment"
+        android:name="com.cmc.recipe.presentation.ui.recipe.RecipeDetailFragment"
+        android:label=""
+        tools:layout="@layout/fragment_recipe_detail" >
+        <action
+            android:id="@+id/action_recipeDetailFragment_to_recipeMenuFragment"
+            app:destination="@id/recipeMenuFragment" />
+        <action
+            android:id="@+id/action_recipeDetailFragment_to_recipeReviewFragment2"
+            app:destination="@id/recipeReviewFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/recipeMenuFragment"
+        android:name="com.cmc.recipe.presentation.ui.recipe.RecipeMenuFragment"
+        android:label="fragment_recipe_menu"
+        tools:layout="@layout/fragment_recipe_menu" />
+    <fragment
+        android:id="@+id/recipeReviewFragment"
+        android:name="com.cmc.recipe.presentation.ui.recipe.RecipeReviewFragment"
+        android:label="fragment_recipe_review"
+        tools:layout="@layout/fragment_recipe_review" />
+</navigation>

@@ -1,11 +1,13 @@
 package com.cmc.recipe.presentation.ui.recipe
 
+import android.content.Intent
 import android.net.wifi.p2p.WifiP2pManager.ActionListener
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.cmc.recipe.R
 import com.cmc.recipe.data.model.RecipeItem
 import com.cmc.recipe.databinding.FragmentRecipeMainBinding
+import com.cmc.recipe.presentation.ui.MainActivity
 import com.cmc.recipe.presentation.ui.base.BaseFragment
 import com.cmc.recipe.presentation.ui.base.OnClickListener
 
@@ -25,7 +27,7 @@ class RecipeMainFragment : BaseFragment<FragmentRecipeMainBinding>(FragmentRecip
     private fun recipeRecyclerview(itemList:ArrayList<RecipeItem>){
         val clickListener = object : OnClickListener {
             override fun onMovePage(id: Int) {
-                findNavController().navigate(R.id.action_recipeMainFragment_to_recipeDetailFragment)
+                moveRecipeActivity()
             }
         }
 
@@ -39,5 +41,10 @@ class RecipeMainFragment : BaseFragment<FragmentRecipeMainBinding>(FragmentRecip
         binding.rvRecipe.adapter = adapter
         binding.rvRecipe.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
         adapter.replaceData(itemList)
+    }
+
+    private fun moveRecipeActivity() {
+        val intent = Intent(activity, RecipeActivity::class.java)
+        startActivity(intent)
     }
 }
