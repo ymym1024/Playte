@@ -1,12 +1,16 @@
 package com.cmc.recipe.presentation.ui.recipe
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import android.view.*
+import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.core.view.MenuHost
 import androidx.core.view.MenuProvider
+import androidx.core.view.ViewCompat
+import androidx.core.view.updatePadding
 import androidx.lifecycle.Lifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.cmc.recipe.R
@@ -15,16 +19,29 @@ import com.cmc.recipe.data.model.Product
 import com.cmc.recipe.data.model.RecipeItem
 import com.cmc.recipe.data.model.RecipeOrder
 import com.cmc.recipe.databinding.FragmentRecipeDetailBinding
+import com.cmc.recipe.presentation.ui.MainActivity
 import com.cmc.recipe.presentation.ui.base.BaseFragment
 import com.cmc.recipe.presentation.ui.common.RemoveBottomSheetFragment
 import com.cmc.recipe.presentation.ui.shortform.ShortsProductAdapter
 import com.cmc.recipe.presentation.ui.shortform.ShortsProductItemHolder
-import com.cmc.recipe.utils.loadImagesWithGlide
+import com.cmc.recipe.utils.*
 import com.google.android.material.bottomsheet.BottomSheetDialog
 
 
 class RecipeDetailFragment : BaseFragment<FragmentRecipeDetailBinding>(FragmentRecipeDetailBinding::inflate) {
+
+    override fun onDestroy() {
+        super.onDestroy()
+
+        val activity = activity as RecipeActivity
+        activity.hideToolbar(false)
+    }
+
     override fun initFragment() {
+
+        val activity = activity as RecipeActivity
+        activity.hideToolbar(true)
+
 
         initMenu()
 
@@ -61,27 +78,24 @@ class RecipeDetailFragment : BaseFragment<FragmentRecipeDetailBinding>(FragmentR
 
     }
 
-
     private fun initMenu(){
-        val menuHost: MenuHost = requireActivity()
-        menuHost.addMenuProvider(object : MenuProvider {
-            override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
-                // Add menu items here
-                Log.d("menu","잘 호출됨?")
-                menuInflater.inflate(R.menu.menu_more, menu)
-            }
+        // 프래그먼트 내에서 투명한 상태 표시줄 설정
+        requireActivity().setStatusBarTransparent()
+        binding.innerContainer.setPadding(
+            0,
+            requireContext().statusBarHeight(),
+            0,
+            requireContext().navigationHeight()
+        )
 
-            override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
-                return when (menuItem.itemId) {
-                    R.id.menu_more -> {
-                        Log.d("menu","잘 호출됨?12")
-                        showBottomSheet()
-                        true
-                    }
-                    else -> false
-                }
-            }
-        }, viewLifecycleOwner, Lifecycle.State.RESUMED)
+        binding.btnBack.setOnClickListener {
+            requireActivity().onBackPressed()
+        }
+
+        binding.btnMore.setOnClickListener {
+            showBottomSheet()
+        }
+
     }
 
     private fun showBottomSheet(){
@@ -152,5 +166,10 @@ class RecipeDetailFragment : BaseFragment<FragmentRecipeDetailBinding>(FragmentR
         binding.rvRecommendRecipe.adapter = adapter
         binding.rvRecommendRecipe.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
         adapter.replaceData(itemList)
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        requireActivity().setStatusBarOrigin()
     }
 }

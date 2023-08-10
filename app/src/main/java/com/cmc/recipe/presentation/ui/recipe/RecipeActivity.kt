@@ -3,6 +3,7 @@ package com.cmc.recipe.presentation.ui.recipe
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
+import androidx.appcompat.widget.Toolbar
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.AppBarConfiguration
@@ -47,4 +48,14 @@ class RecipeActivity : AppCompatActivity() {
     override fun onSupportNavigateUp(): Boolean {
         return navController.navigateUp() || super.onSupportNavigateUp()
     }
+
+    fun hideToolbar(state:Boolean){
+        if(state){
+            binding.toolbar.visibility = View.GONE
+        }else{
+            binding.toolbar.visibility = View.VISIBLE
+        }
+    }
+
+    fun getToolbar() : Toolbar = binding.toolbar
 }
