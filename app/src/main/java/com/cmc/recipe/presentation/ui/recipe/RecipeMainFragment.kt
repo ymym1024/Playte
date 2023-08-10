@@ -27,7 +27,7 @@ class RecipeMainFragment : BaseFragment<FragmentRecipeMainBinding>(FragmentRecip
     private fun recipeRecyclerview(itemList:ArrayList<RecipeItem>){
         val clickListener = object : OnClickListener {
             override fun onMovePage(id: Int) {
-                moveRecipeActivity()
+                movePage(R.id.action_recipeMainFragment_to_recipeActivity)
             }
         }
 
@@ -43,8 +43,4 @@ class RecipeMainFragment : BaseFragment<FragmentRecipeMainBinding>(FragmentRecip
         adapter.replaceData(itemList)
     }
 
-    private fun moveRecipeActivity() {
-        val intent = Intent(activity, RecipeActivity::class.java)
-        startActivity(intent)
-    }
 }

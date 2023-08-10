@@ -8,7 +8,7 @@
     <fragment
         android:id="@+id/recipeDetailFragment"
         android:name="com.cmc.recipe.presentation.ui.recipe.RecipeDetailFragment"
-        android:label=""
+        android:label="토마토어쩌고"
         tools:layout="@layout/fragment_recipe_detail" >
         <action
             android:id="@+id/action_recipeDetailFragment_to_recipeMenuFragment"

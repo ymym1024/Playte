@@ -1,10 +1,13 @@
 package com.cmc.recipe.presentation.ui.recipe
 
+import android.content.Context
 import android.os.Bundle
+import android.util.Log
+import android.view.*
 import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import androidx.core.view.MenuHost
+import androidx.core.view.MenuProvider
+import androidx.lifecycle.Lifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.cmc.recipe.R
 import com.cmc.recipe.data.IngredientItem
@@ -13,13 +16,18 @@ import com.cmc.recipe.data.model.RecipeItem
 import com.cmc.recipe.data.model.RecipeOrder
 import com.cmc.recipe.databinding.FragmentRecipeDetailBinding
 import com.cmc.recipe.presentation.ui.base.BaseFragment
+import com.cmc.recipe.presentation.ui.common.RemoveBottomSheetFragment
 import com.cmc.recipe.presentation.ui.shortform.ShortsProductAdapter
 import com.cmc.recipe.presentation.ui.shortform.ShortsProductItemHolder
 import com.cmc.recipe.utils.loadImagesWithGlide
+import com.google.android.material.bottomsheet.BottomSheetDialog
 
 
 class RecipeDetailFragment : BaseFragment<FragmentRecipeDetailBinding>(FragmentRecipeDetailBinding::inflate) {
     override fun initFragment() {
+
+        initMenu()
+
         initDatabinding()
         initRecipeRV()
         initRecipeIngredientRV()
@@ -40,6 +48,9 @@ class RecipeDetailFragment : BaseFragment<FragmentRecipeDetailBinding>(FragmentR
         binding.tvPeople.text = "2인분"
         binding.tvTime.text = "10분"
 
+        binding.tvPeople.setOnClickListener {
+            showBottomSheet()
+        }
         binding.btnReview.setOnClickListener {
             movePage(R.id.action_recipeDetailFragment_to_recipeMenuFragment)
         }
@@ -48,6 +59,33 @@ class RecipeDetailFragment : BaseFragment<FragmentRecipeDetailBinding>(FragmentR
             movePage(R.id.action_recipeDetailFragment_to_recipeReviewFragment)
         }
 
+    }
+
+
+    private fun initMenu(){
+        val menuHost: MenuHost = requireActivity()
+        menuHost.addMenuProvider(object : MenuProvider {
+            override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
+                // Add menu items here
+                Log.d("menu","잘 호출됨?")
+                menuInflater.inflate(R.menu.menu_more, menu)
+            }
+
+            override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
+                return when (menuItem.itemId) {
+                    R.id.menu_more -> {
+                        Log.d("menu","잘 호출됨?12")
+                        showBottomSheet()
+                        true
+                    }
+                    else -> false
+                }
+            }
+        }, viewLifecycleOwner, Lifecycle.State.RESUMED)
+    }
+
+    private fun showBottomSheet(){
+        BottomSheetDetailDialog().show(fragmentManager!!, "RemoveBottomSheetFragment")
     }
 
     private fun initRecipeIngredientRV(){
