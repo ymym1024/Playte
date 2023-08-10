@@ -20,6 +20,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
         android:textFontWeight="400"
+        android:textSize="14sp"
         android:text="TextView"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -41,9 +42,10 @@
         android:id="@+id/tv_review_thumb"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="18dp"
+        android:layout_marginTop="15dp"
         android:text="TextView"
         android:textFontWeight="600"
+        android:textColor="@color/gray_17"
         android:textSize="16sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tv_review_nick" />
@@ -55,7 +57,8 @@
         android:layout_marginTop="10dp"
         android:layout_marginBottom="10dp"
         android:text="TextView"
-        app:layout_constraintBottom_toTopOf="@+id/recyclerView3"
+        android:textColor="@color/gray_17"
+        app:layout_constraintBottom_toTopOf="@+id/rv_review_image"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tv_review_thumb" />
@@ -72,15 +75,16 @@
         <ImageView
             android:id="@+id/ib_up"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="2dp"
-            app:srcCompat="@drawable/ic_thumb_up" />
+            android:layout_height="match_parent"
+            android:layout_marginEnd="5dp"
+            app:srcCompat="@drawable/ic_heart_gray" />
 
         <TextView
             android:id="@+id/tv_upcount"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="8dp"
+            android:textColor="@color/gray_8"
             android:text="1" />
 
         <ImageView
@@ -88,14 +92,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="2dp"
-            app:srcCompat="@drawable/ic_thumb_down" />
+            app:srcCompat="@drawable/ic_alarm_warning_line" />
 
-        <TextView
-            android:id="@+id/tv_downcount"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="2dp"
-            android:text="1" />
     </LinearLayout>
 
     <androidx.recyclerview.widget.RecyclerView

@@ -1,9 +1,11 @@
 package com.cmc.recipe.utils
 
 import android.app.Activity
+import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.provider.MediaStore
+import android.util.TypedValue
 import android.widget.ImageButton
 import android.widget.ImageView
 import androidx.activity.result.ActivityResultLauncher
@@ -36,6 +38,11 @@ fun ImageView.loadImagesWithGlideRound(url: String,radius:Int) {
 
 fun String.convertTimestampToDate(time: Long){
    SimpleDateFormat("yy.MM.dd").format(time).toString()
+}
+
+fun dpToPx(context: Context, dp: Float): Int {
+    val displayMetrics = context.resources.displayMetrics
+    return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp, displayMetrics).toInt()
 }
 
 fun Long.convertLongToTime(durationMillis: Long): String {

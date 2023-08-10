@@ -2,11 +2,13 @@ package com.cmc.recipe.presentation.ui.recipe
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.cmc.recipe.data.model.RecipeReview
 import com.cmc.recipe.databinding.ItemRecipeReviewBinding
 import com.cmc.recipe.presentation.ui.base.BaseAdapter
 import com.cmc.recipe.presentation.ui.base.BaseHolder
 import com.cmc.recipe.presentation.ui.base.OnClickListener
+import com.cmc.recipe.presentation.ui.common.ImageAdapter
 
 class RecipeMenuReviewAdapter(private val upEventListener: OnClickListener,private val downEventListener: OnClickListener):
     BaseAdapter<RecipeReview, ItemRecipeReviewBinding, RecipeMenuReviewItemHolder>() {
@@ -30,7 +32,12 @@ class RecipeMenuReviewItemHolder(viewBinding: ItemRecipeReviewBinding,private va
                 view.tvReview.text = review.content
                 view.tvRatingbar.numStars = review.stars
                 view.tvUpcount.text = "${review.thumb_up}"
-                view.tvDowncount.text = "${review.thumb_down}"
+
+                val adapter = ImageAdapter(96)
+                view.rvReviewImage.adapter = adapter
+                view.rvReviewImage.layoutManager = LinearLayoutManager(binding.root.context ,
+                    LinearLayoutManager.HORIZONTAL, false)
+                adapter.replaceData(review.image_list)
             }
         }
 
