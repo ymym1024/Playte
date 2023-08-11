@@ -7,15 +7,18 @@
     tools:context=".presentation.ui.recipe.RecipeReviewFragment">
 
     <ImageView
-        android:id="@+id/imageView4"
-        android:layout_width="match_parent"
-        android:layout_height="80dp"
-        android:layout_marginStart="150dp"
-        android:layout_marginTop="20dp"
-        android:layout_marginEnd="150dp"
+        android:id="@+id/iv_recipe_thumbnail"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="100dp"
+        android:layout_marginTop="18dp"
+        android:layout_marginEnd="100dp"
         android:layout_weight="1"
         android:adjustViewBounds="true"
+        android:minWidth="100dp"
+        android:minHeight="100dp"
         android:src="@drawable/ic_logo"
+        app:layout_constraintDimensionRatio="w,1:1"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -29,15 +32,16 @@
         android:stepSize="1"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imageView4" />
+        app:layout_constraintTop_toBottomOf="@+id/iv_recipe_thumbnail" />
 
     <TextView
-        android:id="@+id/textView6"
+        android:id="@+id/tv_ratingbar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="11dp"
+        android:layout_marginTop="5dp"
         android:text="@string/recipe_review_msg"
-        android:textColor="@color/gray_6"
+        android:textColor="@color/primary_color"
+        android:textSize="16sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/ratingBar" />
@@ -49,38 +53,39 @@
         android:layout_marginStart="22dp"
         android:layout_marginTop="36dp"
         android:text="@string/recipe_review_1"
+        android:textColor="@color/gray_12"
+        android:textSize="16sp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView6" />
+        app:layout_constraintTop_toBottomOf="@+id/tv_ratingbar" />
 
     <com.cmc.recipe.presentation.component.CustomEditText
-        android:id="@+id/editTextTextPersonName2"
+        android:id="@+id/et_review"
         android:layout_width="0dp"
-        android:layout_height="203dp"
+        android:layout_height="wrap_content"
         android:layout_marginStart="20dp"
-        android:layout_marginTop="15dp"
+        android:layout_marginTop="10dp"
         android:layout_marginEnd="20dp"
         android:background="@drawable/bg_input_radius"
         android:gravity="top"
+        android:minHeight="200dp"
         app:hint="@string/recipe_review_hint"
-        app:maxLength="1000"
-        android:paddingStart="23dp"
-        android:paddingTop="18dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView8" />
+        app:layout_constraintTop_toBottomOf="@+id/textView8"
+        app:maxLength="1000" />
 
     <TextView
         android:id="@+id/textView10"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="20dp"
-        android:layout_marginTop="33dp"
+        android:layout_marginTop="20dp"
         android:text="@string/recipe_review_photo"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editTextTextPersonName2" />
+        app:layout_constraintTop_toBottomOf="@+id/et_review" />
 
     <androidx.appcompat.widget.AppCompatImageButton
-        android:id="@+id/imageButton6"
+        android:id="@+id/btn_image_add"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="20dp"
@@ -92,35 +97,51 @@
         app:layout_constraintTop_toBottomOf="@+id/textView10" />
 
     <TextView
-        android:id="@+id/textView22"
+        android:id="@+id/tv_image_cnt"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="10dp"
-        android:layout_marginTop="33dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="3dp"
         android:text="0"
         android:textColor="@color/primary_color"
+        app:layout_constraintEnd_toStartOf="@+id/textView31"
         app:layout_constraintStart_toEndOf="@+id/textView10"
-        app:layout_constraintTop_toBottomOf="@+id/editTextTextPersonName2" />
+        app:layout_constraintTop_toBottomOf="@+id/et_review" />
 
     <TextView
         android:id="@+id/textView31"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="33dp"
-        android:text="/5"
-        app:layout_constraintStart_toEndOf="@+id/textView22"
-        app:layout_constraintTop_toBottomOf="@+id/editTextTextPersonName2" />
+        android:layout_marginStart="3dp"
+        android:layout_marginTop="20dp"
+        android:text="/ 5"
+        app:layout_constraintStart_toEndOf="@+id/tv_image_cnt"
+        app:layout_constraintTop_toBottomOf="@+id/et_review" />
 
     <Button
         android:id="@+id/button7"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="5dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp"
+        android:layout_marginBottom="29dp"
         android:background="@drawable/btn_selected_color"
-        android:text="@string/recipe_review"
+        android:text="@string/complete"
         android:textColor="@color/white"
+        android:textSize="18sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rv_review_image"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="12dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/btn_image_add"
+        app:layout_constraintTop_toBottomOf="@+id/textView10" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
