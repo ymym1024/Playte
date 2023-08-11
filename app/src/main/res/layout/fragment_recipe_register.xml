@@ -24,10 +24,12 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="20dp"
-                android:layout_marginTop="16dp"
+                android:layout_marginTop="20dp"
                 android:text="@string/recipe_register_title"
+                android:textFontWeight="600"
+                android:textColor="@color/gray_12"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toBottomOf="@+id/imageView4" />
 
             <com.cmc.recipe.presentation.component.CustomEditText
                 android:id="@+id/et_recipe_name"
@@ -51,6 +53,8 @@
                 android:layout_marginStart="20dp"
                 android:layout_marginTop="21dp"
                 android:text="@string/recipe_register_description"
+                android:textFontWeight="600"
+                android:textColor="@color/gray_12"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/et_recipe_name" />
 
@@ -74,6 +78,8 @@
                 android:layout_marginStart="19dp"
                 android:layout_marginTop="18dp"
                 android:text="@string/recipe_register_ingredient"
+                android:textFontWeight="600"
+                android:textColor="@color/gray_12"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/et_recipe_description" />
 
@@ -114,6 +120,8 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:text="@string/recipe_register_time"
+                        android:textFontWeight="600"
+                        android:textColor="@color/gray_12"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />
@@ -136,6 +144,8 @@
                         android:layout_marginStart="9dp"
                         android:layout_marginTop="25dp"
                         android:text="@string/recipe_register_minutes"
+                        android:textFontWeight="600"
+                        android:textColor="@color/gray_12"
                         app:layout_constraintStart_toEndOf="@+id/et_recipe_time"
                         app:layout_constraintTop_toBottomOf="@+id/textView35" />
                 </androidx.constraintlayout.widget.ConstraintLayout>
@@ -150,6 +160,8 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:text="@string/recipe_register_people"
+                        android:textFontWeight="600"
+                        android:textColor="@color/gray_12"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />
@@ -159,7 +171,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="14dp"
-                        android:src="@drawable/ic_round_check"
+                        android:background="@drawable/ic_minus_deactivate"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@+id/textView37" />
 
@@ -168,7 +180,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="14dp"
-                        android:src="@drawable/ic_plus"
+                        android:background="@drawable/ic_plus_activate"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintTop_toBottomOf="@+id/textView37" />
 
@@ -177,10 +189,15 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="26dp"
-                        android:layout_marginTop="14dp"
+                        android:layout_marginTop="20dp"
                         android:layout_marginEnd="26dp"
+                        android:layout_marginBottom="20dp"
                         android:gravity="center"
                         android:text="1"
+                        android:textColor="@color/primary_color"
+                        android:textFontWeight="600"
+                        android:textSize="18sp"
+                        app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toStartOf="@+id/ib_plus"
                         app:layout_constraintStart_toEndOf="@+id/ib_minus"
                         app:layout_constraintTop_toBottomOf="@+id/textView37" />
@@ -194,6 +211,8 @@
                 android:layout_marginStart="20dp"
                 android:layout_marginTop="29dp"
                 android:text="@string/recipe_register_order"
+                android:textFontWeight="600"
+                android:textColor="@color/gray_12"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/linearLayout3" />
 
@@ -228,8 +247,10 @@
                 android:layout_marginTop="8dp"
                 android:layout_marginEnd="17dp"
                 android:layout_marginBottom="22dp"
-                android:background="@color/primary_color"
+                android:background="@drawable/btn_selected_color"
                 android:text="@string/save"
+                android:enabled="false"
+                android:textSize="18dp"
                 android:textColor="@color/white"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -281,6 +302,30 @@
                     android:background="@null"
                     android:src="@drawable/ic_hamburger" />
             </LinearLayout>
+
+            <ImageView
+                android:id="@+id/imageView4"
+                android:layout_width="120dp"
+                android:layout_height="120dp"
+                android:layout_marginTop="11dp"
+                android:background="@drawable/bg_radius_10"
+                android:padding="48dp"
+                android:src="@drawable/ic_image_add"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/textView6" />
+
+            <TextView
+                android:id="@+id/textView6"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="30dp"
+                android:text="@string/thumbnail"
+                android:textFontWeight="600"
+                android:textColor="@color/gray_12"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.core.widget.NestedScrollView>
