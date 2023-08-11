@@ -60,6 +60,7 @@ class RecipeReviewFragment : BaseFragment<FragmentRecipeReviewBinding>(FragmentR
                     binding.tvImageCnt.text="${++imageCount}"
                     val image = requireActivity().getRealPathFromURI(it.data!!)
                     adapter.addItem(image)
+                    binding.rvReviewImage.scrollToPosition(adapter.itemCount - 1)
                 } else{
                     showToastMessage("이미지는 최대 5개 까지만 추가 됩니다")
                 }
