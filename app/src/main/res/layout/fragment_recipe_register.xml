@@ -29,7 +29,7 @@
                 android:textFontWeight="600"
                 android:textColor="@color/gray_12"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/imageView4" />
+                app:layout_constraintTop_toBottomOf="@+id/iv_thumbnail" />
 
             <com.cmc.recipe.presentation.component.CustomEditText
                 android:id="@+id/et_recipe_name"
@@ -304,7 +304,7 @@
             </LinearLayout>
 
             <ImageView
-                android:id="@+id/imageView4"
+                android:id="@+id/iv_thumbnail"
                 android:layout_width="120dp"
                 android:layout_height="120dp"
                 android:layout_marginTop="11dp"

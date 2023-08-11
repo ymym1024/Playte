@@ -22,7 +22,9 @@ import com.cmc.recipe.databinding.FragmentRecipeRegisterBinding
 import com.cmc.recipe.presentation.ui.base.BaseFragment
 import com.cmc.recipe.presentation.ui.base.OnClickListener
 import com.cmc.recipe.utils.Constant
+import com.cmc.recipe.utils.getRealPathFromURI
 import com.cmc.recipe.utils.loadImagesWithGlide
+import com.cmc.recipe.utils.loadImagesWithGlideRound
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
@@ -34,12 +36,13 @@ class RecipeRegisterFragment : BaseFragment<FragmentRecipeRegisterBinding>(Fragm
     private var imageString : String? = ""
 
     override fun initFragment() {
+        getThumbnail()
         initRecipeRv()
         initEvent()
     }
 
     private fun initEvent(){
-        //TODO : viewmodel 로 구조 변경
+
         binding.ibPlus.setOnClickListener {
             binding.tvRecipeCount.text = "${Integer.parseInt(binding.tvRecipeCount.text as String)+1}"
         }
@@ -86,22 +89,30 @@ class RecipeRegisterFragment : BaseFragment<FragmentRecipeRegisterBinding>(Fragm
         if(result.resultCode == Activity.RESULT_OK){
             result?.data?.let { it ->
                 imageUri = it.data!!
-                imageString= getRealPathFromURI(it.data!!)
+                imageString= requireActivity().getRealPathFromURI(it.data!!)
                 binding.ibImage.loadImagesWithGlide(imageString!!)
             }
         }
     }
 
-    private fun getRealPathFromURI(uri: Uri): String{
-        var columnIndex = 0
-        val proj = arrayOf(MediaStore.Images.Media.DATA)
-        val cursor = activity?.contentResolver?.query(uri, proj, null, null, null)
-        if(cursor!!.moveToFirst()){
-            columnIndex = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA)
+    private val imageThumbnailResult = registerForActivityResult(ActivityResultContracts.StartActivityForResult()){
+            result ->
+        if(result.resultCode == Activity.RESULT_OK){
+            result?.data?.let { it ->
+                val image = requireActivity().getRealPathFromURI(it.data!!)
+                binding.ivThumbnail.setPadding(0, 0, 0, 0)
+                binding.ivThumbnail.loadImagesWithGlideRound(image!!,10)
+            }
         }
-        val result = cursor.getString(columnIndex)
-        cursor.close()
-        return result
+    }
+
+
+    private fun getThumbnail(){
+        binding.ivThumbnail.setOnClickListener {
+            var intent = Intent(Intent.ACTION_PICK)
+            intent.setDataAndType(MediaStore.Images.Media.EXTERNAL_CONTENT_URI,"image/*")
+            imageThumbnailResult.launch(intent)
+        }
     }
 
     private fun selectGallery(){
