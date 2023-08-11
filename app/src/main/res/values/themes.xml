@@ -15,6 +15,10 @@
 
     </style>
 
+    <style name="RecipeRatingBar" parent="Widget.AppCompat.RatingBar">
+        <item name="android:progressDrawable">@drawable/rating</item>
+    </style>
+
     <style name="TransparentStatusTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="android:windowTranslucentStatus">true</item>
         <item name="android:windowTranslucentNavigation">true</item>
