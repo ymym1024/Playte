@@ -2,6 +2,7 @@ package com.cmc.recipe.presentation.ui.recipe
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import com.cmc.recipe.data.model.RecipeStep
 import com.cmc.recipe.databinding.ItemImageDeleteBinding
 import com.cmc.recipe.presentation.ui.base.BaseAdapter
 import com.cmc.recipe.presentation.ui.base.BaseHolder
@@ -23,6 +24,12 @@ class ReviewImageAdapter:
 
     fun setListener(listener: ReviewImageItemHolder.onActionListener){
         this.listener = listener
+    }
+
+    fun addItem(item: String) {
+        val itemList = getData()
+        itemList.add(item)
+        notifyItemInserted(getData().size - 1)
     }
 
     fun removeItem(item: String) {

@@ -3,6 +3,7 @@ package com.cmc.recipe.presentation.ui.recipe
 import android.app.Activity
 import android.content.Intent
 import android.provider.MediaStore
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
 import com.cmc.recipe.databinding.FragmentRecipeReviewBinding
@@ -19,13 +20,12 @@ class RecipeReviewFragment : BaseFragment<FragmentRecipeReviewBinding>(FragmentR
 
     override fun initFragment() {
         initView()
-
         initRV()
-
+        addImageButton()
     }
 
     private fun initView(){
-        val url = "https://recipe1.ezmember.co.kr/cache/recipe/2022/02/02/dbb3f34bfe348a4bb4d142ff353815651.jpg" // TODO : 삭제예정
+        val url = "https://recipe1.ezmember.co.kr/cache/recipe/2022/02/02/dbb3f34bfe348a4bb4d142ff353815651.jpg";
         val pixel = dpToPx(requireContext(),100.toFloat())
         binding.ivRecipeThumbnail.layoutParams.width = pixel
         binding.ivRecipeThumbnail.layoutParams.height = pixel
@@ -33,9 +33,7 @@ class RecipeReviewFragment : BaseFragment<FragmentRecipeReviewBinding>(FragmentR
     }
 
     private fun initRV(){
-        val url = "https://recipe1.ezmember.co.kr/cache/recipe/2022/02/02/dbb3f34bfe348a4bb4d142ff353815651.jpg";
-        val image_list = arrayListOf(url,url,url)
-        val adapter = ReviewImageAdapter()
+        adapter = ReviewImageAdapter()
         adapter.setListener(object :ReviewImageItemHolder.onActionListener{
             override fun delete(item: String) {
                 adapter.removeItem(item)
@@ -44,8 +42,24 @@ class RecipeReviewFragment : BaseFragment<FragmentRecipeReviewBinding>(FragmentR
         binding.rvReviewImage.adapter = adapter
         binding.rvReviewImage.layoutManager = LinearLayoutManager(binding.root.context ,
             LinearLayoutManager.HORIZONTAL, false)
-        adapter.replaceData(image_list)
     }
 
+    private val imageResultSingle = registerForActivityResult(ActivityResultContracts.StartActivityForResult()){
+            result ->
+        if(result.resultCode == Activity.RESULT_OK){
+            result?.data?.let { it ->
+                val image = requireActivity().getRealPathFromURI(it.data!!)
+                adapter.addItem(image)
+            }
+        }
+    }
+
+    private fun addImageButton(){
+        binding.btnImageAdd.setOnClickListener {
+            var intent = Intent(Intent.ACTION_PICK)
+            intent.setDataAndType(MediaStore.Images.Media.EXTERNAL_CONTENT_URI,"image/*")
+            imageResultSingle.launch(intent)
+        }
+    }
 
 }
