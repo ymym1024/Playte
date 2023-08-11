@@ -21,6 +21,7 @@ class RecipeReviewFragment : BaseFragment<FragmentRecipeReviewBinding>(FragmentR
     override fun initFragment() {
         initView()
         initRV()
+        getRatingScore()
         addImageButton()
     }
 
@@ -32,6 +33,11 @@ class RecipeReviewFragment : BaseFragment<FragmentRecipeReviewBinding>(FragmentR
         binding.ivRecipeThumbnail.loadImagesWithGlideRound(url,10)
     }
 
+    private fun getRatingScore(){
+        binding.ratingBar.setOnRatingBarChangeListener { _, rating, _ ->
+            binding.tvRatingbar.text = "${rating}"
+        }
+    }
     private fun initRV(){
         adapter = ReviewImageAdapter()
         adapter.setListener(object :ReviewImageItemHolder.onActionListener{
