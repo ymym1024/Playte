@@ -1,34 +1,20 @@
 package com.cmc.recipe.presentation.ui.recipe
 
-import android.Manifest
 import android.app.Activity
 import android.content.Intent
-import android.content.pm.PackageManager
 import android.net.Uri
 import android.provider.MediaStore
-import android.util.Log
 import android.view.KeyEvent
 import android.view.inputmethod.EditorInfo
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.core.app.ActivityCompat
-import androidx.core.content.ContextCompat
-import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.bumptech.glide.Glide
 import com.cmc.recipe.R
-import com.cmc.recipe.data.model.RecipeItem
 import com.cmc.recipe.data.model.RecipeStep
 import com.cmc.recipe.databinding.FragmentRecipeRegisterBinding
 import com.cmc.recipe.presentation.ui.base.BaseFragment
 import com.cmc.recipe.presentation.ui.base.OnClickListener
-import com.cmc.recipe.utils.Constant
 import com.cmc.recipe.utils.getRealPathFromURI
-import com.cmc.recipe.utils.loadImagesWithGlide
 import com.cmc.recipe.utils.loadImagesWithGlideRound
-import okhttp3.MediaType.Companion.toMediaTypeOrNull
-import okhttp3.MultipartBody
-import okhttp3.RequestBody
-import java.io.File
 
 class RecipeRegisterFragment : BaseFragment<FragmentRecipeRegisterBinding>(FragmentRecipeRegisterBinding::inflate) {
 
@@ -90,7 +76,7 @@ class RecipeRegisterFragment : BaseFragment<FragmentRecipeRegisterBinding>(Fragm
             result?.data?.let { it ->
                 imageUri = it.data!!
                 imageString= requireActivity().getRealPathFromURI(it.data!!)
-                binding.ibImage.loadImagesWithGlide(imageString!!)
+                binding.ibImage.loadImagesWithGlideRound(imageString!!,10)
             }
         }
     }
@@ -106,7 +92,6 @@ class RecipeRegisterFragment : BaseFragment<FragmentRecipeRegisterBinding>(Fragm
         }
     }
 
-
     private fun getThumbnail(){
         binding.ivThumbnail.setOnClickListener {
             var intent = Intent(Intent.ACTION_PICK)
@@ -116,18 +101,8 @@ class RecipeRegisterFragment : BaseFragment<FragmentRecipeRegisterBinding>(Fragm
     }
 
     private fun selectGallery(){
-        val readPermission = ContextCompat.checkSelfPermission(requireActivity(), Manifest.permission.READ_EXTERNAL_STORAGE)
-
-        if(readPermission == PackageManager.PERMISSION_DENIED){
-            ActivityCompat.requestPermissions(requireActivity(), arrayOf(
-                Manifest.permission.READ_EXTERNAL_STORAGE,
-            ),
-                Constant.REQ_GALLERY
-            )
-        }else{
-            var intent = Intent(Intent.ACTION_PICK)
-            intent.setDataAndType(MediaStore.Images.Media.EXTERNAL_CONTENT_URI,"image/*")
-            imageResultSingle.launch(intent)
-        }
+        var intent = Intent(Intent.ACTION_PICK)
+        intent.setDataAndType(MediaStore.Images.Media.EXTERNAL_CONTENT_URI,"image/*")
+        imageResultSingle.launch(intent)
     }
 }
