@@ -2,15 +2,14 @@ package com.cmc.recipe.utils
 
 import android.app.Activity
 import android.content.Context
+import android.database.Cursor
+import android.net.Uri
 import android.os.Build
+import android.provider.MediaStore
 import android.util.TypedValue
-import android.view.View
 import android.view.WindowManager
 import android.widget.ImageView
-import androidx.core.view.ViewCompat
 import androidx.core.view.WindowCompat
-import androidx.core.view.WindowInsetsCompat
-import androidx.core.view.WindowInsetsControllerCompat
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.load.resource.bitmap.CenterCrop
@@ -86,4 +85,22 @@ fun Activity.setStatusBarOrigin() {
     if(Build.VERSION.SDK_INT >= 30) {
         WindowCompat.setDecorFitsSystemWindows(window, true)
     }
+}
+
+fun Context.getRealPathFromURI(uri: Uri): String {
+    var columnIndex = 0
+    val proj = arrayOf(MediaStore.Images.Media.DATA)
+    val cursor: Cursor? = contentResolver.query(uri, proj, null, null, null)
+    if (cursor?.moveToFirst() == true) {
+        columnIndex = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA)
+    }
+    val result = cursor?.getString(columnIndex) ?: ""
+    cursor?.close()
+    return result
+}
+
+fun ImageView.resizeBitmapToSquare(size:Int){
+    val pixel = dpToPx(context,size.toFloat())
+    this.layoutParams.width = pixel
+    this.layoutParams.height = pixel
 }
