@@ -83,7 +83,7 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/et_recipe_description" />
 
-            <EditText
+            <AutoCompleteTextView
                 android:id="@+id/et_recipe_ingredient"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -98,17 +98,28 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/textView33" />
 
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rv_complete_ingredient"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="19dp"
+                android:layout_marginTop="15dp"
+                android:layout_marginEnd="19dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/et_recipe_ingredient" />
+
             <LinearLayout
                 android:id="@+id/linearLayout3"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="20dp"
-                android:layout_marginTop="26dp"
+                android:layout_marginTop="20dp"
                 android:layout_marginEnd="20dp"
                 android:orientation="horizontal"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/et_recipe_ingredient">
+                app:layout_constraintTop_toBottomOf="@+id/rv_complete_ingredient">
 
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
@@ -120,20 +131,20 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:text="@string/recipe_register_time"
-                        android:textFontWeight="600"
                         android:textColor="@color/gray_12"
+                        android:textFontWeight="600"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />
 
                     <EditText
                         android:id="@+id/et_recipe_time"
-                        android:background="@drawable/bg_gray_radius"
                         android:layout_width="126dp"
-                        android:padding="14dp"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="10dp"
+                        android:background="@drawable/bg_gray_radius"
                         android:inputType="textPersonName"
+                        android:padding="14dp"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@+id/textView35" />
 
@@ -144,8 +155,8 @@
                         android:layout_marginStart="9dp"
                         android:layout_marginTop="25dp"
                         android:text="@string/recipe_register_minutes"
-                        android:textFontWeight="600"
                         android:textColor="@color/gray_12"
+                        android:textFontWeight="600"
                         app:layout_constraintStart_toEndOf="@+id/et_recipe_time"
                         app:layout_constraintTop_toBottomOf="@+id/textView35" />
                 </androidx.constraintlayout.widget.ConstraintLayout>
@@ -160,8 +171,8 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:text="@string/recipe_register_people"
-                        android:textFontWeight="600"
                         android:textColor="@color/gray_12"
+                        android:textFontWeight="600"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />

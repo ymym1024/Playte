@@ -4,11 +4,15 @@ import android.app.Activity
 import android.content.Intent
 import android.net.Uri
 import android.provider.MediaStore
+import android.util.Log
 import android.view.KeyEvent
 import android.view.inputmethod.EditorInfo
+import android.widget.ArrayAdapter
+import android.widget.BaseAdapter
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.cmc.recipe.R
+import com.cmc.recipe.data.model.Ingredient
 import com.cmc.recipe.data.model.RecipeStep
 import com.cmc.recipe.databinding.FragmentUploadRecipeBinding
 import com.cmc.recipe.presentation.ui.base.BaseFragment
@@ -20,11 +24,14 @@ class UploadRecipeFragment : BaseFragment<FragmentUploadRecipeBinding>(FragmentU
 
     private lateinit var imageUri : Uri
     private var imageString : String? = ""
+    private lateinit var ingredientAdapter : IngredientAdapter
 
     override fun initFragment() {
+        selectGallery()
         getThumbnail()
         initRecipeRv()
         initEvent()
+        initAdapter()
     }
 
     private fun initEvent(){
@@ -38,6 +45,7 @@ class UploadRecipeFragment : BaseFragment<FragmentUploadRecipeBinding>(FragmentU
             if(binding.tvRecipeCount.text == "1") binding.ibMinus.isEnabled = false
         }
     }
+
     private fun initRecipeRv(){
         val clickListener = object : OnClickListener {
             override fun onMovePage(id: Int) {
@@ -65,8 +73,49 @@ class UploadRecipeFragment : BaseFragment<FragmentUploadRecipeBinding>(FragmentU
             }
             return@setOnEditorActionListener false
         }
+    }
 
-        binding.ibImage.setOnClickListener { selectGallery() }
+    private fun initAdapter(){
+        val dataList = arrayListOf(
+            Ingredient("토마토","재료"),
+            Ingredient("토마토 소스","양념"),
+            Ingredient("토마토","양념"),
+            Ingredient("토마토 소스","양념"),
+            Ingredient("토마토","양념"),
+            Ingredient("토마토 소스","양념")
+        )
+
+        ingredientAdapter = IngredientAdapter()
+        ingredientAdapter.setActionListener(object :IngredientItemHolder.actionListener{
+            override fun remove(name: String) {
+                ingredientAdapter.removeItem(name)
+            }
+        })
+
+        binding.rvCompleteIngredient.adapter = ingredientAdapter
+        binding.rvCompleteIngredient.layoutManager = LinearLayoutManager(requireContext(),LinearLayoutManager.HORIZONTAL, false)
+
+        val adapter = IngredientListAdapter(requireContext(),dataList)
+        binding.etRecipeIngredient.setAdapter(adapter)
+        binding.etRecipeIngredient.setOnItemClickListener { _, v, position, _ ->
+            val data = adapter.getItem(position)
+            viewDialog("개수",data.name)
+        }
+    }
+
+    private fun viewDialog(type:String,name:String){
+        if(type == "개수") {
+            val dialog = IngredientCountDialog(name)
+            dialog.setListener(object : IngredientCountDialog.onCountListener{
+                override fun getCount(count: Int) {
+                    val nameAndCount = "${name} ${count}개"
+                    ingredientAdapter.addItem(nameAndCount)
+                    binding.etRecipeIngredient.setText("")
+                }
+
+            })
+            dialog.show(parentFragmentManager,"IngredientCountDialog")
+        }
     }
 
 
@@ -101,8 +150,10 @@ class UploadRecipeFragment : BaseFragment<FragmentUploadRecipeBinding>(FragmentU
     }
 
     private fun selectGallery(){
-        var intent = Intent(Intent.ACTION_PICK)
-        intent.setDataAndType(MediaStore.Images.Media.EXTERNAL_CONTENT_URI,"image/*")
-        imageResultSingle.launch(intent)
+        binding.ibImage.setOnClickListener {
+            var intent = Intent(Intent.ACTION_PICK)
+            intent.setDataAndType(MediaStore.Images.Media.EXTERNAL_CONTENT_URI,"image/*")
+            imageResultSingle.launch(intent)
+        }
     }
 }
