@@ -14,6 +14,9 @@ class IngredientEtcDialog(val ingredient_name: String,val ingredient_unit: Strin
     override fun initDialog() {
         initView()
 
+        binding.tvIngredientName.text = ingredient_name
+        binding.tvIngredientUnit.text = ingredient_unit
+
         binding.btnCancel.setOnClickListener { dismiss() }
 
         binding.btnCheck.setOnClickListener {
