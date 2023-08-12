@@ -179,8 +179,8 @@
 
                     <ImageButton
                         android:id="@+id/ib_minus"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_width="49dp"
+                        android:layout_height="49dp"
                         android:layout_marginTop="14dp"
                         android:background="@drawable/ic_minus_deactivate"
                         app:layout_constraintStart_toStartOf="parent"
@@ -188,8 +188,8 @@
 
                     <ImageButton
                         android:id="@+id/ib_plus"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_width="49dp"
+                        android:layout_height="49dp"
                         android:layout_marginTop="14dp"
                         android:background="@drawable/ic_plus_activate"
                         app:layout_constraintEnd_toEndOf="parent"

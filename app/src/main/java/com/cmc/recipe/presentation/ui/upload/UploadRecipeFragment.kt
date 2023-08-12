@@ -26,6 +26,7 @@ class UploadRecipeFragment : BaseFragment<FragmentUploadRecipeBinding>(FragmentU
     private lateinit var imageUri : Uri
     private var imageString : String? = ""
     private lateinit var ingredientAdapter : IngredientAdapter
+    private var count = 1;
 
     override fun initFragment() {
         selectGallery()
@@ -38,12 +39,19 @@ class UploadRecipeFragment : BaseFragment<FragmentUploadRecipeBinding>(FragmentU
     private fun initEvent(){
 
         binding.ibPlus.setOnClickListener {
-            binding.tvRecipeCount.text = "${Integer.parseInt(binding.tvRecipeCount.text as String)+1}"
+            binding.tvRecipeCount.text = "${++count}"
+            if(count > 1){
+                binding.ibMinus.isEnabled = true
+            }
+            binding.ibMinus.setBackgroundResource(R.drawable.ic_minus_activate)
         }
 
         binding.ibMinus.setOnClickListener {
-            binding.tvRecipeCount.text = "${Integer.parseInt(binding.tvRecipeCount.text as String)-1}"
-            if(binding.tvRecipeCount.text == "1") binding.ibMinus.isEnabled = false
+            binding.tvRecipeCount.text  = "${--count}"
+            if(count == 1){
+                binding.ibMinus.setBackgroundResource(R.drawable.ic_minus_deactivate)
+                binding.ibMinus.isEnabled = false
+            }
         }
     }
 
