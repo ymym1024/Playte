@@ -6,10 +6,10 @@ import com.cmc.recipe.presentation.ui.base.BaseDialog
 
 class IngredientCountDialog(val ingredient_name: String) : BaseDialog<DialogIngredientCountBinding>(DialogIngredientCountBinding::inflate) {
 
-    private lateinit var clickListener: onActionListener
+    private lateinit var clickListener: onCountListener
     private var count = 1;
 
-    fun setListener(clickListener:onActionListener){
+    fun setListener(clickListener:onCountListener){
         this.clickListener = clickListener
     }
 
@@ -18,7 +18,11 @@ class IngredientCountDialog(val ingredient_name: String) : BaseDialog<DialogIngr
 
         binding.btnCancel.setOnClickListener { dismiss() }
 
-        binding.btnCheck.setOnClickListener {  }
+        binding.btnCheck.setOnClickListener {
+            val count = Integer.parseInt(binding.tvCount.text.toString())
+            clickListener.getCount(count)
+            dismiss()
+        }
 
     }
 
@@ -37,5 +41,9 @@ class IngredientCountDialog(val ingredient_name: String) : BaseDialog<DialogIngr
             }
             binding.tvCount.text = "${--count}"
         }
+    }
+
+    interface onCountListener{
+        fun getCount(count:Int)
     }
 }
