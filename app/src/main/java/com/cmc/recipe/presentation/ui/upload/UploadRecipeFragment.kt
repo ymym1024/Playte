@@ -17,8 +17,13 @@ import com.cmc.recipe.data.model.Ingredient
 import com.cmc.recipe.data.model.RecipeStep
 import com.cmc.recipe.databinding.FragmentUploadRecipeBinding
 import com.cmc.recipe.presentation.ui.base.BaseFragment
+import com.cmc.recipe.utils.CommonTextWatcher
 import com.cmc.recipe.utils.getRealPathFromURI
 import com.cmc.recipe.utils.loadImagesWithGlideRound
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 
 class UploadRecipeFragment : BaseFragment<FragmentUploadRecipeBinding>(FragmentUploadRecipeBinding::inflate) {
@@ -37,7 +42,6 @@ class UploadRecipeFragment : BaseFragment<FragmentUploadRecipeBinding>(FragmentU
     }
 
     private fun initEvent(){
-
         binding.ibPlus.setOnClickListener {
             binding.tvRecipeCount.text = "${++count}"
             if(count > 1){

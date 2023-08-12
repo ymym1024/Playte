@@ -5,6 +5,7 @@ import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.RectF
 import android.graphics.drawable.Drawable
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.View
@@ -19,6 +20,7 @@ import com.cmc.recipe.databinding.ItemRecipeStepBinding
 import com.cmc.recipe.presentation.ui.base.BaseAdapter
 import com.cmc.recipe.presentation.ui.base.BaseHolder
 import com.cmc.recipe.utils.loadImagesWithGlide
+import com.cmc.recipe.utils.loadImagesWithGlideRound
 
 
 class RecipeStepAdapter:
@@ -59,7 +61,7 @@ class RecipeStepAdapter:
     }
 
     override fun onItemSwipe(position: Int) {
-        //
+
     }
 
 }
@@ -69,8 +71,11 @@ class RecipeStepItemHolder(viewBinding: ItemRecipeStepBinding):
     override fun bind(binding: ItemRecipeStepBinding, item: RecipeStep?) {
         binding.let { view->
             view.tvStepTitle.text = item?.recipeDesc
-            view.ibImage.loadImagesWithGlide(item?.recipeImage!!)
-
+            view.ibImage.loadImagesWithGlideRound(item?.recipeImage!!,10)
+            val image = binding.root.resources.getDrawable(R.drawable.ic_image)
+            view.ibImage.setOnClickListener {
+                view.ibImage.setImageDrawable(image)
+            }
         }
     }
 }
