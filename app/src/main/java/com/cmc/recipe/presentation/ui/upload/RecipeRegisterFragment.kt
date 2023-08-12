@@ -45,7 +45,7 @@ class RecipeRegisterFragment : BaseFragment<FragmentRecipeRegisterBinding>(Fragm
             }
         }
 
-        val adapter = RecipeRegisterAdapter(clickListener)
+        val adapter = RecipeStepAdapter(clickListener)
         binding.rvStep.adapter = adapter
         binding.rvStep.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
 

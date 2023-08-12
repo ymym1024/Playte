@@ -9,7 +9,7 @@ import com.cmc.recipe.presentation.ui.base.BaseHolder
 import com.cmc.recipe.presentation.ui.base.OnClickListener
 import com.cmc.recipe.utils.loadImagesWithGlide
 
-class RecipeRegisterAdapter(val clickListener: OnClickListener):
+class RecipeStepAdapter(val clickListener: OnClickListener):
     BaseAdapter<RecipeStep, ItemRecipeStepBinding, RecipeRegisterItemHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecipeRegisterItemHolder {
         return RecipeRegisterItemHolder(
