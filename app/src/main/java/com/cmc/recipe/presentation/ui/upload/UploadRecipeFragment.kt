@@ -77,12 +77,10 @@ class UploadRecipeFragment : BaseFragment<FragmentUploadRecipeBinding>(FragmentU
 
     private fun initAdapter(){
         val dataList = arrayListOf(
-            Ingredient("토마토","재료"),
-            Ingredient("토마토 소스","양념"),
-            Ingredient("토마토","양념"),
-            Ingredient("토마토 소스","양념"),
-            Ingredient("토마토","양념"),
-            Ingredient("토마토 소스","양념")
+시            Ingredient("토마토","재료","개"),
+            Ingredient("토마토 소스","양념","ml"),
+            Ingredient("토마토","양념","ml"),
+            Ingredient("간장","양념","T")
         )
 
         ingredientAdapter = IngredientAdapter()
@@ -99,23 +97,35 @@ class UploadRecipeFragment : BaseFragment<FragmentUploadRecipeBinding>(FragmentU
         binding.etRecipeIngredient.setAdapter(adapter)
         binding.etRecipeIngredient.setOnItemClickListener { _, v, position, _ ->
             val data = adapter.getItem(position)
-            viewDialog("개수",data.name)
+            viewDialog(data.unit,data.name)
         }
     }
 
-    private fun viewDialog(type:String,name:String){
-        if(type == "개수") {
+    private fun viewDialog(unit:String,name:String){
+        if(unit == "개") {
             val dialog = IngredientCountDialog(name)
             dialog.setListener(object : IngredientCountDialog.onCountListener{
                 override fun getCount(count: Int) {
-                    val nameAndCount = "${name} ${count}개"
-                    ingredientAdapter.addItem(nameAndCount)
-                    binding.etRecipeIngredient.setText("")
+                    dialogBinding(name,count,unit)
                 }
 
             })
             dialog.show(parentFragmentManager,"IngredientCountDialog")
+        }else{
+            val dialog = IngredientEtcDialog(name,unit)
+            dialog.setListener(object :IngredientEtcDialog.onCountListener{
+                override fun getCount(count: Int) {
+                    dialogBinding(name,count,unit)
+                }
+            })
+            dialog.show(parentFragmentManager,"IngredientEtcDialog")
         }
+    }
+
+    private fun dialogBinding(name:String,count:Int,unit:String){
+        val nameAndCount = "${name} ${count}${unit}"
+        ingredientAdapter.addItem(nameAndCount)
+        binding.etRecipeIngredient.setText("")
     }
 
 
