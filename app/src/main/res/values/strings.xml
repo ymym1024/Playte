@@ -39,6 +39,8 @@
     <string name="no_favorite">관심 없음</string>
     <string name="alert">신고하기</string>
     <string name="send_reply">의견보내기</string>
+    <string name="count">개</string>
+    <string name="check">확인</string>
 
     <!-- 레시피 -->
     <string name="recipe_searchview_hint">레시피 및 재료를 검색해보세요.</string>
