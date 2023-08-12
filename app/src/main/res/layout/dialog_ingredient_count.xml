@@ -7,9 +7,8 @@
     android:background="@drawable/bg_radius_dialog"
     android:orientation="vertical">
 
-
     <TextView
-        android:id="@+id/textView43"
+        android:id="@+id/btn_cancel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
@@ -34,7 +33,7 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <TextView
-            android:id="@+id/textView44"
+            android:id="@+id/tv_ingredient_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="TextView"
@@ -62,7 +61,7 @@
         app:layout_constraintTop_toBottomOf="@+id/linearLayout7">
 
         <ImageButton
-            android:id="@+id/imageButton6"
+            android:id="@+id/btn_minus"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@drawable/ic_minus_deactivate"
@@ -70,7 +69,7 @@
             tools:layout_editor_absoluteY="105dp" />
 
         <TextView
-            android:id="@+id/textView46"
+            android:id="@+id/tv_count"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
@@ -84,7 +83,7 @@
             tools:layout_editor_absoluteY="122dp" />
 
         <ImageButton
-            android:id="@+id/imageButton9"
+            android:id="@+id/btn_plus"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@drawable/ic_plus_activate"
@@ -93,7 +92,7 @@
     </LinearLayout>
 
     <Button
-        android:id="@+id/button8"
+        android:id="@+id/btn_check"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
