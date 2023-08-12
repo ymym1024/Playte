@@ -77,7 +77,7 @@ class UploadRecipeFragment : BaseFragment<FragmentUploadRecipeBinding>(FragmentU
 
     private fun initAdapter(){
         val dataList = arrayListOf(
-시            Ingredient("토마토","재료","개"),
+            Ingredient("토마토","재료","개"),
             Ingredient("토마토 소스","양념","ml"),
             Ingredient("토마토","양념","ml"),
             Ingredient("간장","양념","T")
