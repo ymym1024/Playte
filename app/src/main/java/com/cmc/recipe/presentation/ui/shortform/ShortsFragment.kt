@@ -20,7 +20,9 @@ class ShortsFragment : BaseFragment<FragmentShortsBinding>(FragmentShortsBinding
         val itemList = arrayListOf(
             "https://recipe-application-bucket.s3.ap-northeast-2.amazonaws.com/videos/testvideo.mp4",
             "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4",
-            "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4"
+            "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4",
+            "https://d1jg55wkcrciwu.cloudfront.net/videos/testvideo.mp4",
+            "https://www.youtube.com/shorts/ku5PCueK_CY?feature=share"
         )
 
         initVideo(itemList)

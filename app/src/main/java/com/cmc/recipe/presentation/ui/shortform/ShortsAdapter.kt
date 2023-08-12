@@ -34,7 +34,7 @@ class ShortsAdapter(private val context:Context,val videoPreparedListener: Short
     }
 }
 
-class ShortsItemHolder(viewBinding: ItemShortsBinding, val context: Context,val videoPreparedListener: ShortsItemHolder.OnVideoPreparedListener,val clickListener: OnClickListener):
+class ShortsItemHolder(viewBinding: ItemShortsBinding, val context: Context,val videoPreparedListener: OnVideoPreparedListener,val clickListener: OnClickListener):
     BaseHolder<String, ItemShortsBinding>(viewBinding){
 
     override fun bind(binding: ItemShortsBinding, item: String?) {
@@ -60,9 +60,18 @@ class ShortsItemHolder(viewBinding: ItemShortsBinding, val context: Context,val 
             }
             v.videoExoplay.player = exoPlayer
             v.ivEyes.bringToFront()
+            v.tvTitle.bringToFront()
+            v.tvDesc.bringToFront()
+            v.tvBookmarkCnt.bringToFront()
+            v.ibBookmark.bringToFront()
+            v.tvCommentCnt.bringToFront()
+            v.ibComment.bringToFront()
+            v.tvHeartCnt.bringToFront()
+            v.ibHeart.bringToFront()
         }
 
         exoPlayer.seekTo(0)
+        exoPlayer.volume = 0f
         exoPlayer.repeatMode = Player.REPEAT_MODE_ONE
 
         val dataSourceFactory = DefaultDataSource.Factory(context)
