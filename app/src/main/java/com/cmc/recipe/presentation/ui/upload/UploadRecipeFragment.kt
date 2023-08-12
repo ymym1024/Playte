@@ -17,6 +17,7 @@ import com.cmc.recipe.data.model.Ingredient
 import com.cmc.recipe.data.model.RecipeStep
 import com.cmc.recipe.databinding.FragmentUploadRecipeBinding
 import com.cmc.recipe.presentation.ui.base.BaseFragment
+import com.cmc.recipe.presentation.ui.common.RecipeSnackBar
 import com.cmc.recipe.utils.CommonTextWatcher
 import com.cmc.recipe.utils.getRealPathFromURI
 import com.cmc.recipe.utils.loadImagesWithGlideRound
@@ -57,6 +58,10 @@ class UploadRecipeFragment : BaseFragment<FragmentUploadRecipeBinding>(FragmentU
                 binding.ibMinus.isEnabled = false
             }
         }
+
+        binding.btnSave.setOnClickListener {
+            RecipeSnackBar(binding.btnSave,"레시피가 등록됐습니다!").show()
+        }
     }
 
     private fun initRecipeRv(){
@@ -91,6 +96,7 @@ class UploadRecipeFragment : BaseFragment<FragmentUploadRecipeBinding>(FragmentU
                     imageString = ""
                     binding.ibImage.setImageResource(R.drawable.ic_image)
                     binding.tvRecipeStepCount.text = "${adapter.itemCount}"
+                    binding.btnSave.isEnabled =true
                 }
                 return@setOnEditorActionListener true
             }
