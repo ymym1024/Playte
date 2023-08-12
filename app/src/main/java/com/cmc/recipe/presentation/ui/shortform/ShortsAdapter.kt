@@ -38,13 +38,6 @@ class ShortsItemHolder(viewBinding: ItemShortsBinding, val context: Context,val 
     BaseHolder<String, ItemShortsBinding>(viewBinding){
 
     override fun bind(binding: ItemShortsBinding, item: String?) {
-//        item?.let {
-//            binding.tvTime.text = it
-//        }
-        binding.shortParent.setOnClickListener {
-            clickListener.onMoveDetailPage(0)
-        }
-
         val exoPlayer = ExoPlayer.Builder(context).build()
         exoPlayer.addListener(object : Player.Listener {
             override fun onPlayerError(error: PlaybackException) {
@@ -61,7 +54,13 @@ class ShortsItemHolder(viewBinding: ItemShortsBinding, val context: Context,val 
             }
         })
 
-        binding.videoExoplay.player = exoPlayer
+        binding.let { v ->
+            v.shortParent.setOnClickListener {
+                clickListener.onMoveDetailPage(0)
+            }
+            v.videoExoplay.player = exoPlayer
+            v.ivEyes.bringToFront()
+        }
 
         exoPlayer.seekTo(0)
         exoPlayer.repeatMode = Player.REPEAT_MODE_ONE

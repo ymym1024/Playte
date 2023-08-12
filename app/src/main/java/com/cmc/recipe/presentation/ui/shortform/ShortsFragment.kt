@@ -18,7 +18,7 @@ class ShortsFragment : BaseFragment<FragmentShortsBinding>(FragmentShortsBinding
     override fun initFragment() {
         //TODO : 네트워크 연결 후 모델 변경
         val itemList = arrayListOf(
-            "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
+            "https://recipe-application-bucket.s3.ap-northeast-2.amazonaws.com/videos/testvideo.mp4",
             "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4",
             "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4"
         )
@@ -108,8 +108,18 @@ class ShortsFragment : BaseFragment<FragmentShortsBinding>(FragmentShortsBinding
         }
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
+//    override fun onDestroy() {
+//        super.onDestroy()
+//        if (exoPlayerItems.isNotEmpty()) {
+//            for (item in exoPlayerItems) {
+//                val player = item.exoPlayer
+//                player.release()
+//            }
+//        }
+//    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
         if (exoPlayerItems.isNotEmpty()) {
             for (item in exoPlayerItems) {
                 val player = item.exoPlayer
