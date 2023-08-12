@@ -32,8 +32,8 @@ class UploadShortsFragment : BaseFragment<FragmentUploadShortsBinding>(FragmentU
 
     override fun onDestroyView() {
         super.onDestroyView()
-        val mainActivity = activity as MainActivity
-        mainActivity.clearToolbarAndIcon()
+        val activity = activity as UploadActivity
+        activity.clearToolbarAndIcon()
     }
 
     override fun initFragment() {
@@ -142,11 +142,11 @@ class UploadShortsFragment : BaseFragment<FragmentUploadShortsBinding>(FragmentU
     }
 
     fun settingToolbar(time : Long){
-        val mainActivity = activity as MainActivity
+        val activity = activity as UploadActivity
         val iconDrawable: Drawable? = ContextCompat.getDrawable(requireContext(), R.drawable.ic_time)
         val drawablePadding = 6.dp
 
-        mainActivity.setToolbarAndIcon(iconDrawable!!,time.convertLongToTime(time),drawablePadding)
+        activity.setToolbarAndIcon(iconDrawable!!,time.convertLongToTime(time),drawablePadding)
     }
 
     val Int.dp: Int

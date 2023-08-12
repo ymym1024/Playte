@@ -9,7 +9,7 @@
     <fragment
         android:id="@+id/uploadRecipeFragment"
         android:name="com.cmc.recipe.presentation.ui.upload.UploadRecipeFragment"
-        android:label="fragment_upload_recipe"
+        android:label="나의 레시피 작성"
         tools:layout="@layout/fragment_upload_recipe" />
 
     <fragment

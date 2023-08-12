@@ -1,5 +1,6 @@
 package com.cmc.recipe.presentation.ui.upload
 
+import android.graphics.drawable.Drawable
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import com.cmc.recipe.R
@@ -38,5 +39,16 @@ class UploadActivity : BaseActivity<ActivityUploadBinding>({ ActivityUploadBindi
 
     override fun onSupportNavigateUp(): Boolean {
         return navController.navigateUp() || super.onSupportNavigateUp()
+    }
+
+
+    fun setToolbarAndIcon(icon : Drawable, string: String, padding:Int){
+        binding.toolbarTitle.setCompoundDrawablesWithIntrinsicBounds(icon, null, null, null)
+        binding.toolbarTitle.text = string
+        binding.toolbarTitle.compoundDrawablePadding = padding
+    }
+
+    fun clearToolbarAndIcon(){
+        binding.toolbarTitle.setCompoundDrawablesWithIntrinsicBounds(null, null, null, null)
     }
 }
