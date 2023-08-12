@@ -10,6 +10,7 @@ import android.view.inputmethod.EditorInfo
 import android.widget.ArrayAdapter
 import android.widget.BaseAdapter
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.cmc.recipe.R
 import com.cmc.recipe.data.model.Ingredient
@@ -47,15 +48,20 @@ class UploadRecipeFragment : BaseFragment<FragmentUploadRecipeBinding>(FragmentU
     }
 
     private fun initRecipeRv(){
-        val clickListener = object : OnClickListener {
-            override fun onMovePage(id: Int) {
-               // findNavController().navigate(R.id.action_recipeDetailFragment_to_recipeReviewFragment)
-            }
-        }
 
-        val adapter = RecipeStepAdapter(clickListener)
+        val adapter = RecipeStepAdapter()
+        adapter.setListener(object : RecipeStepItemHolder.onItemListener{
+
+            override fun delete(position: Int) {
+
+            }
+
+        })
+
         binding.rvStep.adapter = adapter
         binding.rvStep.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
+        val itemTouchHelper = ItemTouchHelper(ItemTouchCallback(adapter))
+        itemTouchHelper.attachToRecyclerView(binding.rvStep)
 
         binding.etRecipe.setOnEditorActionListener { _, actionId, event ->
             if (actionId == EditorInfo.IME_ACTION_DONE || (event != null && event.keyCode == KeyEvent.KEYCODE_ENTER)) {
