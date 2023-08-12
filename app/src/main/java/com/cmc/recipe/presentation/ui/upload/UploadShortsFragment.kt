@@ -46,12 +46,10 @@ class UploadShortsFragment : BaseFragment<FragmentUploadShortsBinding>(FragmentU
     private fun initAdapter(){
         //TODO : mockup data => 네트워크 연결 후 삭제
         val dataList = arrayListOf(
-            Ingredient("토마토","재료"),
-            Ingredient("토마토 소스","양념"),
-            Ingredient("토마토","양념"),
-            Ingredient("토마토 소스","양념"),
-            Ingredient("토마토","양념"),
-            Ingredient("토마토 소스","양념")
+            Ingredient("토마토","재료","개수"),
+            Ingredient("토마토 소스","양념","ml"),
+            Ingredient("토마토","양념","ml"),
+            Ingredient("간장","양념","T")
         )
 
         val ingredientAdapter = IngredientAdapter()
