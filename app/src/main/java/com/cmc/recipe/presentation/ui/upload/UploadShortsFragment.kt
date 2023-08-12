@@ -32,8 +32,8 @@ class UploadShortsFragment : BaseFragment<FragmentUploadShortsBinding>(FragmentU
 
     override fun onDestroyView() {
         super.onDestroyView()
-        val mainActivity = activity as MainActivity
-        mainActivity.clearToolbarAndIcon()
+        val activity = activity as UploadActivity
+        activity.clearToolbarAndIcon()
     }
 
     override fun initFragment() {
@@ -46,12 +46,10 @@ class UploadShortsFragment : BaseFragment<FragmentUploadShortsBinding>(FragmentU
     private fun initAdapter(){
         //TODO : mockup data => 네트워크 연결 후 삭제
         val dataList = arrayListOf(
-            Ingredient("토마토","재료"),
-            Ingredient("토마토 소스","양념"),
-            Ingredient("토마토","양념"),
-            Ingredient("토마토 소스","양념"),
-            Ingredient("토마토","양념"),
-            Ingredient("토마토 소스","양념")
+            Ingredient("토마토","재료","개수"),
+            Ingredient("토마토 소스","양념","ml"),
+            Ingredient("토마토","양념","ml"),
+            Ingredient("간장","양념","T")
         )
 
         val ingredientAdapter = IngredientAdapter()
@@ -144,11 +142,11 @@ class UploadShortsFragment : BaseFragment<FragmentUploadShortsBinding>(FragmentU
     }
 
     fun settingToolbar(time : Long){
-        val mainActivity = activity as MainActivity
+        val activity = activity as UploadActivity
         val iconDrawable: Drawable? = ContextCompat.getDrawable(requireContext(), R.drawable.ic_time)
         val drawablePadding = 6.dp
 
-        mainActivity.setToolbarAndIcon(iconDrawable!!,time.convertLongToTime(time),drawablePadding)
+        activity.setToolbarAndIcon(iconDrawable!!,time.convertLongToTime(time),drawablePadding)
     }
 
     val Int.dp: Int

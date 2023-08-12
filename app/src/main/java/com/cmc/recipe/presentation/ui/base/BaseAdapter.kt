@@ -8,7 +8,7 @@ import androidx.viewbinding.ViewBinding
 abstract class BaseAdapter<ItemType, BindingType : ViewBinding, ViewHolderType : BaseHolder<ItemType, BindingType>> :
     RecyclerView.Adapter<ViewHolderType>() {
     private val itemList: MutableList<ItemType> = ArrayList()
-    private var itemPosition = -1
+    var itemPosition = -1
 
     override fun onBindViewHolder(@NonNull holder: ViewHolderType, @SuppressLint("RecyclerView") position: Int) {
         val itemData = itemList[position] ?: return

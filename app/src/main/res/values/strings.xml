@@ -28,6 +28,7 @@
     <string name="add">저장</string>
     <string name="etc">기타</string>
     <string name="next">다음</string>
+    <string name="thumbnail">썸네일</string>
     <string name="complete">완료</string>
     <string name="newest">최신순</string>
     <string name="popular">인기순</string>
@@ -38,6 +39,8 @@
     <string name="no_favorite">관심 없음</string>
     <string name="alert">신고하기</string>
     <string name="send_reply">의견보내기</string>
+    <string name="count">개</string>
+    <string name="check">확인</string>
 
     <!-- 레시피 -->
     <string name="recipe_searchview_hint">레시피 및 재료를 검색해보세요.</string>
@@ -65,6 +68,7 @@
     <string name="recipe_order_best">베스트순</string>
     <string name="recipe_order_recent">최신순</string>
     <string name="recipe_comment_info">댓글을 적어보세요.</string>
+    <string name="recipe_dialog_hin">필요한 양(mL)을 입력해주세요</string>
 
     <!-- 온보딩 -->
     <string name="simple_login">간편 로그인</string>

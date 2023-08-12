@@ -81,16 +81,6 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    fun setToolbarAndIcon(icon : Drawable, string: String,padding:Int){
-        binding.toolbarTitle.setCompoundDrawablesWithIntrinsicBounds(icon, null, null, null)
-        binding.toolbarTitle.text = string
-        binding.toolbarTitle.compoundDrawablePadding = padding
-    }
-
-    fun clearToolbarAndIcon(){
-        binding.toolbarTitle.setCompoundDrawablesWithIntrinsicBounds(null, null, null, null)
-    }
-
     // bottomnavigation show flag
     fun hideBottomNavigation(state:Boolean){
         if(state){
