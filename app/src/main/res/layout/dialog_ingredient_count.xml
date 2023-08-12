@@ -62,8 +62,9 @@
 
         <ImageButton
             android:id="@+id/btn_minus"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="49dp"
+            android:layout_height="49dp"
+            android:scaleType="centerInside"
             android:background="@drawable/ic_minus_deactivate"
             tools:layout_editor_absoluteX="57dp"
             tools:layout_editor_absoluteY="105dp" />
@@ -78,17 +79,13 @@
             android:text="1"
             android:textColor="@color/primary_color"
             android:textFontWeight="500"
-            android:textSize="24dp"
-            tools:layout_editor_absoluteX="141dp"
-            tools:layout_editor_absoluteY="122dp" />
+            android:textSize="24dp" />
 
         <ImageButton
             android:id="@+id/btn_plus"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@drawable/ic_plus_activate"
-            tools:layout_editor_absoluteX="225dp"
-            tools:layout_editor_absoluteY="91dp" />
+            android:layout_width="49dp"
+            android:layout_height="49dp"
+            android:background="@drawable/ic_plus_activate" />
     </LinearLayout>
 
     <Button
