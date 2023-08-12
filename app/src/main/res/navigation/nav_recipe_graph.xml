@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_recipe_graph"
-    app:startDestination="@id/recipeDetailFragment">
+    app:startDestination="@id/recipeRegisterFragment">
 
     <fragment
         android:id="@+id/recipeDetailFragment"
@@ -37,4 +37,9 @@
         android:name="com.cmc.recipe.presentation.ui.recipe.ImageReviewActivity"
         android:label="activity_image_review"
         tools:layout="@layout/activity_image_review" />
+    <fragment
+        android:id="@+id/recipeRegisterFragment"
+        android:name="com.cmc.recipe.presentation.ui.upload.UploadRecipeFragment"
+        android:label="fragment_recipe_register"
+        tools:layout="@layout/fragment_upload_recipe" />
 </navigation>

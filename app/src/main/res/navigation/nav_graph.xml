@@ -6,6 +6,12 @@
     app:startDestination="@id/shortsFragment">
 
     <fragment
+        android:id="@+id/uploadFragment"
+        android:name="com.cmc.recipe.presentation.ui.upload.UploadFragment"
+        android:label="UploadFragment"
+        tools:layout="@layout/fragment_upload"/>
+
+    <fragment
         android:id="@+id/recipeMainFragment"
         android:name="com.cmc.recipe.presentation.ui.recipe.RecipeMainFragment"
         android:label="@string/recipe"
@@ -52,16 +58,6 @@
             app:destination="@id/myReviewFragment" />
     </fragment>
 
-    <fragment
-        android:id="@+id/uploadFragment"
-        android:name="com.cmc.recipe.presentation.ui.upload.UploadFragment"
-        android:label="UploadFragment"
-        tools:layout="@layout/fragment_upload"/>
-    <fragment
-        android:id="@+id/uploadShortsFragment"
-        android:name="com.cmc.recipe.presentation.ui.upload.UploadShortsFragment"
-        android:label=""
-        tools:layout="@layout/fragment_upload_shorts" />
     <fragment
         android:id="@+id/searchRecipeFragment"
         android:name="com.cmc.recipe.presentation.ui.search.SearchRecipeFragment"
