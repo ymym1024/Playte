@@ -10,13 +10,13 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.cmc.recipe.R
 import com.cmc.recipe.data.model.RecipeStep
-import com.cmc.recipe.databinding.FragmentRecipeRegisterBinding
+import com.cmc.recipe.databinding.FragmentUploadRecipeBinding
 import com.cmc.recipe.presentation.ui.base.BaseFragment
 import com.cmc.recipe.presentation.ui.base.OnClickListener
 import com.cmc.recipe.utils.getRealPathFromURI
 import com.cmc.recipe.utils.loadImagesWithGlideRound
 
-class RecipeRegisterFragment : BaseFragment<FragmentRecipeRegisterBinding>(FragmentRecipeRegisterBinding::inflate) {
+class UploadRecipeFragment : BaseFragment<FragmentUploadRecipeBinding>(FragmentUploadRecipeBinding::inflate) {
 
     private lateinit var imageUri : Uri
     private var imageString : String? = ""
