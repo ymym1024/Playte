@@ -2,24 +2,24 @@ package com.cmc.recipe.presentation.ui.upload
 
 import android.app.Activity
 import android.content.Intent
+import android.graphics.Canvas
 import android.net.Uri
 import android.provider.MediaStore
 import android.util.Log
 import android.view.KeyEvent
 import android.view.inputmethod.EditorInfo
-import android.widget.ArrayAdapter
-import android.widget.BaseAdapter
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.cmc.recipe.R
 import com.cmc.recipe.data.model.Ingredient
 import com.cmc.recipe.data.model.RecipeStep
 import com.cmc.recipe.databinding.FragmentUploadRecipeBinding
 import com.cmc.recipe.presentation.ui.base.BaseFragment
-import com.cmc.recipe.presentation.ui.base.OnClickListener
 import com.cmc.recipe.utils.getRealPathFromURI
 import com.cmc.recipe.utils.loadImagesWithGlideRound
+
 
 class UploadRecipeFragment : BaseFragment<FragmentUploadRecipeBinding>(FragmentUploadRecipeBinding::inflate) {
 
@@ -50,18 +50,23 @@ class UploadRecipeFragment : BaseFragment<FragmentUploadRecipeBinding>(FragmentU
     private fun initRecipeRv(){
 
         val adapter = RecipeStepAdapter()
-        adapter.setListener(object : RecipeStepItemHolder.onItemListener{
-
-            override fun delete(position: Int) {
-
+        adapter.setListener(object : RecipeStepAdapter.onChangeListener{
+            override fun change() {
+                binding.tvRecipeStepCount.text = "${adapter.itemCount}"
             }
 
         })
-
         binding.rvStep.adapter = adapter
         binding.rvStep.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
-        val itemTouchHelper = ItemTouchHelper(ItemTouchCallback(adapter))
+        val swipeController = ItemTouchCallback(adapter)
+        val itemTouchHelper = ItemTouchHelper(swipeController)
         itemTouchHelper.attachToRecyclerView(binding.rvStep)
+        binding.rvStep.addItemDecoration(object : RecyclerView.ItemDecoration() {
+            override fun onDraw(c: Canvas, parent: RecyclerView, state: RecyclerView.State) {
+                swipeController.onDraw(c)
+            }
+        })
+
 
         binding.etRecipe.setOnEditorActionListener { _, actionId, event ->
             if (actionId == EditorInfo.IME_ACTION_DONE || (event != null && event.keyCode == KeyEvent.KEYCODE_ENTER)) {
