@@ -68,6 +68,7 @@
     <string name="recipe_order_best">베스트순</string>
     <string name="recipe_order_recent">최신순</string>
     <string name="recipe_comment_info">댓글을 적어보세요.</string>
+    <string name="recipe_dialog_hin">필요한 양(mL)을 입력해주세요</string>
 
     <!-- 온보딩 -->
     <string name="simple_login">간편 로그인</string>
