@@ -1,9 +1,7 @@
-package com.cmc.recipe.presentation.ui.recipe
+package com.cmc.recipe.presentation.ui.upload
 
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import com.cmc.recipe.data.model.RecipeItem
 import com.cmc.recipe.data.model.RecipeStep
 import com.cmc.recipe.databinding.ItemRecipeStepBinding
 import com.cmc.recipe.presentation.ui.base.BaseAdapter

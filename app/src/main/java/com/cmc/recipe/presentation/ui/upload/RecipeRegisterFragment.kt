@@ -1,4 +1,4 @@
-package com.cmc.recipe.presentation.ui.recipe
+package com.cmc.recipe.presentation.ui.upload
 
 import android.app.Activity
 import android.content.Intent
