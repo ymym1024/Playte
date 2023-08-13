@@ -2,9 +2,13 @@ package com.cmc.recipe.presentation.ui.shortform
 
 import android.content.Context
 import android.net.Uri
+import android.os.Handler
+import android.os.Looper
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.Toast
 import androidx.core.content.ContextCompat
@@ -21,6 +25,8 @@ import com.google.android.exoplayer2.PlaybackException
 import com.google.android.exoplayer2.Player
 import com.google.android.exoplayer2.source.ProgressiveMediaSource
 import com.google.android.exoplayer2.ui.DefaultTimeBar
+import com.google.android.exoplayer2.ui.PlayerControlView
+import com.google.android.exoplayer2.ui.StyledPlayerView
 import com.google.android.exoplayer2.upstream.DefaultDataSource
 
 class ShortsDetailAdapter(private val context:Context,val videoPreparedListener: ShortsItemHolder.OnVideoPreparedListener):
@@ -37,21 +43,6 @@ class ShortsDetailAdapter(private val context:Context,val videoPreparedListener:
 class ShortsDetailHolder(viewBinding: ItemShortsDetailBinding, val context: Context,val videoPreparedListener: ShortsItemHolder.OnVideoPreparedListener)
     :BaseHolder<String, ItemShortsDetailBinding>(viewBinding){
     override fun bind(binding: ItemShortsDetailBinding, item: String?) {
-
-        val videoView = binding.exoplayer
-        val defaultTimeBarView = videoView.findViewById<DefaultTimeBar>(com.google.android.exoplayer2.ui.R.id.exo_progress)
-        val timeTextView = videoView.findViewById<LinearLayout>(R.id.tv_video_time)
-
-        defaultTimeBarView.setPlayedColor(ContextCompat.getColor(binding.root.context, R.color.primary_color))
-        defaultTimeBarView.setScrubberColor(ContextCompat.getColor(binding.root.context, R.color.primary_color))
-        defaultTimeBarView.setAdMarkerColor(ContextCompat.getColor(binding.root.context, R.color.primary_color))
-
-        val parent = defaultTimeBarView.parent as? ViewGroup
-        parent?.removeView(defaultTimeBarView)
-        parent?.removeView(timeTextView)
-
-        binding.llPlayer.addView(defaultTimeBarView)
-        binding.llPlayer.addView(timeTextView)
 
         val exoPlayer = ExoPlayer.Builder(context).build()
         exoPlayer.addListener(object : Player.Listener {
@@ -70,6 +61,24 @@ class ShortsDetailHolder(viewBinding: ItemShortsDetailBinding, val context: Cont
         })
 
         binding.exoplayer.player = exoPlayer
+        binding.exoplayer.controllerShowTimeoutMs = 0
+
+        var isPlaying = true
+
+        binding.ivPlayPause.bringToFront()
+        binding.exoplayer.setOnClickListener {
+            binding.exoplayer.showController()
+            if (isPlaying) {
+                exoPlayer.playWhenReady = false // Pause the player
+                isPlaying = false
+
+            } else {
+                exoPlayer.playWhenReady = true // Resume playing
+                isPlaying = true
+            }
+
+            showPlayPause(binding.ivPlayPause,isPlaying)
+        }
 
         exoPlayer.seekTo(0)
         exoPlayer.repeatMode = Player.REPEAT_MODE_ONE
@@ -89,7 +98,6 @@ class ShortsDetailHolder(viewBinding: ItemShortsDetailBinding, val context: Cont
 
         videoPreparedListener.onVideoPrepared(ExoPlayerItem(exoPlayer, absoluteAdapterPosition))
 
-
         // product recyclerview
         val adapter = ShortsProductAdapter(object :ShortsProductItemHolder.OnClickListener{
             override fun onMoveSite(url: String) {
@@ -108,4 +116,13 @@ class ShortsDetailHolder(viewBinding: ItemShortsDetailBinding, val context: Cont
         adapter.replaceData(itemList)
     }
 
+    private fun showPlayPause(imageView:ImageView,flag:Boolean){
+        if(flag) imageView.setImageResource(R.drawable.ic_shorts_play)
+        else imageView.setImageResource(R.drawable.ic_shorts_pause)
+
+        imageView.visibility = View.VISIBLE
+        Handler(Looper.getMainLooper()).postDelayed({
+            imageView.visibility = View.GONE
+        }, 1000)
+    }
 }
