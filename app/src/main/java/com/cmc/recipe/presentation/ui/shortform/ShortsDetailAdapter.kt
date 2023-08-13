@@ -5,8 +5,11 @@ import android.net.Uri
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.LinearLayout
 import android.widget.Toast
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.cmc.recipe.R
 import com.cmc.recipe.data.model.ExoPlayerItem
 import com.cmc.recipe.data.model.Product
 import com.cmc.recipe.databinding.ItemShortsDetailBinding
@@ -17,6 +20,7 @@ import com.google.android.exoplayer2.MediaItem
 import com.google.android.exoplayer2.PlaybackException
 import com.google.android.exoplayer2.Player
 import com.google.android.exoplayer2.source.ProgressiveMediaSource
+import com.google.android.exoplayer2.ui.DefaultTimeBar
 import com.google.android.exoplayer2.upstream.DefaultDataSource
 
 class ShortsDetailAdapter(private val context:Context,val videoPreparedListener: ShortsItemHolder.OnVideoPreparedListener):
@@ -33,6 +37,22 @@ class ShortsDetailAdapter(private val context:Context,val videoPreparedListener:
 class ShortsDetailHolder(viewBinding: ItemShortsDetailBinding, val context: Context,val videoPreparedListener: ShortsItemHolder.OnVideoPreparedListener)
     :BaseHolder<String, ItemShortsDetailBinding>(viewBinding){
     override fun bind(binding: ItemShortsDetailBinding, item: String?) {
+
+        val videoView = binding.exoplayer
+        val defaultTimeBarView = videoView.findViewById<DefaultTimeBar>(com.google.android.exoplayer2.ui.R.id.exo_progress)
+        val timeTextView = videoView.findViewById<LinearLayout>(R.id.tv_video_time)
+
+        defaultTimeBarView.setPlayedColor(ContextCompat.getColor(binding.root.context, R.color.primary_color))
+        defaultTimeBarView.setScrubberColor(ContextCompat.getColor(binding.root.context, R.color.primary_color))
+        defaultTimeBarView.setAdMarkerColor(ContextCompat.getColor(binding.root.context, R.color.primary_color))
+
+        val parent = defaultTimeBarView.parent as? ViewGroup
+        parent?.removeView(defaultTimeBarView)
+        parent?.removeView(timeTextView)
+
+        binding.llPlayer.addView(defaultTimeBarView)
+        binding.llPlayer.addView(timeTextView)
+
         val exoPlayer = ExoPlayer.Builder(context).build()
         exoPlayer.addListener(object : Player.Listener {
             override fun onPlayerError(error: PlaybackException) {
