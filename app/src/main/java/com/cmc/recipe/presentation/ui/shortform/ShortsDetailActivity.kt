@@ -4,12 +4,20 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import androidx.viewpager2.widget.ViewPager2
+import com.cmc.recipe.R
 import com.cmc.recipe.data.model.ExoPlayerItem
 import com.cmc.recipe.databinding.ActivityShortsDetailBinding
+import com.cmc.recipe.presentation.ui.recipe.BottomSheetDetailDialog
+import com.cmc.recipe.utils.navigationHeight
+import com.cmc.recipe.utils.setStatusBarTransparent
+import com.cmc.recipe.utils.statusBarHeight
 
 class ShortsDetailActivity : AppCompatActivity() {
     private lateinit var binding: ActivityShortsDetailBinding
     private val exoPlayerItems = ArrayList<ExoPlayerItem>()
+    private var currentPosition = 0
+
+    private var isMute = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -25,7 +33,42 @@ class ShortsDetailActivity : AppCompatActivity() {
         )
 
         initVideo(itemList)
+        initMenu()
 
+    }
+
+    private fun initMenu(){
+
+        binding.let {
+            it.btnSpeak.bringToFront()
+            it.btnBack.bringToFront()
+            it.btnMore.bringToFront()
+        }
+
+        binding.btnBack.setOnClickListener {
+            this.onBackPressed()
+        }
+
+        binding.btnMore.setOnClickListener {
+            showBottomSheet()
+        }
+
+        binding.btnSpeak.setOnClickListener {
+            if(!isMute){ // mute 아님
+                binding.btnSpeak.setImageResource(R.drawable.ic_mute)
+                exoPlayerItems[currentPosition].exoPlayer.volume = 0f
+                isMute = true
+            }else{
+                binding.btnSpeak.setImageResource(R.drawable.ic_speak)
+                exoPlayerItems[currentPosition].exoPlayer.volume = 0.5f
+                isMute = false
+            }
+        }
+
+    }
+
+    private fun showBottomSheet(){
+        BottomSheetDetailDialog().show(supportFragmentManager,"RemoveBottomSheetFragment")
     }
 
     private fun initVideo(itemList:ArrayList<String>){
@@ -54,6 +97,7 @@ class ShortsDetailActivity : AppCompatActivity() {
                     player.playWhenReady = true
                     player.play()
                 }
+                currentPosition = position
                 Log.d("onPageSelected","${previousIndex} , ${newIndex}")
             }
         })
