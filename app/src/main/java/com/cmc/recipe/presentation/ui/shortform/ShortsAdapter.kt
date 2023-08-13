@@ -9,6 +9,7 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.navigation.NavDirections
 import androidx.recyclerview.widget.RecyclerView
+import com.cmc.recipe.R
 import com.cmc.recipe.data.model.ExoPlayerItem
 import com.cmc.recipe.databinding.ItemShortsBinding
 import com.cmc.recipe.databinding.ItemShortsDetailBinding
@@ -24,20 +25,28 @@ import com.google.android.exoplayer2.upstream.DefaultDataSource
 class ShortsAdapter(private val context:Context,val videoPreparedListener: ShortsItemHolder.OnVideoPreparedListener,val clickListener: ShortsItemHolder.OnClickListener):
     BaseAdapter<String, ItemShortsBinding, ShortsItemHolder>() {
 
+    private lateinit var onShortsListener : onShortsListener
+
+    fun setShortsListener(onShortsListener:onShortsListener){
+        this.onShortsListener = onShortsListener
+    }
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ShortsItemHolder {
         return ShortsItemHolder(
             ItemShortsBinding.inflate(LayoutInflater.from(parent.context), parent, false),
             context,
             videoPreparedListener,
-            clickListener
+            clickListener,
+            onShortsListener
         )
     }
 }
 
-class ShortsItemHolder(viewBinding: ItemShortsBinding, val context: Context,val videoPreparedListener: OnVideoPreparedListener,val clickListener: OnClickListener):
+class ShortsItemHolder(viewBinding: ItemShortsBinding, val context: Context,val videoPreparedListener: OnVideoPreparedListener,val clickListener: OnClickListener,val shortsListener: onShortsListener):
     BaseHolder<String, ItemShortsBinding>(viewBinding){
 
     override fun bind(binding: ItemShortsBinding, item: String?) {
+        //오디오 처리
         val exoPlayer = ExoPlayer.Builder(context).build()
         exoPlayer.addListener(object : Player.Listener {
             override fun onPlayerError(error: PlaybackException) {
@@ -56,7 +65,7 @@ class ShortsItemHolder(viewBinding: ItemShortsBinding, val context: Context,val 
 
         binding.let { v ->
             v.shortParent.setOnClickListener {
-                clickListener.onMoveDetailPage(0)
+                clickListener.onMoveDetailPage("")
             }
             v.videoExoplay.player = exoPlayer
             v.ivEyes.bringToFront()
@@ -88,6 +97,35 @@ class ShortsItemHolder(viewBinding: ItemShortsBinding, val context: Context,val 
         }
 
         videoPreparedListener.onVideoPrepared(ExoPlayerItem(exoPlayer, absoluteAdapterPosition))
+
+        var favoriteFlag = true // TODO : 나중에 서버에서 받아오기
+        // 좋아요
+        binding.ibHeart.setOnClickListener {
+            if(favoriteFlag){
+                binding.ibHeart.setImageResource(R.drawable.ic_shorts_heart_deactivate)
+                favoriteFlag = false
+            }else{
+                binding.ibHeart.setImageResource(R.drawable.ic_shorts_heart_activate)
+                favoriteFlag = true
+            }
+            shortsListener.onFavorite() //서버로 통신하는 로직 추가
+        }
+        // 댓글
+        binding.ibComment.setOnClickListener {
+            shortsListener.onComment()
+        }
+        // 북마크
+        var bookMarkFlag = true // TODO : 나중에 서버에서 받아오기
+        binding.ibBookmark.setOnClickListener {
+            if(bookMarkFlag){
+                binding.ibBookmark.setImageResource(R.drawable.ic_shorts_bookmark_deactivate)
+                bookMarkFlag = false
+            }else{
+                binding.ibBookmark.setImageResource(R.drawable.ic_shorts_bookmark_activate)
+                bookMarkFlag = true
+            }
+            shortsListener.onSave()
+        }
     }
 
     interface OnVideoPreparedListener {
@@ -95,6 +133,6 @@ class ShortsItemHolder(viewBinding: ItemShortsBinding, val context: Context,val 
     }
 
     interface OnClickListener{
-        fun onMoveDetailPage(id:Int)
+        fun onMoveDetailPage(item:String)
     }
 }

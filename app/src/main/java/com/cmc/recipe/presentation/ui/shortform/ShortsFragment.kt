@@ -26,12 +26,13 @@ class ShortsFragment : BaseFragment<FragmentShortsBinding>(FragmentShortsBinding
         )
 
         initVideo(itemList)
+
     }
 
     private fun initVideo(itemList:ArrayList<String>){
         val clickListener = object : ShortsItemHolder.OnClickListener{
-            override fun onMoveDetailPage(id: Int) {
-                findNavController().navigate(R.id.action_shortsFragment_to_shortsDetailActivity)
+            override fun onMoveDetailPage(item:String) {
+                movePage(R.id.action_shortsFragment_to_shortsDetailActivity)
             }
         }
 
@@ -41,6 +42,21 @@ class ShortsFragment : BaseFragment<FragmentShortsBinding>(FragmentShortsBinding
             }
         }
         val adapter = ShortsAdapter(requireContext(),videoPreparedListener,clickListener)
+        adapter.setShortsListener(object : onShortsListener{
+            override fun onFavorite() {
+
+            }
+
+            override fun onSave() {
+
+            }
+
+            override fun onComment() {
+                //숏츠 상세로 이동
+                movePage(R.id.action_shortsFragment_to_shortsDetailActivity)
+            }
+
+        })
 
         adapter.replaceData(itemList)
         val pageMargin = resources.getDimensionPixelOffset(R.dimen.pageMargin).toFloat()

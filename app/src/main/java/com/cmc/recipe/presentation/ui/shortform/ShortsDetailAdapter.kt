@@ -31,16 +31,24 @@ import com.google.android.exoplayer2.upstream.DefaultDataSource
 
 class ShortsDetailAdapter(private val context:Context,val videoPreparedListener: ShortsItemHolder.OnVideoPreparedListener):
     BaseAdapter<String, ItemShortsDetailBinding, ShortsDetailHolder>() {
+
+    private lateinit var onShortsListener : onShortsListener
+
+    fun setShortsListener(onShortsListener:onShortsListener){
+        this.onShortsListener = onShortsListener
+    }
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ShortsDetailHolder {
         return ShortsDetailHolder(
             ItemShortsDetailBinding.inflate(LayoutInflater.from(parent.context), parent, false),
             context,
-            videoPreparedListener
+            videoPreparedListener,
+            onShortsListener
         )
     }
 }
 
-class ShortsDetailHolder(viewBinding: ItemShortsDetailBinding, val context: Context,val videoPreparedListener: ShortsItemHolder.OnVideoPreparedListener)
+class ShortsDetailHolder(viewBinding: ItemShortsDetailBinding, val context: Context,val videoPreparedListener: ShortsItemHolder.OnVideoPreparedListener,val shortsListener: onShortsListener)
     :BaseHolder<String, ItemShortsDetailBinding>(viewBinding){
     override fun bind(binding: ItemShortsDetailBinding, item: String?) {
 
@@ -114,6 +122,40 @@ class ShortsDetailHolder(viewBinding: ItemShortsDetailBinding, val context: Cont
         )
 
         adapter.replaceData(itemList)
+
+        // 댓글
+        var favoriteFlag = true // TODO : 나중에 서버에서 받아오기
+        // 좋아요
+        binding.btnHeart.let { btn->
+            btn.setOnClickListener{
+                if(favoriteFlag){
+                    btn.setImageResource(R.drawable.ic_shorts_heart_deactivate)
+                    favoriteFlag = false
+                }else{
+                    btn.setImageResource(R.drawable.ic_shorts_heart_activate)
+                    favoriteFlag = true
+                }
+                shortsListener.onFavorite()
+            }
+        }
+        // 댓글
+        binding.btnComment.setOnClickListener {
+            shortsListener.onComment()
+        }
+        // 북마크
+        var bookMarkFlag = true // TODO : 나중에 서버에서 받아오기
+        binding.btnBookmark.let { btn ->
+            btn.setOnClickListener {
+                if(bookMarkFlag){
+                    btn.setImageResource(R.drawable.ic_shorts_bookmark_deactivate)
+                    bookMarkFlag = false
+                }else{
+                    btn.setImageResource(R.drawable.ic_shorts_bookmark_activate)
+                    bookMarkFlag = true
+                }
+                shortsListener.onSave()
+            }
+        }
     }
 
     private fun showPlayPause(imageView:ImageView,flag:Boolean){

@@ -78,6 +78,20 @@ class ShortsDetailActivity : AppCompatActivity() {
             }
         })
 
+        adapter.setShortsListener(object : onShortsListener{
+            override fun onFavorite() {
+
+            }
+
+            override fun onSave() {
+
+            }
+
+            override fun onComment() {
+
+            }
+        })
+
         adapter.replaceData(itemList)
         binding.vpExoplayer.adapter = adapter
 
