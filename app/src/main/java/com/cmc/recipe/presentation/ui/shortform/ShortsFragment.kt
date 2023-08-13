@@ -1,7 +1,10 @@
 package com.cmc.recipe.presentation.ui.shortform
 
 
+import android.content.Intent
 import android.util.Log
+import android.view.KeyEvent
+import android.view.inputmethod.EditorInfo
 import androidx.navigation.NavDirections
 import androidx.navigation.fragment.findNavController
 import androidx.viewpager2.widget.ViewPager2
@@ -9,6 +12,8 @@ import com.cmc.recipe.R
 import com.cmc.recipe.data.model.ExoPlayerItem
 import com.cmc.recipe.databinding.FragmentShortsBinding
 import com.cmc.recipe.presentation.ui.base.BaseFragment
+import com.cmc.recipe.presentation.ui.search.SearchActivity
+import com.cmc.recipe.utils.Constant
 import kotlin.math.abs
 import kotlin.math.max
 
@@ -26,9 +31,33 @@ class ShortsFragment : BaseFragment<FragmentShortsBinding>(FragmentShortsBinding
         )
 
         initVideo(itemList)
-
+        searchShorts()
     }
 
+    private fun searchShorts(){
+        binding.searchView.setOnEditorActionListener { _, actionId, event ->
+            if (actionId == EditorInfo.IME_ACTION_DONE ||
+                (event != null && event.action == KeyEvent.ACTION_DOWN && event.keyCode == KeyEvent.KEYCODE_ENTER)
+            ) {
+                val searchText = binding.searchView.text.toString()
+
+                if(searchText.isEmpty()){
+                    movePage(Constant.SHORTS,Constant.SEARCH)
+                }else{
+                    movePage(Constant.SHORTS,Constant.SHORTS)
+                }
+                return@setOnEditorActionListener true
+            }
+            return@setOnEditorActionListener false
+        }
+    }
+
+    private fun movePage(current:String,destination:String){
+        val intent = Intent(requireContext(), SearchActivity::class.java)
+        intent.putExtra("startDestination", destination)
+        intent.putExtra("currentDestination", current)
+        startActivity(intent)
+    }
     private fun initVideo(itemList:ArrayList<String>){
         val clickListener = object : ShortsItemHolder.OnClickListener{
             override fun onMoveDetailPage(item:String) {

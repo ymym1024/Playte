@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".presentation.ui.search.SearchShortsFragment">
+    tools:context=".presentation.ui.search.SearchFragment">
 
     <ImageView
         android:id="@+id/btn_back"
@@ -35,56 +35,26 @@
         app:layout_constraintStart_toEndOf="@+id/btn_back"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/btn_new"
+    <TextView
+        android:id="@+id/textView43"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="10dp"
-        android:layout_marginTop="15dp"
-        android:background="@drawable/bg_custom_bedge"
-        android:minWidth="57dp"
-        android:minHeight="29dp"
-        android:text="@string/newest"
-        android:textSize="14sp"
+        android:layout_marginStart="19dp"
+        android:layout_marginTop="20dp"
+        android:text="최근검색어"
+        android:textColor="@color/black"
+        android:textSize="18sp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/searchView" />
-
-    <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/btn_popular"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="15dp"
-        android:background="@drawable/bg_custom_bedge"
-        android:minWidth="57dp"
-        android:minHeight="29dp"
-        android:text="@string/popular"
-        android:textSize="14sp"
-        app:layout_constraintStart_toEndOf="@+id/btn_new"
-        app:layout_constraintTop_toBottomOf="@+id/searchView" />
-
-    <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/btn_minimum"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="15dp"
-        android:background="@drawable/bg_custom_bedge"
-        android:minHeight="29dp"
-        android:text="@string/minimum_time"
-        android:textSize="14sp"
-        app:layout_constraintStart_toEndOf="@+id/btn_popular"
         app:layout_constraintTop_toBottomOf="@+id/searchView" />
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rv_shorts"
+        android:id="@+id/rv_recent"
         android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_marginStart="12dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="12dp"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="14dp"
+        android:orientation="horizontal"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btn_minimum" />
+        app:layout_constraintTop_toBottomOf="@+id/textView43"></androidx.recyclerview.widget.RecyclerView>
 </androidx.constraintlayout.widget.ConstraintLayout>

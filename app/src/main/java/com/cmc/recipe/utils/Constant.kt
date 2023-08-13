@@ -11,4 +11,7 @@ object Constant {
     const val SAVE = "SAVE"
     const val WRITE = "WRITE"
 
+    const val SHORTS = "shorts"
+    const val RECIPE = "recipe"
+    const val SEARCH = "search"
 }

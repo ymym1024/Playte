@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/shortsFragment">
+
+    <fragment
+        android:id="@+id/searchRecipeFragment"
+        android:name="com.cmc.recipe.presentation.ui.search.SearchRecipeFragment"
+        android:label="fragment_search_recipe"
+        tools:layout="@layout/fragment_search_recipe" />
+    <fragment
+        android:id="@+id/searchShortsFragment"
+        android:name="com.cmc.recipe.presentation.ui.search.SearchShortsFragment"
+        android:label="fragment_search_shorts"
+        tools:layout="@layout/fragment_search_shorts" />
+    <fragment
+        android:id="@+id/searchFragment"
+        android:name="com.cmc.recipe.presentation.ui.search.SearchFragment"
+        android:label="fragment_search"
+        tools:layout="@layout/fragment_search" >
+        <action
+            android:id="@+id/action_searchFragment_to_searchRecipeFragment"
+            app:destination="@id/searchRecipeFragment" />
+        <action
+            android:id="@+id/action_searchFragment_to_searchShortsFragment"
+            app:destination="@id/searchShortsFragment" />
+    </fragment>
+
+</navigation>
