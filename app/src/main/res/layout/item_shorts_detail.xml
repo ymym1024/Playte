@@ -118,6 +118,7 @@
     </LinearLayout>
 
     <LinearLayout
+        android:id="@+id/linearLayout10"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="23dp"
@@ -148,7 +149,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginBottom="10dp"
-            android:background="@drawable/ic_shortsdetail_comment"/>
+            android:background="@drawable/ic_shortsdetail_comment" />
 
         <TextView
             android:id="@+id/textView24"
@@ -165,7 +166,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="10dp"
-            android:background="@drawable/ic_shortsdetail_book_deactivate"/>
+            android:background="@drawable/ic_shortsdetail_book_deactivate" />
 
         <TextView
             android:id="@+id/textView25"
@@ -177,16 +178,38 @@
             android:textSize="14sp" />
     </LinearLayout>
 
-    <TextView
+    <LinearLayout
         android:id="@+id/textView20"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="23dp"
+        android:layout_marginEnd="100dp"
         android:layout_marginBottom="16dp"
-        android:text="TextView"
-        android:textColor="@color/white"
+        android:orientation="horizontal"
         app:layout_constraintBottom_toTopOf="@+id/linearLayout"
-        app:layout_constraintStart_toStartOf="@+id/exoplayer" />
+        app:layout_constraintEnd_toStartOf="@+id/linearLayout10"
+        app:layout_constraintStart_toStartOf="@+id/exoplayer">
+
+        <TextView
+            android:id="@+id/tv_short_content"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:text="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed faucibus mauris vel nisi tincidunt, a interdum dui volutpat. Vivamus hendrerit tristique libero, id suscipit ex gravida nec. Suspendisse potenti. Nullam tincidunt justo sed turpis feugiat, in pulvinar quam facilisis. Donec id libero arcu. In id risus quis velit bibendum ullamcorper ut vel nulla. Nulla facilisi. Sed interdum urna a nunc hendrerit, in mattis nisl tincidunt. Aliquam malesuada quam nec finibus fermentum. Pellentesque facilisis lacinia est, eget cursus nunc venenatis vel. Sed varius eros non mi blandit, vel dictum purus varius. Fusce nec ex sit amet nunc fermentum aliquet."
+            android:textColor="@color/white"
+            android:textSize="14sp" />
+
+        <TextView
+            android:id="@+id/tv_showMore"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="더보기"
+            android:layout_gravity="bottom"
+            android:textColor="@color/white"
+            android:textSize="14sp" />
+    </LinearLayout>
 
     <TextView
         android:id="@+id/textView22"

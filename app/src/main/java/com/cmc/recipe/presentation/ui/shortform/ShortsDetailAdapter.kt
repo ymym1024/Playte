@@ -156,6 +156,22 @@ class ShortsDetailHolder(viewBinding: ItemShortsDetailBinding, val context: Cont
                 shortsListener.onSave()
             }
         }
+
+        // 텍스트 접기
+        val originalMaxLines = binding.tvShortContent.maxLines
+        val expandedMaxLines = Int.MAX_VALUE
+
+        binding.tvShowMore.setOnClickListener {
+            if (binding.tvShortContent.maxLines == originalMaxLines) {
+                binding.tvShortContent.maxLines = expandedMaxLines
+                binding.tvShowMore.text = "접기"
+            } else {
+                binding.tvShortContent.maxLines = originalMaxLines
+                binding.tvShowMore.text = "더보기"
+            }
+        }
+
+
     }
 
     private fun showPlayPause(imageView:ImageView,flag:Boolean){
