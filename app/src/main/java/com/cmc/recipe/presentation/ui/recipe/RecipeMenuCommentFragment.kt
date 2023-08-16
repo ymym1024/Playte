@@ -1,12 +1,18 @@
 package com.cmc.recipe.presentation.ui.recipe
 
 import android.util.Log
+import android.view.View
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.cmc.recipe.data.model.Comment
 import com.cmc.recipe.databinding.FragmentRecipeMenuCommentBinding
 import com.cmc.recipe.presentation.ui.base.BaseFragment
 import com.cmc.recipe.presentation.ui.common.CommentAdapter
 import com.cmc.recipe.presentation.ui.common.OnCommentListener
+import com.cmc.recipe.utils.CommonTextWatcher
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 class RecipeMenuCommentFragment : BaseFragment<FragmentRecipeMenuCommentBinding>(FragmentRecipeMenuCommentBinding::inflate) {
 
@@ -18,6 +24,20 @@ class RecipeMenuCommentFragment : BaseFragment<FragmentRecipeMenuCommentBinding>
 
         binding.tvCommentCnt.text = itemList.size.toString()
         initRV(itemList)
+
+        // 댓글 입력 시 이벤트 처리
+        binding.etComment.addTextChangedListener(CommonTextWatcher(
+            onChanged = { text,_,_,_ ->
+                text?.let {
+                    if (text.isEmpty()) {
+                        binding.tvEditIng.visibility = View.INVISIBLE
+                    } else {
+                        binding.tvEditIng.visibility = View.VISIBLE
+                        binding.tvEditIng.text = "답글 남기는 중...";
+                    }
+                }
+            }
+        ))
     }
 
     private fun initRV(itemList:ArrayList<Comment>){
