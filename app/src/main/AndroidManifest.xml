@@ -43,7 +43,8 @@
             android:exported="true" />
         <activity
             android:name=".presentation.ui.shortform.ShortsDetailActivity"
-            android:exported="true" />
+            android:exported="true"
+            android:windowSoftInputMode="adjustUnspecified|adjustPan"/>
         <activity
             android:name=".presentation.ui.recipe.ImageReviewActivity"
             android:exported="true" />

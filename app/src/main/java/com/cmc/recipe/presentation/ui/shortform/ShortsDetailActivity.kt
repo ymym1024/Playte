@@ -3,6 +3,7 @@ package com.cmc.recipe.presentation.ui.shortform
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import androidx.viewpager2.widget.ViewPager2
 import com.cmc.recipe.R
 import com.cmc.recipe.data.model.ExoPlayerItem
@@ -11,6 +12,7 @@ import com.cmc.recipe.presentation.ui.recipe.BottomSheetDetailDialog
 import com.cmc.recipe.utils.navigationHeight
 import com.cmc.recipe.utils.setStatusBarTransparent
 import com.cmc.recipe.utils.statusBarHeight
+import com.google.android.material.bottomsheet.BottomSheetBehavior
 
 class ShortsDetailActivity : AppCompatActivity() {
     private lateinit var binding: ActivityShortsDetailBinding
