@@ -153,6 +153,10 @@ class ShortsDetailHolder(viewBinding: ItemShortsDetailBinding, val context: Cont
 
             }
 
+            override fun writeReply(id: Int) {
+
+            }
+
         })
         binding.rvComment.adapter = adapter
         binding.rvComment.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)

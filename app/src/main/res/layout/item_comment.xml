@@ -78,12 +78,12 @@
         android:paddingEnd="20dp"
         android:paddingBottom="19dp"
         android:text="TextView"
-        app:layout_constraintEnd_toStartOf="@+id/textView48"
+        app:layout_constraintEnd_toStartOf="@+id/tv_reply"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tv_nick" />
 
     <TextView
-        android:id="@+id/textView48"
+        android:id="@+id/tv_reply"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="26dp"
@@ -93,20 +93,32 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/ib_report" />
 
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rv_reply"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="35dp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toTopOf="@+id/item_reply"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tv_comment" />
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/item_reply"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:layout_constraintBottom_toTopOf="@+id/rv_reply"
+        android:layout_marginStart="43dp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tv_comment">
+        app:layout_constraintTop_toBottomOf="@+id/rv_reply">
 
         <ImageView
             android:id="@+id/imageView4"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="43dp"
             android:layout_marginTop="7dp"
             android:layout_marginBottom="7dp"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -128,15 +140,4 @@
             app:layout_constraintStart_toEndOf="@+id/imageView4"
             app:layout_constraintTop_toTopOf="parent" />
     </androidx.constraintlayout.widget.ConstraintLayout>
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rv_reply"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="35dp"
-        android:visibility="gone"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/item_reply" />
 </androidx.constraintlayout.widget.ConstraintLayout>

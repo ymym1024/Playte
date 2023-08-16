@@ -1,5 +1,6 @@
 package com.cmc.recipe.presentation.ui.recipe
 
+import android.annotation.SuppressLint
 import android.util.Log
 import android.view.View
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -51,10 +52,19 @@ class RecipeMenuCommentFragment : BaseFragment<FragmentRecipeMenuCommentBinding>
                 Log.d("onReport",id.toString())
             }
 
+            override fun writeReply(id: Int) {
+                val nick = itemList.get(id).nickname
+                writeReply(nick)
+            }
+
         })
         binding.rvComment.adapter = adapter
         binding.rvComment.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
         adapter.replaceData(itemList)
+    }
+
+    private fun writeReply(nick:String){
+        binding.etComment.setText("@$nick ")
     }
 
 }
