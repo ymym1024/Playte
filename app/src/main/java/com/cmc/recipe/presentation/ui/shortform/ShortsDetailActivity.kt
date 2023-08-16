@@ -3,13 +3,23 @@ package com.cmc.recipe.presentation.ui.shortform
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import androidx.viewpager2.widget.ViewPager2
+import com.cmc.recipe.R
 import com.cmc.recipe.data.model.ExoPlayerItem
 import com.cmc.recipe.databinding.ActivityShortsDetailBinding
+import com.cmc.recipe.presentation.ui.recipe.BottomSheetDetailDialog
+import com.cmc.recipe.utils.navigationHeight
+import com.cmc.recipe.utils.setStatusBarTransparent
+import com.cmc.recipe.utils.statusBarHeight
+import com.google.android.material.bottomsheet.BottomSheetBehavior
 
 class ShortsDetailActivity : AppCompatActivity() {
     private lateinit var binding: ActivityShortsDetailBinding
     private val exoPlayerItems = ArrayList<ExoPlayerItem>()
+    private var currentPosition = 0
+
+    private var isMute = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -17,19 +27,70 @@ class ShortsDetailActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         val itemList = arrayListOf(
-            "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
+            "https://recipe-application-bucket.s3.ap-northeast-2.amazonaws.com/videos/testvideo.mp4",
             "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4",
-            "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4"
+            "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4",
+            "https://d1jg55wkcrciwu.cloudfront.net/videos/testvideo.mp4",
+            "https://www.youtube.com/shorts/ku5PCueK_CY?feature=share"
         )
 
         initVideo(itemList)
+        initMenu()
 
+    }
+
+    private fun initMenu(){
+
+        binding.let {
+            it.btnSpeak.bringToFront()
+            it.btnBack.bringToFront()
+            it.btnMore.bringToFront()
+        }
+
+        binding.btnBack.setOnClickListener {
+            this.onBackPressed()
+        }
+
+        binding.btnMore.setOnClickListener {
+            showBottomSheet()
+        }
+
+        binding.btnSpeak.setOnClickListener {
+            if(!isMute){ // mute 아님
+                binding.btnSpeak.setImageResource(R.drawable.ic_mute)
+                exoPlayerItems[currentPosition].exoPlayer.volume = 0f
+                isMute = true
+            }else{
+                binding.btnSpeak.setImageResource(R.drawable.ic_speak)
+                exoPlayerItems[currentPosition].exoPlayer.volume = 0.5f
+                isMute = false
+            }
+        }
+
+    }
+
+    private fun showBottomSheet(){
+        BottomSheetDetailDialog().show(supportFragmentManager,"RemoveBottomSheetFragment")
     }
 
     private fun initVideo(itemList:ArrayList<String>){
         val adapter = ShortsDetailAdapter(applicationContext,object : ShortsItemHolder.OnVideoPreparedListener {
             override fun onVideoPrepared(exoPlayerItem: ExoPlayerItem) {
                 exoPlayerItems.add(exoPlayerItem)
+            }
+        })
+
+        adapter.setShortsListener(object : onShortsListener{
+            override fun onFavorite() {
+
+            }
+
+            override fun onSave() {
+
+            }
+
+            override fun onComment() {
+
             }
         })
 
@@ -52,6 +113,7 @@ class ShortsDetailActivity : AppCompatActivity() {
                     player.playWhenReady = true
                     player.play()
                 }
+                currentPosition = position
                 Log.d("onPageSelected","${previousIndex} , ${newIndex}")
             }
         })

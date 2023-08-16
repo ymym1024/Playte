@@ -21,6 +21,7 @@ import com.cmc.recipe.presentation.ui.base.BaseAdapter
 import com.cmc.recipe.presentation.ui.base.BaseHolder
 import com.cmc.recipe.utils.loadImagesWithGlide
 import com.cmc.recipe.utils.loadImagesWithGlideRound
+import com.cmc.recipe.utils.resizeBitmapToSquare
 
 
 class RecipeStepAdapter:
@@ -72,9 +73,14 @@ class RecipeStepItemHolder(viewBinding: ItemRecipeStepBinding):
         binding.let { view->
             view.tvStepTitle.text = item?.recipeDesc
             view.ibImage.loadImagesWithGlideRound(item?.recipeImage!!,10)
+            if(item?.recipeImage!!.isNotEmpty()){
+                view.ibImage.resizeBitmapToSquare(40)
+            }
+
             val image = binding.root.resources.getDrawable(R.drawable.ic_image)
             view.ibImage.setOnClickListener {
                 view.ibImage.setImageDrawable(image)
+                view.ibImage.resizeBitmapToSquare(20)
             }
         }
     }

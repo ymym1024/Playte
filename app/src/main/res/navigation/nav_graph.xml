@@ -19,6 +19,9 @@
         <action
             android:id="@+id/action_recipeMainFragment_to_recipeActivity"
             app:destination="@id/recipeActivity" />
+        <action
+            android:id="@+id/action_recipeMainFragment_to_searchRecipeFragment"
+            app:destination="@id/searchRecipeFragment" />
     </fragment>
 
     <activity
@@ -34,6 +37,9 @@
         <action
             android:id="@+id/action_shortsFragment_to_shortsDetailActivity"
             app:destination="@id/shortsDetailActivity" />
+        <action
+            android:id="@+id/action_shortsFragment_to_searchShortsFragment"
+            app:destination="@id/searchShortsFragment" />
     </fragment>
     <activity
         android:id="@+id/shortsDetailActivity"

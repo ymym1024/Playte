@@ -2,6 +2,8 @@ package com.cmc.recipe.presentation.ui.recipe
 
 import android.content.Intent
 import android.net.wifi.p2p.WifiP2pManager.ActionListener
+import android.view.KeyEvent
+import android.view.inputmethod.EditorInfo
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.cmc.recipe.R
@@ -10,6 +12,8 @@ import com.cmc.recipe.databinding.FragmentRecipeMainBinding
 import com.cmc.recipe.presentation.ui.MainActivity
 import com.cmc.recipe.presentation.ui.base.BaseFragment
 import com.cmc.recipe.presentation.ui.base.OnClickListener
+import com.cmc.recipe.presentation.ui.search.SearchActivity
+import com.cmc.recipe.utils.Constant
 
 class RecipeMainFragment : BaseFragment<FragmentRecipeMainBinding>(FragmentRecipeMainBinding::inflate) {
 
@@ -22,6 +26,32 @@ class RecipeMainFragment : BaseFragment<FragmentRecipeMainBinding>(FragmentRecip
             RecipeItem(image_url = "", name = "토마토 계란 볶음밥", time = 10, nickName = "구땡뿡야",star=30, flag = true),
         )
         recipeRecyclerview(itemList)
+        searchRecipe()
+    }
+
+    private fun searchRecipe(){
+        binding.searchView.setOnEditorActionListener { _, actionId, event ->
+            if (actionId == EditorInfo.IME_ACTION_DONE ||
+                (event != null && event.action == KeyEvent.ACTION_DOWN && event.keyCode == KeyEvent.KEYCODE_ENTER)
+            ) {
+                val searchText = binding.searchView.text.toString()
+
+                if(searchText.isEmpty()){
+                    movePage(Constant.RECIPE, Constant.SEARCH)
+                }else{
+                    movePage(Constant.RECIPE, Constant.RECIPE)
+                }
+                return@setOnEditorActionListener true
+            }
+            return@setOnEditorActionListener false
+        }
+    }
+
+    private fun movePage(current:String,destination:String){
+        val intent = Intent(requireContext(), SearchActivity::class.java)
+        intent.putExtra("startDestination", destination)
+        intent.putExtra("currentDestination", current)
+        startActivity(intent)
     }
 
     private fun recipeRecyclerview(itemList:ArrayList<RecipeItem>){
