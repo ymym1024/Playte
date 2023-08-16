@@ -2,24 +2,18 @@ package com.cmc.recipe.presentation.ui.shortform
 
 import android.content.Context
 import android.net.Uri
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import androidx.navigation.NavDirections
-import androidx.recyclerview.widget.RecyclerView
 import com.cmc.recipe.R
 import com.cmc.recipe.data.model.ExoPlayerItem
 import com.cmc.recipe.databinding.ItemShortsBinding
-import com.cmc.recipe.databinding.ItemShortsDetailBinding
 import com.cmc.recipe.presentation.ui.base.BaseAdapter
 import com.cmc.recipe.presentation.ui.base.BaseHolder
-import com.google.android.exoplayer2.ExoPlayer
-import com.google.android.exoplayer2.MediaItem
-import com.google.android.exoplayer2.PlaybackException
-import com.google.android.exoplayer2.Player
+import com.google.android.exoplayer2.*
 import com.google.android.exoplayer2.source.ProgressiveMediaSource
+import com.google.android.exoplayer2.ui.AspectRatioFrameLayout
 import com.google.android.exoplayer2.upstream.DefaultDataSource
 
 class ShortsAdapter(private val context:Context,val videoPreparedListener: ShortsItemHolder.OnVideoPreparedListener,val clickListener: ShortsItemHolder.OnClickListener):
@@ -82,6 +76,9 @@ class ShortsItemHolder(viewBinding: ItemShortsBinding, val context: Context,val 
         exoPlayer.seekTo(0)
         exoPlayer.volume = 0f
         exoPlayer.repeatMode = Player.REPEAT_MODE_ONE
+
+        binding.videoExoplay.setResizeMode(AspectRatioFrameLayout.RESIZE_MODE_FILL);
+        exoPlayer.setVideoScalingMode(C.VIDEO_SCALING_MODE_SCALE_TO_FIT_WITH_CROPPING);
 
         val dataSourceFactory = DefaultDataSource.Factory(context)
 
