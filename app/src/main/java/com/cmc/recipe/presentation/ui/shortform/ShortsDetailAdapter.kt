@@ -78,6 +78,11 @@ class ShortsDetailHolder(viewBinding: ItemShortsDetailBinding, val context: Cont
             }
         }
         // 댓글
+        binding.bottomSheetComment.post {
+            val bottomSheetVisibleHeight =  binding.bottomSheetComment.height -  binding.bottomSheetComment.top
+            binding.buttonLayout.y =
+                (bottomSheetVisibleHeight -  binding.bottomSheetComment.height).toFloat()
+        }
         bottomSheetBehavior.addBottomSheetCallback(object :BottomSheetBehavior.BottomSheetCallback(){
             override fun onStateChanged(bottomSheet: View, newState: Int) {
                 Log.d("newState","${newState}")
@@ -92,7 +97,9 @@ class ShortsDetailHolder(viewBinding: ItemShortsDetailBinding, val context: Cont
             }
 
             override fun onSlide(bottomSheet: View, slideOffset: Float) {
-
+                val bottomSheetVisibleHeight = bottomSheet.height - bottomSheet.top
+                binding.buttonLayout.translationY =
+                    (bottomSheetVisibleHeight - binding.buttonLayout.height).toFloat()
             }
         })
 
@@ -100,7 +107,7 @@ class ShortsDetailHolder(viewBinding: ItemShortsDetailBinding, val context: Cont
             // shortsListener.onComment()
             if (bottomSheetBehavior.state == BottomSheetBehavior.STATE_HIDDEN) {
                 val itemHeight = itemView.height /3
-                bottomSheetBehavior.peekHeight = itemHeight * 2 - 100
+                bottomSheetBehavior.peekHeight = itemHeight * 2 +100
                 bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
             } else {
                 bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
@@ -151,6 +158,9 @@ class ShortsDetailHolder(viewBinding: ItemShortsDetailBinding, val context: Cont
         binding.rvComment.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
         //mock data
         val itemList = arrayListOf(
+            Comment(comment = "좋은레시피입니다", nickname = "자칭 얼리어답터", comment_time = "2022.03.04", is_like = false, is_reply = false),
+            Comment(comment = "좋은레시피입니다", nickname = "자칭 얼리어답터", comment_time = "2022.03.04", is_like = false, is_reply = false),
+            Comment(comment = "좋은레시피입니다", nickname = "자칭 얼리어답터", comment_time = "2022.03.04", is_like = false, is_reply = false),
             Comment(comment = "좋은레시피입니다", nickname = "자칭 얼리어답터", comment_time = "2022.03.04", is_like = false, is_reply = false),
             Comment(comment = "좋은레시피입니다", nickname = "자칭 얼리어답터", comment_time = "2022.03.04", is_like = false, is_reply = false),
             Comment(comment = "좋은레시피입니다", nickname = "자칭 얼리어답터", comment_time = "2022.03.04", is_like = false, is_reply = false),
