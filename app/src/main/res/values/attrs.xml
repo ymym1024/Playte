@@ -10,4 +10,7 @@
         <attr name="hint" format="reference|string" />
         <attr name="maxLength" format="reference|integer" />
     </declare-styleable>
+    <declare-styleable name="RoundedBarChart">
+        <attr name="radius" format="dimension" />
+    </declare-styleable>
 </resources>

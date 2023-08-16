@@ -76,6 +76,23 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/textView34" />
 
+                <com.cmc.recipe.presentation.component.RoundedBarChart
+                    android:id="@+id/review_chart"
+                    app:radius="10dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="0dp"
+                    android:layout_gravity="center"
+                    android:layout_marginStart="25dp"
+                    android:layout_marginTop="30dp"
+                    android:layout_marginEnd="25dp"
+                    android:layout_marginBottom="31dp"
+                    android:minWidth="170dp"
+                    app:layout_constraintBottom_toTopOf="@+id/rv_image"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@+id/view"
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:ignore="MissingClass" />
+
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/rv_image"
                     android:layout_width="0dp"
