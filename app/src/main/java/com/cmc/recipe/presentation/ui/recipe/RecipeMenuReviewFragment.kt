@@ -33,6 +33,7 @@ class RecipeMenuReviewFragment : BaseFragment<FragmentRecipeMenuReviewBinding>(F
                     "감이 좀 있어요. 그래도 다들 한번씩 해보길", stars = 3, thumb_up = 2, thumb_down = 2,image_list = arrayListOf(url,url,url))
         )
 
+        binding.ratingbar.rating = 4f
         initRV(itemList)
 
         initImageRV()
