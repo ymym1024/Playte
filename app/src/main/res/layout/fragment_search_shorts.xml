@@ -35,42 +35,39 @@
         app:layout_constraintStart_toEndOf="@+id/btn_back"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <androidx.appcompat.widget.AppCompatButton
+    <com.google.android.material.chip.Chip
         android:id="@+id/btn_new"
+        style="@style/RecipeChipChoice"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="10dp"
-        android:layout_marginTop="15dp"
+        android:layout_marginTop="10dp"
         android:background="@drawable/bg_custom_bedge"
-        android:minWidth="57dp"
-        android:minHeight="29dp"
+        android:checked="true"
         android:text="@string/newest"
         android:textSize="14sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/searchView" />
 
-    <androidx.appcompat.widget.AppCompatButton
+    <com.google.android.material.chip.Chip
         android:id="@+id/btn_popular"
+        style="@style/RecipeChipChoice"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="15dp"
-        android:background="@drawable/bg_custom_bedge"
-        android:minWidth="57dp"
-        android:minHeight="29dp"
+        android:layout_marginTop="10dp"
         android:text="@string/popular"
         android:textSize="14sp"
         app:layout_constraintStart_toEndOf="@+id/btn_new"
         app:layout_constraintTop_toBottomOf="@+id/searchView" />
 
-    <androidx.appcompat.widget.AppCompatButton
+    <com.google.android.material.chip.Chip
         android:id="@+id/btn_minimum"
+        style="@style/RecipeChipChoice"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="15dp"
-        android:background="@drawable/bg_custom_bedge"
-        android:minHeight="29dp"
+        android:layout_marginTop="10dp"
         android:text="@string/minimum_time"
         android:textSize="14sp"
         app:layout_constraintStart_toEndOf="@+id/btn_popular"
