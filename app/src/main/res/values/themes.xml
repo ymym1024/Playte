@@ -21,8 +21,6 @@
 
     <style name="RecipeRatingBarSmall" parent="Widget.AppCompat.RatingBar.Small">
         <item name="android:progressDrawable">@drawable/rating_small</item>
-        <item name="android:minHeight">20dp</item> <!-- Adjust this value as needed -->
-        <item name="android:maxHeight">48dp</item>
     </style>
 
     <style name="RecipeChipChoice" parent="@style/Widget.MaterialComponents.Chip.Choice">
