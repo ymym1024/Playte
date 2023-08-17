@@ -19,6 +19,15 @@
         <item name="android:progressDrawable">@drawable/rating</item>
     </style>
 
+    <style name="RecipeRatingBarSmall" parent="Widget.AppCompat.RatingBar.Small">
+        <item name="android:progressDrawable">@drawable/rating_small</item>
+    </style>
+
+    <style name="RecipeChipChoice" parent="@style/Widget.MaterialComponents.Chip.Choice">
+        <item name="chipBackgroundColor">@color/chip_bg_state_list</item>
+        <item name="android:textColor">@color/chip_text_state_list</item>
+    </style>
+
     <style name="TransparentStatusTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="android:windowTranslucentStatus">true</item>
         <item name="android:windowTranslucentNavigation">true</item>
