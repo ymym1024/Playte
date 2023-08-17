@@ -8,8 +8,13 @@ import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.viewbinding.ViewBinding
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.launch
 
 typealias Inflate<T> = (LayoutInflater, ViewGroup?, Boolean) -> T
 
@@ -60,5 +65,16 @@ abstract class BaseFragment<T:ViewBinding>(private val inflate: Inflate<T>) : Fr
 
     fun movePage(naviRes:Int){
         findNavController().navigate(naviRes)
+    }
+
+    internal inline fun launchWithLifecycle(
+        lifecycle: Lifecycle,
+        crossinline block: suspend CoroutineScope.() -> Unit
+    ) {
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                block()
+            }
+        }
     }
 }
