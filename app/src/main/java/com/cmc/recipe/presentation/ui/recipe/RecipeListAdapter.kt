@@ -56,12 +56,12 @@ class RecipeItemHolder(viewBinding: ItemRecipeBinding, val type:String,val click
 
         binding.let {
             item?.let { recipe ->
-                it.ivRecipeMain.loadImagesWithGlide("https://recipe1.ezmember.co.kr/cache/recipe/2022/02/02/dbb3f34bfe348a4bb4d142ff353815651.jpg")
-                it.tvRecipeName.text = recipe.name
-                it.tvRecipeTime.text = "${recipe.time}분"
-                it.tvTimeNickname.text = "3분전 | ${recipe.nickName}"
-                it.tvStarCnt.text = "4.7(104)"
-                if(!recipe.flag) it.btnStar.setBackgroundResource(R.drawable.ic_bookmark_deactive)
+                it.ivRecipeMain.loadImagesWithGlide(recipe.recipe_thumbnail_img)
+                it.tvRecipeName.text = recipe.recipe_name
+                it.tvRecipeTime.text = "" //"${recipe.time}분"
+                it.tvTimeNickname.text = "${recipe.created_date} | ${recipe.nickname}"
+                it.tvStarCnt.text = "${recipe.rating}(${recipe.comment_count})"
+                if(!recipe.is_saved) it.btnStar.setBackgroundResource(R.drawable.ic_bookmark_deactive)
                 else it.btnStar.setBackgroundResource(R.drawable.ic_bookmark_activate)
             }
         }
