@@ -16,6 +16,7 @@ import com.cmc.recipe.data.model.RecipeItem
 import com.cmc.recipe.databinding.FragmentRecipeMainBinding
 import com.cmc.recipe.presentation.ui.base.BaseFragment
 import com.cmc.recipe.presentation.ui.base.OnClickListener
+import com.cmc.recipe.presentation.ui.common.RecipeSnackBar
 import com.cmc.recipe.presentation.ui.search.SearchActivity
 import com.cmc.recipe.presentation.viewmodel.RecipeViewModel
 import com.cmc.recipe.utils.Constant
@@ -100,7 +101,7 @@ class RecipeMainFragment : BaseFragment<FragmentRecipeMainBinding>(FragmentRecip
         val adapter = RecipeListAdapter(clickListener)
         adapter.setListener(object :RecipeItemHolder.onActionListener{
             override fun action(item: RecipeItem) {
-
+                requestRecipeSave()
             }
 
         })
@@ -123,6 +124,32 @@ class RecipeMainFragment : BaseFragment<FragmentRecipeMainBinding>(FragmentRecip
             // TODO : 조리시간 컬럼 추가 후 수정예정
           //  itemList.sortedBy {  }
           //  adapter.replaceData(itemList)
+        }
+    }
+
+    private fun requestRecipeSave(){
+        launchWithLifecycle(lifecycle) {
+            val accessToken = MainApplication.tokenManager.getAccessToken()
+            recipeViewModel.postRecipesSave(accessToken,1)
+            recipeViewModel._recipeSaveResult.collect{
+                when(it){
+                    is NetworkState.Success -> {
+                        it.data?.let {data ->
+                            if(data.code == "SUCCESS"){
+                                RecipeSnackBar(binding.rvRecipe,"레시피가 저장되었습니다!").show()
+                            }else{
+                                Log.d("data","${data.data}")
+                            }
+                        }
+                        recipeViewModel._recipeResult.value = NetworkState.Loading
+                    }
+                    is NetworkState.Error ->{
+                        showToastMessage(it.message.toString())
+                        recipeViewModel._recipeResult.value = NetworkState.Loading
+                    }
+                    else -> {}
+                }
+            }
         }
     }
 

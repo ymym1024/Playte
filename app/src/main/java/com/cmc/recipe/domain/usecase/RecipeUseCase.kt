@@ -14,4 +14,5 @@ class RecipeUseCase @Inject constructor(
 
     fun getRecipesDetail(accessToken:String,id:Int) = repository.getRecipesDetail(accessToken,id)
 
+    fun postRecipesSave(accessToken:String,id:Int) = repository.postRecipesSave(accessToken,id)
 }

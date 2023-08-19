@@ -2,6 +2,7 @@ package com.cmc.recipe.presentation.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.cmc.recipe.data.model.response.BaseResponse
 import com.cmc.recipe.data.model.response.RecipeDetailResponse
 import com.cmc.recipe.data.model.response.RecipesResponse
 import com.cmc.recipe.data.model.response.SignupResponse
@@ -23,6 +24,9 @@ class RecipeViewModel @Inject constructor(private val recipeUseCase: RecipeUseCa
     var _recipeDetailResult: MutableStateFlow<NetworkState<RecipeDetailResponse>> = MutableStateFlow(NetworkState.Loading)
     var recipeDetailResult: StateFlow<NetworkState<RecipeDetailResponse>> = _recipeDetailResult
 
+    var _recipeSaveResult : MutableStateFlow<NetworkState<BaseResponse>> = MutableStateFlow(NetworkState.Loading)
+    var recipeSaveResult: StateFlow<NetworkState<BaseResponse>> = _recipeSaveResult
+
     fun getRecipes(accessToken:String) = viewModelScope.launch {
         _recipeResult.value = NetworkState.Loading
         recipeUseCase.getRecipes(accessToken)
@@ -40,6 +44,16 @@ class RecipeViewModel @Inject constructor(private val recipeUseCase: RecipeUseCa
                 _recipeDetailResult.value = NetworkState.Error(400,"${error.message}")
             }.collect { values ->
                 _recipeDetailResult.value = values
+            }
+    }
+
+    fun postRecipesSave(accessToken:String,id:Int) = viewModelScope.launch {
+        _recipeSaveResult.value = NetworkState.Loading
+        recipeUseCase.postRecipesSave(accessToken,id)
+            .catch { error ->
+                _recipeSaveResult.value = NetworkState.Error(400,"${error.message}")
+            }.collect { values ->
+                _recipeSaveResult.value = values
             }
     }
 }
