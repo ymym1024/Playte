@@ -18,5 +18,8 @@ interface RecipeService {
     @POST("/api/v1/recipes/{recipe-id}/save")
     suspend fun postRecipesSave(@Header("auth-token") accessToken: String?,@Path("recipe-id")id:Int) : Response<BaseResponse>
 
+    @POST("/api/v1/recipes/{recipe-id}/unsave")
+    suspend fun postRecipesNotSave(@Header("auth-token") accessToken: String?,@Path("recipe-id")id:Int) : Response<BaseResponse>
+
 
 }

@@ -56,4 +56,14 @@ class RecipeViewModel @Inject constructor(private val recipeUseCase: RecipeUseCa
                 _recipeSaveResult.value = values
             }
     }
+
+    fun postRecipesNotSave(accessToken:String,id:Int) = viewModelScope.launch {
+        _recipeSaveResult.value = NetworkState.Loading
+        recipeUseCase.postRecipesNotSave(accessToken,id)
+            .catch { error ->
+                _recipeSaveResult.value = NetworkState.Error(400,"${error.message}")
+            }.collect { values ->
+                _recipeSaveResult.value = values
+            }
+    }
 }

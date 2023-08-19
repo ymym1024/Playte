@@ -13,4 +13,6 @@ interface RecipeRepository {
 
     fun postRecipesSave(accessToken:String,id:Int) : Flow<NetworkState<BaseResponse>>
 
+    fun postRecipesNotSave(accessToken:String,id:Int) : Flow<NetworkState<BaseResponse>>
+
 }
