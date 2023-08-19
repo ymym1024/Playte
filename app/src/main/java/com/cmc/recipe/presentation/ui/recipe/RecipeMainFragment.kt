@@ -38,8 +38,6 @@ class RecipeMainFragment : BaseFragment<FragmentRecipeMainBinding>(FragmentRecip
     }
 
     private fun requestRecipeList(){
-
-
         launchWithLifecycle(lifecycle) {
             val accessToken = MainApplication.tokenManager.getAccessToken()
             recipeViewModel.getRecipes(accessToken)

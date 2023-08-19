@@ -1,9 +1,6 @@
 package com.cmc.recipe.data.datasource
 
-import com.cmc.recipe.data.model.response.BaseResponse
-import com.cmc.recipe.data.model.response.LoginResponse
-import com.cmc.recipe.data.model.response.RecipesResponse
-import com.cmc.recipe.data.model.response.SignupResponse
+import com.cmc.recipe.data.model.response.*
 import com.cmc.recipe.data.source.remote.api.AuthService
 import com.cmc.recipe.data.source.remote.api.RecipeService
 import com.cmc.recipe.data.source.remote.request.RequestNickname
@@ -22,6 +19,24 @@ class RecipeRepositoryImpl @Inject constructor(
 
     override fun getRecipes(accessToken: String): Flow<NetworkState<RecipesResponse>> = flow {
         val response = service.getRecipes(accessToken)
+        if(response.isSuccessful){
+            response.body()?.let {
+                emit(NetworkState.Success(it))
+            }
+        }else{
+            try {
+                emit(NetworkState.Error(response.code(),response.errorBody()!!.string()))
+            }catch (e: IOException) {
+                e.printStackTrace()
+            }
+        }
+    }
+
+    override fun getRecipesDetail(
+        accessToken: String,
+        id: Int
+    ): Flow<NetworkState<RecipeDetailResponse>> = flow{
+        val response = service.getRecipesDetail(accessToken,id)
         if(response.isSuccessful){
             response.body()?.let {
                 emit(NetworkState.Success(it))
