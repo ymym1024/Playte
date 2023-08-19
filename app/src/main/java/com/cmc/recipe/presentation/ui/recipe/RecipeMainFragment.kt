@@ -30,6 +30,7 @@ import java.util.concurrent.TimeUnit
 class RecipeMainFragment : BaseFragment<FragmentRecipeMainBinding>(FragmentRecipeMainBinding::inflate) {
 
     private val recipeViewModel : RecipeViewModel by viewModels()
+    private lateinit var itemList:List<RecipeItem>
 
     override fun initFragment() {
 
@@ -46,8 +47,8 @@ class RecipeMainFragment : BaseFragment<FragmentRecipeMainBinding>(FragmentRecip
                     is NetworkState.Success -> {
                         it.data?.let {data ->
                             if(data.code == "SUCCESS"){
-                                val itemList = it.data.data.content
-                                recipeRecyclerview(itemList)
+                                itemList = it.data.data.content
+                                recipeRecyclerview()
                             }else{
                                 Log.d("data","${data.data}")
                             }
@@ -89,7 +90,7 @@ class RecipeMainFragment : BaseFragment<FragmentRecipeMainBinding>(FragmentRecip
         startActivity(intent)
     }
 
-    private fun recipeRecyclerview(itemList:List<RecipeItem>){
+    private fun recipeRecyclerview(){
         val clickListener = object : OnClickListener {
             override fun onMovePage(id: Int) {
                 movePage(R.id.action_recipeMainFragment_to_recipeActivity)
@@ -106,6 +107,23 @@ class RecipeMainFragment : BaseFragment<FragmentRecipeMainBinding>(FragmentRecip
         binding.rvRecipe.adapter = adapter
         binding.rvRecipe.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
         adapter.replaceData(itemList)
+
+
+        binding.btnNewest.setOnClickListener {
+            itemList.sortedByDescending { it.created_date }
+            adapter.replaceData(itemList)
+        }
+
+        binding.btnPopular.setOnClickListener {
+            itemList.sortedByDescending { it.rating }
+            adapter.replaceData(itemList)
+        }
+
+        binding.btnMiniumTime.setOnClickListener {
+            // TODO : 조리시간 컬럼 추가 후 수정예정
+          //  itemList.sortedBy {  }
+          //  adapter.replaceData(itemList)
+        }
     }
 
 }
