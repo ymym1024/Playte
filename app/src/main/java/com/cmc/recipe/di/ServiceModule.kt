@@ -2,6 +2,7 @@ package com.cmc.recipe.di
 
 import com.cmc.recipe.data.source.remote.api.AuthService
 import com.cmc.recipe.data.source.remote.api.GoogleService
+import com.cmc.recipe.data.source.remote.api.RecipeService
 import com.cmc.recipe.data.source.remote.api.UserService
 import dagger.Module
 import dagger.Provides
@@ -24,6 +25,11 @@ object ServiceModule {
     @Provides
     fun providesAuthService(@Named("RecipeApi")retrofit: Retrofit): AuthService =
         retrofit.create(AuthService::class.java)
+
+    @Singleton
+    @Provides
+    fun providesRecipeService(@Named("RecipeApi")retrofit: Retrofit): RecipeService =
+        retrofit.create(RecipeService::class.java)
 
     @Singleton
     @Provides

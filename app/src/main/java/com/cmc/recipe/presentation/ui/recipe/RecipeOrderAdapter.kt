@@ -4,14 +4,15 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import com.cmc.recipe.data.model.RecipeOrder
+import com.cmc.recipe.data.model.response.Stage
 import com.cmc.recipe.databinding.ItemRecipeOrderBinding
 import com.cmc.recipe.presentation.ui.base.BaseAdapter
 import com.cmc.recipe.presentation.ui.base.BaseHolder
 import com.cmc.recipe.utils.loadImagesWithGlide
 import com.cmc.recipe.utils.loadImagesWithGlideRound
 
-class RecipeOrderAdapter(private val context:Context):
-    BaseAdapter<RecipeOrder, ItemRecipeOrderBinding, RecipeOrderItemHolder>() {
+class RecipeOrderAdapter:
+    BaseAdapter<Stage, ItemRecipeOrderBinding, RecipeOrderItemHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecipeOrderItemHolder {
         return RecipeOrderItemHolder(
             ItemRecipeOrderBinding.inflate(LayoutInflater.from(parent.context), parent, false)
@@ -20,13 +21,17 @@ class RecipeOrderAdapter(private val context:Context):
 }
 
 class RecipeOrderItemHolder(viewBinding: ItemRecipeOrderBinding):
-    BaseHolder<RecipeOrder, ItemRecipeOrderBinding>(viewBinding){
-    override fun bind(binding: ItemRecipeOrderBinding, item: RecipeOrder?) {
+    BaseHolder<Stage, ItemRecipeOrderBinding>(viewBinding){
+    override fun bind(binding: ItemRecipeOrderBinding, item: Stage?) {
         binding.let { view ->
             item?.let { order ->
-                view.ivThumbnail.loadImagesWithGlideRound(order.recipeImage,8)
-                view.tvOrder.text = "0${order.recipeOrder}"
-                view.tvOrderTitle.text = order.recipeInfo
+                view.ivThumbnail.loadImagesWithGlideRound(order.stage_image_url,8)
+                view.tvOrder.text = if (position < 10) {
+                    String.format("%02d", position)
+                } else {
+                    position.toString()
+                }
+                view.tvOrderTitle.text = order.stage_description
             }
         }
 
