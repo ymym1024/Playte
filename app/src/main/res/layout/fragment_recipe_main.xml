@@ -124,76 +124,41 @@
                     android:text="집들이용\n레시피" />
             </GridLayout>
 
-            <LinearLayout
-                android:id="@+id/linearLayout"
+            <com.google.android.material.chip.ChipGroup
+                android:id="@+id/chip_recipe"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="20dp"
-                android:layout_marginTop="23dp"
-                android:layout_marginEnd="20dp"
-                android:orientation="horizontal"
+                android:layout_marginTop="15dp"
+                app:checkedChip="@id/btn_newest"
+                app:chipSpacingHorizontal="10dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/imageButton3">
+                app:layout_constraintTop_toTopOf="parent"
+                app:selectionRequired="true"
+                app:singleSelection="true">
 
                 <com.google.android.material.chip.Chip
+                    android:id="@+id/btn_newest"
+                    style="@style/RecipeChipChoice"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    style="@style/RecipeChipChoice"
-                    android:layout_marginEnd="10dp"
-                    android:checked="true"
-                    android:text="@string/newest"/>
+                    android:text="@string/newest" />
+
                 <com.google.android.material.chip.Chip
+                    android:id="@+id/btn_popular"
+                    style="@style/RecipeChipChoice"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    style="@style/RecipeChipChoice"
-                    android:layout_marginEnd="10dp"
-                    android:text="@string/popular"/>
+                    android:text="@string/popular" />
+
                 <com.google.android.material.chip.Chip
+                    android:id="@+id/btn_minium_time"
+                    style="@style/RecipeChipChoice"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    style="@style/RecipeChipChoice"
-                    android:text="@string/minimum_time"/>
-
-<!--                <androidx.appcompat.widget.AppCompatButton-->
-<!--                    android:id="@+id/btn_new"-->
-<!--                    android:layout_width="wrap_content"-->
-<!--                    android:layout_height="wrap_content"-->
-<!--                    android:background="@drawable/bg_custom_bedge"-->
-<!--                    android:minWidth="57dp"-->
-<!--                    android:minHeight="29dp"-->
-<!--                    android:clickable="true"-->
-<!--                    android:layout_marginEnd="10dp"-->
-<!--                    android:text="@string/newest"-->
-<!--                    android:textSize="14sp"-->
-<!--                    app:layout_constraintStart_toStartOf="parent"-->
-<!--                    app:layout_constraintTop_toTopOf="parent" />-->
-
-<!--                <androidx.appcompat.widget.AppCompatButton-->
-<!--                    android:id="@+id/btn_popular"-->
-<!--                    android:layout_width="wrap_content"-->
-<!--                    android:layout_height="wrap_content"-->
-<!--                    android:background="@drawable/bg_custom_bedge"-->
-<!--                    android:minWidth="57dp"-->
-<!--                    android:minHeight="29dp"-->
-<!--                    android:layout_marginEnd="10dp"-->
-<!--                    android:text="@string/popular"-->
-<!--                    android:textSize="14sp"-->
-<!--                    app:layout_constraintStart_toStartOf="parent"-->
-<!--                    app:layout_constraintTop_toTopOf="parent" />-->
-
-<!--                <androidx.appcompat.widget.AppCompatButton-->
-<!--                    android:id="@+id/btn_minimum"-->
-<!--                    android:layout_width="wrap_content"-->
-<!--                    android:layout_height="wrap_content"-->
-<!--                    android:background="@drawable/bg_custom_bedge"-->
-<!--                    android:minHeight="29dp"-->
-<!--                    android:layout_marginEnd="10dp"-->
-<!--                    android:text="@string/minimum_time"-->
-<!--                    android:textSize="14sp"-->
-<!--                    app:layout_constraintStart_toStartOf="parent"-->
-<!--                    app:layout_constraintTop_toTopOf="parent" />-->
-            </LinearLayout>
+                    android:text="@string/minimum_time" />
+            </com.google.android.material.chip.ChipGroup>
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rv_recipe"

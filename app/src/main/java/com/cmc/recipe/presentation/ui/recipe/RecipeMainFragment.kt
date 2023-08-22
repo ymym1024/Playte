@@ -108,21 +108,22 @@ class RecipeMainFragment : BaseFragment<FragmentRecipeMainBinding>(FragmentRecip
         binding.rvRecipe.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
         adapter.replaceData(itemList)
 
-
-        binding.btnNewest.setOnClickListener {
-            itemList.sortedByDescending { it.created_date }
-            adapter.replaceData(itemList)
-        }
-
-        binding.btnPopular.setOnClickListener {
-            itemList.sortedByDescending { it.rating }
-            adapter.replaceData(itemList)
-        }
-
-        binding.btnMiniumTime.setOnClickListener {
-            // TODO : 조리시간 컬럼 추가 후 수정예정
-          //  itemList.sortedBy {  }
-          //  adapter.replaceData(itemList)
+        binding.chipRecipe.setOnCheckedStateChangeListener { group, checkedIds ->
+            when (checkedIds) {
+                binding.btnNewest -> {
+                    itemList.sortedByDescending { it.created_date }
+                    adapter.replaceData(itemList)
+                    binding.btnNewest.isCheckable = true
+                }
+                binding.btnPopular -> {
+                    itemList.sortedByDescending { it.rating }
+                    adapter.replaceData(itemList)
+                    binding.btnPopular.isCheckable = true
+                }
+                binding.btnMiniumTime -> {
+                    binding.btnPopular.isCheckable = true
+                }
+            }
         }
     }
 
