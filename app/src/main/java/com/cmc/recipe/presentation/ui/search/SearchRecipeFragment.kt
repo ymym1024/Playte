@@ -87,6 +87,24 @@ class SearchRecipeFragment : BaseFragment<FragmentSearchRecipeBinding>(FragmentS
         binding.rvRecipe.adapter = adapter
         binding.rvRecipe.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
         adapter.replaceData(itemList)
+
+        binding.chipRecipe.setOnCheckedStateChangeListener { group, checkedIds ->
+            when (checkedIds) {
+                binding.btnRecipeNewest -> {
+                    itemList.sortedByDescending { it.created_date }
+                    adapter.replaceData(itemList)
+                    binding.btnRecipeNewest.isCheckable = true
+                }
+                binding.btnRecipePopular -> {
+                    itemList.sortedByDescending { it.rating }
+                    adapter.replaceData(itemList)
+                    binding.btnRecipePopular.isCheckable = true
+                }
+                binding.btnRecipeMiniumTime -> {
+                    binding.btnRecipeMiniumTime.isCheckable = true
+                }
+            }
+        }
     }
 
 }

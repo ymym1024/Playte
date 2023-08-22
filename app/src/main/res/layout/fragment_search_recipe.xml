@@ -35,50 +35,48 @@
         app:layout_constraintStart_toEndOf="@+id/btn_back"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <com.google.android.material.chip.Chip
-        android:id="@+id/btn_new"
-        style="@style/RecipeChipChoice"
-        android:layout_width="wrap_content"
+    <com.google.android.material.chip.ChipGroup
+        android:id="@+id/chip_recipe"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="10dp"
-        android:layout_marginTop="10dp"
-        android:text="@string/newest"
-        android:checked="true"
-        android:textSize="14sp"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="15dp"
+        app:checkedChip="@id/btn_recipe_newest"
+        app:chipSpacingHorizontal="10dp"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/searchView" />
+        app:layout_constraintTop_toBottomOf="@+id/searchView"
+        app:selectionRequired="true"
+        app:singleSelection="true">
 
-    <com.google.android.material.chip.Chip
-        android:id="@+id/btn_popular"
-        style="@style/RecipeChipChoice"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="10dp"
-        android:text="@string/popular"
-        android:textSize="14sp"
-        app:layout_constraintStart_toEndOf="@+id/btn_new"
-        app:layout_constraintTop_toBottomOf="@+id/searchView" />
+        <com.google.android.material.chip.Chip
+            android:id="@+id/btn_recipe_newest"
+            style="@style/RecipeChipChoice"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/newest" />
 
-    <com.google.android.material.chip.Chip
-        android:id="@+id/btn_minimum"
-        style="@style/RecipeChipChoice"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="10dp"
-        android:text="@string/minimum_time"
-        android:textSize="14sp"
-        app:layout_constraintStart_toEndOf="@+id/btn_popular"
-        app:layout_constraintTop_toBottomOf="@+id/searchView" />
+        <com.google.android.material.chip.Chip
+            android:id="@+id/btn_recipe_popular"
+            style="@style/RecipeChipChoice"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/popular" />
+
+        <com.google.android.material.chip.Chip
+            android:id="@+id/btn_recipe_minium_time"
+            style="@style/RecipeChipChoice"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/minimum_time" />
+    </com.google.android.material.chip.ChipGroup>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rv_recipe"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_marginTop="16dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btn_minimum" />
+        app:layout_constraintTop_toBottomOf="@+id/chip_recipe" />
 </androidx.constraintlayout.widget.ConstraintLayout>
