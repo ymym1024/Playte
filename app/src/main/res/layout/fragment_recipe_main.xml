@@ -70,7 +70,7 @@
                 android:rowCount="2">
 
                 <TextView
-                    android:id="@+id/textView46"
+                    android:id="@+id/btn_theme_1"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:background="@drawable/img_theme_1"
@@ -84,7 +84,7 @@
                     android:text="자취생 필수!\n" />
 
                 <TextView
-                    android:id="@+id/textView47"
+                    android:id="@+id/btn_theme_2"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:background="@drawable/img_theme_2"
@@ -97,7 +97,7 @@
                     android:text="다이어터를\n위한레시피" />
 
                 <TextView
-                    android:id="@+id/textView48"
+                    android:id="@+id/btn_theme_3"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:background="@drawable/img_theme_3"
@@ -111,7 +111,7 @@
 
 
                 <TextView
-                    android:id="@+id/textView49"
+                    android:id="@+id/btn_theme_4"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:background="@drawable/img_theme_4"

@@ -22,13 +22,22 @@
         <action
             android:id="@+id/action_recipeMainFragment_to_searchRecipeFragment"
             app:destination="@id/searchRecipeFragment" />
+        <argument
+            android:name="theme"
+            app:argType="string" />
     </fragment>
 
     <activity
         android:id="@+id/recipeActivity"
         android:name="com.cmc.recipe.presentation.ui.recipe.RecipeActivity"
         android:label="recipeActivity"
-        tools:layout="@layout/activity_recipe" />
+        tools:layout="@layout/activity_recipe">
+        <argument
+            android:name="theme"
+            app:argType="string"
+            app:nullable="true"
+            android:defaultValue=""/>
+    </activity>
     <fragment
         android:id="@+id/shortsFragment"
         android:name="com.cmc.recipe.presentation.ui.shortform.ShortsFragment"

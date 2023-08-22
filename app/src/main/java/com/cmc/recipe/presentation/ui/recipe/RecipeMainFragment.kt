@@ -1,16 +1,13 @@
 package com.cmc.recipe.presentation.ui.recipe
 
 import android.content.Intent
-import android.os.Bundle
-import android.text.format.DateUtils
 import android.util.Log
 import android.view.KeyEvent
 import android.view.inputmethod.EditorInfo
-import android.widget.TextView
-import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.cmc.recipe.MainApplication
 import com.cmc.recipe.R
 import com.cmc.recipe.data.model.RecipeItem
 import com.cmc.recipe.databinding.FragmentRecipeMainBinding
@@ -22,9 +19,6 @@ import com.cmc.recipe.presentation.viewmodel.RecipeViewModel
 import com.cmc.recipe.utils.Constant
 import com.cmc.recipe.utils.NetworkState
 import dagger.hilt.android.AndroidEntryPoint
-import java.text.ParseException
-import java.text.SimpleDateFormat
-import java.util.concurrent.TimeUnit
 
 
 @AndroidEntryPoint
@@ -33,10 +27,34 @@ class RecipeMainFragment : BaseFragment<FragmentRecipeMainBinding>(FragmentRecip
     private val recipeViewModel : RecipeViewModel by viewModels()
     private lateinit var itemList:List<RecipeItem>
 
-    override fun initFragment() {
 
+    override fun initFragment() {
+        initEventBinding()
         requestRecipeList()
         searchRecipe()
+    }
+
+    private fun initEventBinding(){
+        binding.apply {
+            btnTheme1.setOnClickListener {
+                moveThemePage(getString(R.string.recipe_theme_1))
+            }
+            btnTheme2.setOnClickListener {
+                moveThemePage(getString(R.string.recipe_theme_2))
+            }
+            btnTheme3.setOnClickListener {
+                moveThemePage(getString(R.string.recipe_theme_3))
+            }
+            btnTheme4.setOnClickListener {
+                moveThemePage(getString(R.string.recipe_theme_4))
+            }
+        }
+    }
+
+    private fun moveThemePage(theme:String){
+        //findNavController().navigateUp()
+        val action = RecipeMainFragmentDirections.actionRecipeMainFragmentToRecipeActivity(theme = theme)
+        findNavController().navigate(action)
     }
 
     private fun requestRecipeList(){

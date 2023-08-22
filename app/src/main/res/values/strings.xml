@@ -69,6 +69,10 @@
     <string name="recipe_order_recent">최신순</string>
     <string name="recipe_comment_info">댓글을 적어보세요.</string>
     <string name="recipe_dialog_hin">필요한 양(mL)을 입력해주세요</string>
+    <string name="recipe_theme_1">자취생 필수!</string>
+    <string name="recipe_theme_2">다이어터를 위한 레시피</string>
+    <string name="recipe_theme_3">알뜰살뜰 만원의 행복</string>
+    <string name="recipe_theme_4">집들이용 레시피</string>
 
     <!-- 온보딩 -->
     <string name="simple_login">간편 로그인</string>

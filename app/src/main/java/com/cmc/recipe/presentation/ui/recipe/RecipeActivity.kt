@@ -1,18 +1,15 @@
 package com.cmc.recipe.presentation.ui.recipe
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
-import androidx.appcompat.widget.Toolbar
+import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.NavController
+import androidx.navigation.NavOptions
 import androidx.navigation.fragment.NavHostFragment
-import androidx.navigation.ui.AppBarConfiguration
-import androidx.navigation.ui.NavigationUI.setupWithNavController
-import androidx.navigation.ui.setupActionBarWithNavController
 import com.cmc.recipe.R
-import com.cmc.recipe.databinding.ActivityAuthBinding
 import com.cmc.recipe.databinding.ActivityRecipeBinding
 import dagger.hilt.android.AndroidEntryPoint
+
 
 @AndroidEntryPoint
 class RecipeActivity : AppCompatActivity() {
@@ -42,7 +39,19 @@ class RecipeActivity : AppCompatActivity() {
         }
 
         val graph = navController.navInflater.inflate(R.navigation.nav_recipe_graph)
-        navController.graph = graph
+        val args: RecipeActivityArgs = RecipeActivityArgs.fromBundle(intent.extras!!)
+
+        if (args.theme?.isNotBlank() == true) {
+            val bundle = Bundle()
+            bundle.putString("theme", args.theme)
+
+            graph.setStartDestination(R.id.recipeThemeFragment)
+            navController.graph = graph
+            navController.navigate(R.id.recipeThemeFragment,bundle)
+        } else {
+            graph.setStartDestination(R.id.recipeDetailFragment)
+            navController.graph = graph
+        }
     }
 
     override fun onSupportNavigateUp(): Boolean {
@@ -57,5 +66,7 @@ class RecipeActivity : AppCompatActivity() {
         }
     }
 
-    fun getToolbar() : Toolbar = binding.toolbar
+    fun setToolbarTitle(title:String){
+        binding.toolbarTitle.text = title
+    }
 }
