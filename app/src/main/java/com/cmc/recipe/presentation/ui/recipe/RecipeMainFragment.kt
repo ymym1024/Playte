@@ -41,8 +41,7 @@ class RecipeMainFragment : BaseFragment<FragmentRecipeMainBinding>(FragmentRecip
 
     private fun requestRecipeList(){
         launchWithLifecycle(lifecycle) {
-            val accessToken = MainApplication.tokenManager.getAccessToken()
-            recipeViewModel.getRecipes(accessToken)
+            recipeViewModel.getRecipes()
             recipeViewModel.recipeResult.collect{
                 when(it){
                     is NetworkState.Success -> {
@@ -129,8 +128,7 @@ class RecipeMainFragment : BaseFragment<FragmentRecipeMainBinding>(FragmentRecip
 
     private fun requestRecipeSave(){
         launchWithLifecycle(lifecycle) {
-            val accessToken = MainApplication.tokenManager.getAccessToken()
-            recipeViewModel.postRecipesSave(accessToken,1)
+            recipeViewModel.postRecipesSave(1)
             recipeViewModel._recipeSaveResult.collect{
                 when(it){
                     is NetworkState.Success -> {

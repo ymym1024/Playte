@@ -27,9 +27,9 @@ class RecipeViewModel @Inject constructor(private val recipeUseCase: RecipeUseCa
     var _recipeSaveResult : MutableStateFlow<NetworkState<BaseResponse>> = MutableStateFlow(NetworkState.Loading)
     var recipeSaveResult: StateFlow<NetworkState<BaseResponse>> = _recipeSaveResult
 
-    fun getRecipes(accessToken:String) = viewModelScope.launch {
+    fun getRecipes() = viewModelScope.launch {
         _recipeResult.value = NetworkState.Loading
-        recipeUseCase.getRecipes(accessToken)
+        recipeUseCase.getRecipes()
             .catch { error ->
                 _recipeResult.value = NetworkState.Error(400,"${error.message}")
             }.collect { values ->
@@ -37,9 +37,9 @@ class RecipeViewModel @Inject constructor(private val recipeUseCase: RecipeUseCa
             }
     }
 
-    fun getRecipesDetail(accessToken:String,id:Int) = viewModelScope.launch {
+    fun getRecipesDetail(id:Int) = viewModelScope.launch {
         _recipeDetailResult.value = NetworkState.Loading
-        recipeUseCase.getRecipesDetail(accessToken,id)
+        recipeUseCase.getRecipesDetail(id)
             .catch { error ->
                 _recipeDetailResult.value = NetworkState.Error(400,"${error.message}")
             }.collect { values ->
@@ -47,9 +47,9 @@ class RecipeViewModel @Inject constructor(private val recipeUseCase: RecipeUseCa
             }
     }
 
-    fun postRecipesSave(accessToken:String,id:Int) = viewModelScope.launch {
+    fun postRecipesSave(id:Int) = viewModelScope.launch {
         _recipeSaveResult.value = NetworkState.Loading
-        recipeUseCase.postRecipesSave(accessToken,id)
+        recipeUseCase.postRecipesSave(id)
             .catch { error ->
                 _recipeSaveResult.value = NetworkState.Error(400,"${error.message}")
             }.collect { values ->
@@ -57,9 +57,9 @@ class RecipeViewModel @Inject constructor(private val recipeUseCase: RecipeUseCa
             }
     }
 
-    fun postRecipesNotSave(accessToken:String,id:Int) = viewModelScope.launch {
+    fun postRecipesNotSave(id:Int) = viewModelScope.launch {
         _recipeSaveResult.value = NetworkState.Loading
-        recipeUseCase.postRecipesNotSave(accessToken,id)
+        recipeUseCase.postRecipesNotSave(id)
             .catch { error ->
                 _recipeSaveResult.value = NetworkState.Error(400,"${error.message}")
             }.collect { values ->

@@ -15,8 +15,8 @@ class RecipeRepositoryImpl @Inject constructor(
     private val service: RecipeService
 ) :RecipeRepository{
 
-    override fun getRecipes(accessToken: String): Flow<NetworkState<RecipesResponse>> = flow {
-        val response = service.getRecipes(accessToken)
+    override fun getRecipes(): Flow<NetworkState<RecipesResponse>> = flow {
+        val response = service.getRecipes()
         if(response.isSuccessful){
             response.body()?.let {
                 emit(NetworkState.Success(it))
@@ -31,10 +31,9 @@ class RecipeRepositoryImpl @Inject constructor(
     }
 
     override fun getRecipesDetail(
-        accessToken: String,
         id: Int
     ): Flow<NetworkState<RecipeDetailResponse>> = flow{
-        val response = service.getRecipesDetail(accessToken,id)
+        val response = service.getRecipesDetail(id)
         if(response.isSuccessful){
             response.body()?.let {
                 emit(NetworkState.Success(it))
@@ -48,8 +47,8 @@ class RecipeRepositoryImpl @Inject constructor(
         }
     }
 
-    override fun postRecipesSave(accessToken: String, id: Int): Flow<NetworkState<BaseResponse>> =flow{
-        val response = service.postRecipesSave(accessToken,id)
+    override fun postRecipesSave(id: Int): Flow<NetworkState<BaseResponse>> =flow{
+        val response = service.postRecipesSave(id)
         if(response.isSuccessful){
             response.body()?.let {
                 emit(NetworkState.Success(it))
@@ -63,8 +62,8 @@ class RecipeRepositoryImpl @Inject constructor(
         }
     }
 
-    override fun postRecipesNotSave(accessToken: String, id: Int): Flow<NetworkState<BaseResponse>> = flow{
-        val response = service.postRecipesNotSave(accessToken,id)
+    override fun postRecipesNotSave(id: Int): Flow<NetworkState<BaseResponse>> = flow{
+        val response = service.postRecipesNotSave(id)
         if(response.isSuccessful){
             response.body()?.let {
                 emit(NetworkState.Success(it))

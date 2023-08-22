@@ -2,7 +2,6 @@ package com.cmc.recipe.utils
 
 import android.app.Activity
 import android.content.Context
-import android.content.Intent
 import android.database.Cursor
 import android.net.Uri
 import android.os.Build
@@ -25,7 +24,7 @@ fun ImageView.loadImagesWithGlide(url: String) {
         .into(this)
 }
 
-fun ImageView.loadImagesWithGlideRound(url: String,radius:Int) {
+fun ImageView.loadImagesWithGlideRound(url: String?,radius:Int) {
 
     Glide.with(this)
         .load(url)

@@ -10,11 +10,11 @@ import javax.inject.Inject
 class RecipeUseCase @Inject constructor(
     private val repository: RecipeRepository
     ) {
-    fun getRecipes(accessToken:String) = repository.getRecipes(accessToken)
+    fun getRecipes() = repository.getRecipes()
 
-    fun getRecipesDetail(accessToken:String,id:Int) = repository.getRecipesDetail(accessToken,id)
+    fun getRecipesDetail(id:Int) = repository.getRecipesDetail(id)
 
-    fun postRecipesSave(accessToken:String,id:Int) = repository.postRecipesSave(accessToken,id)
+    fun postRecipesSave(id:Int) = repository.postRecipesSave(id)
 
-    fun postRecipesNotSave(accessToken:String,id:Int) = repository.postRecipesNotSave(accessToken,id)
+    fun postRecipesNotSave(id:Int) = repository.postRecipesNotSave(id)
 }
