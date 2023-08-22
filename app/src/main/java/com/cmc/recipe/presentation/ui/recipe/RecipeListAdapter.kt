@@ -58,7 +58,7 @@ class RecipeItemHolder(viewBinding: ItemRecipeBinding, val type:String,val click
             item?.let { recipe ->
                 it.ivRecipeMain.loadImagesWithGlide(recipe.recipe_thumbnail_img)
                 it.tvRecipeName.text = recipe.recipe_name
-                it.tvRecipeTime.text = "" //"${recipe.time}분"
+                it.tvRecipeTime.text = "${recipe.cook_time}분"
                 it.tvTimeNickname.text = "${recipe.created_date} | ${recipe.nickname}"
                 it.tvStarCnt.text = "${recipe.rating}(${recipe.comment_count})"
                 if(!recipe.is_saved) it.btnStar.setBackgroundResource(R.drawable.ic_bookmark_deactive)
