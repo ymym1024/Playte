@@ -9,7 +9,9 @@ import com.cmc.recipe.R
 import com.cmc.recipe.databinding.ActivitySearchBinding
 import com.cmc.recipe.presentation.ui.base.BaseActivity
 import com.cmc.recipe.utils.Constant
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class SearchActivity : BaseActivity<ActivitySearchBinding>({ ActivitySearchBinding.inflate(it)}){
     private lateinit var navController: NavController
     private lateinit var prevDestination : String
