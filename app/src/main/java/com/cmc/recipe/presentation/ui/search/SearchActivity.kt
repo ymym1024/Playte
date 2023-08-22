@@ -33,15 +33,22 @@ class SearchActivity : BaseActivity<ActivitySearchBinding>({ ActivitySearchBindi
         val graph = navController.navInflater.inflate(R.navigation.nav_search)
         val startDestination = intent.getStringExtra("startDestination")
         prevDestination = intent.getStringExtra("currentDestination")!!
+        val keyword = intent.getStringExtra("keyword")
 
         if(startDestination == Constant.RECIPE){
+            val bundle = Bundle()
+            bundle.putString("keyword", keyword)
+
             graph.setStartDestination(R.id.searchRecipeFragment)
+            navController.graph = graph
+            navController.navigate(R.id.searchRecipeFragment,bundle)
         }else if(startDestination == Constant.SHORTS){
             graph.setStartDestination(R.id.searchShortsFragment)
+            navController.graph = graph
         }else{
             graph.setStartDestination(R.id.searchFragment)
+            navController.graph = graph
         }
-        navController.graph = graph
     }
 
     override fun onSupportNavigateUp(): Boolean {

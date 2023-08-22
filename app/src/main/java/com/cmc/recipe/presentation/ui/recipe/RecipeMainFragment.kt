@@ -91,9 +91,9 @@ class RecipeMainFragment : BaseFragment<FragmentRecipeMainBinding>(FragmentRecip
                 val searchText = binding.searchView.text.toString()
 
                 if(searchText.isEmpty()){
-                    movePage(Constant.RECIPE, Constant.SEARCH)
+                    movePage(Constant.RECIPE, Constant.SEARCH,null)
                 }else{
-                    movePage(Constant.RECIPE, Constant.RECIPE)
+                    movePage(Constant.RECIPE, Constant.RECIPE,searchText)
                 }
                 return@setOnEditorActionListener true
             }
@@ -101,10 +101,11 @@ class RecipeMainFragment : BaseFragment<FragmentRecipeMainBinding>(FragmentRecip
         }
     }
 
-    private fun movePage(current:String,destination:String){
+    private fun movePage(current:String,destination:String,keyword:String?){
         val intent = Intent(requireContext(), SearchActivity::class.java)
         intent.putExtra("startDestination", destination)
         intent.putExtra("currentDestination", current)
+        intent.putExtra("keyword", keyword)
         startActivity(intent)
     }
 

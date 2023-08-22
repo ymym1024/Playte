@@ -15,8 +15,10 @@ import com.cmc.recipe.presentation.ui.recipe.RecipeItemHolder
 import com.cmc.recipe.presentation.ui.recipe.RecipeListAdapter
 import com.cmc.recipe.presentation.viewmodel.RecipeViewModel
 import com.cmc.recipe.presentation.viewmodel.SearchViewModel
+import com.cmc.recipe.utils.CommonTextWatcher
 import com.cmc.recipe.utils.NetworkState
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.*
 
 @AndroidEntryPoint
 class SearchRecipeFragment : BaseFragment<FragmentSearchRecipeBinding>(FragmentSearchRecipeBinding::inflate) {
@@ -24,9 +26,24 @@ class SearchRecipeFragment : BaseFragment<FragmentSearchRecipeBinding>(FragmentS
     private val searchViewModel : SearchViewModel by viewModels()
     private lateinit var itemList:List<RecipeItem>
 
+    private var searchJob: Job? = null
+
     override fun initFragment() {
-        initSearch()
-        requestRecipeList("test")
+        val keyword = arguments?.getString("keyword")
+        binding.searchView.setText(keyword)
+        requestRecipeList(keyword!!)
+
+        binding.searchView.addTextChangedListener(CommonTextWatcher(
+            onChanged = { text,_,_,_ ->
+                searchJob?.cancel()
+                if(text!!.isNotEmpty()){
+                    searchJob = CoroutineScope(Dispatchers.Main).launch {
+                        delay(500L)
+                        requestRecipeList("$text")
+                    }
+                }
+            }
+        ))
 
         //뒤로가기 시 activity 삭제
         requireActivity().onBackPressedDispatcher.addCallback(
@@ -39,9 +56,9 @@ class SearchRecipeFragment : BaseFragment<FragmentSearchRecipeBinding>(FragmentS
         )
     }
 
-    private fun initSearch(){
-
-
+    override fun onDestroyView() {
+        super.onDestroyView()
+        searchJob?.cancel()
     }
 
     private fun requestRecipeList(keyword:String){
