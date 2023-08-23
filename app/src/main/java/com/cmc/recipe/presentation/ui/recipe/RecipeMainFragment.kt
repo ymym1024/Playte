@@ -102,6 +102,7 @@ class RecipeMainFragment : BaseFragment<FragmentRecipeMainBinding>(FragmentRecip
     }
 
     private fun movePage(current:String,destination:String,keyword:String?){
+        binding.searchView.setText("")
         val intent = Intent(requireContext(), SearchActivity::class.java)
         intent.putExtra("startDestination", destination)
         intent.putExtra("currentDestination", current)
