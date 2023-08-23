@@ -87,12 +87,12 @@ class SearchShortsFragment : BaseFragment<FragmentSearchShortsBinding>(FragmentS
         binding.chipRecipe.setOnCheckedStateChangeListener { group, checkedIds ->
             when (checkedIds) {
                 binding.btnRecipeNewest -> {
-                    itemList.sortedByDescending { it.created_date }
+                    itemList.sortedByDescending { it.writtenBy }
                     adapter.replaceData(itemList)
                     binding.btnRecipeNewest.isCheckable = true
                 }
                 binding.btnRecipePopular -> {
-                    itemList.sortedByDescending { it.rating }
+                    itemList.sortedByDescending { it.likes_count }
                     adapter.replaceData(itemList)
                     binding.btnRecipePopular.isCheckable = true
                 }

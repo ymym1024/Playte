@@ -35,7 +35,11 @@ class SearchActivity : BaseActivity<ActivitySearchBinding>({ ActivitySearchBindi
         prevDestination = intent.getStringExtra("currentDestination")!!
         val keyword = intent.getStringExtra("keyword")
 
-        if(keyword!!.isNotBlank()){
+        if(keyword?.isNullOrBlank() == true){
+            graph.setStartDestination(R.id.searchFragment)
+            navController.graph = graph
+
+        } else{
             val bundle = Bundle()
             bundle.putString("keyword", keyword)
 
@@ -48,9 +52,6 @@ class SearchActivity : BaseActivity<ActivitySearchBinding>({ ActivitySearchBindi
                 navController.graph = graph
                 navController.navigate(R.id.searchShortsFragment,bundle)
             }
-        } else{
-            graph.setStartDestination(R.id.searchFragment)
-            navController.graph = graph
         }
     }
 

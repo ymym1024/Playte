@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.cmc.recipe.R
 import com.cmc.recipe.data.model.RecipeItem
@@ -31,9 +32,16 @@ class SearchFragment : BaseFragment<FragmentSearchBinding>(FragmentSearchBinding
     private fun initRV(){
         val itemList = arrayListOf("토마토 계란 볶음밥","토마토 계란 볶음밥","토마토 계란 볶음밥")
 
+        //최신 검색어
         val adapter = SearchItemAdapter()
         binding.rvRecent.adapter = adapter
         binding.rvRecent.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+        adapter.replaceData(itemList)
+
+        //인기 검색어
+        val popAdapter = SearchPopularItemAdapter()
+        binding.rvRecent.adapter = popAdapter
+        binding.rvRecent.layoutManager = GridLayoutManager(context,2)
         adapter.replaceData(itemList)
 
         moveSearch()
