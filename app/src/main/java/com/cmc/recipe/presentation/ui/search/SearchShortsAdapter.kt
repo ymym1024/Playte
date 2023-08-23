@@ -27,10 +27,10 @@ class SearchShortsItemHolder(viewBinding: ItemSearchShortsBinding, val clickList
     BaseHolder<ShortsContent, ItemSearchShortsBinding>(viewBinding){
     override fun bind(binding: ItemSearchShortsBinding, item: ShortsContent?) {
         binding.let { view->
-            view.ivShortsThumbnail.loadImagesWithGlideRound(item?.recipe_thumbnail_img!!,20)
-            view.tvShortsTime.text = "${item?.cook_time}"
-            view.tvShortsNick.text = "${item?.nickname}"
-            view.tvShortsTitle.text = "${item?.recipe_name}"
+            view.ivShortsThumbnail.loadImagesWithGlideRound(item?.video_url!!,20)
+            view.tvShortsTime.text = ""
+            view.tvShortsNick.text = "${item?.writtenBy}"
+            view.tvShortsTitle.text = "${item?.shortform_name}"
         }
     }
 }

@@ -23,13 +23,14 @@ data class ShortsData(
 )
 
 data class ShortsContent(
-    val comment_count: Int,
-    val cook_time: Int,
-    val created_date: String,
+    val comments_count: Int,
+    val is_liked: Boolean,
     val is_saved: Boolean,
-    val nickname: String,
-    val rating: Int,
-    val recipe_id: Int,
-    val recipe_name: String,
-    val recipe_thumbnail_img: String
+    val likes_count: Int,
+    val saved_count: Int,
+    val shortform_description: String,
+    val shortform_id: Int,
+    val shortform_name: String,
+    val video_url: String,
+    val writtenBy: String
 )
