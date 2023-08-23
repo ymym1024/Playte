@@ -5,33 +5,59 @@ import android.content.Intent
 import android.util.Log
 import android.view.KeyEvent
 import android.view.inputmethod.EditorInfo
+import androidx.fragment.app.viewModels
 import androidx.navigation.NavDirections
 import androidx.navigation.fragment.findNavController
 import androidx.viewpager2.widget.ViewPager2
 import com.cmc.recipe.R
 import com.cmc.recipe.data.model.ExoPlayerItem
+import com.cmc.recipe.data.model.response.ShortsContent
 import com.cmc.recipe.databinding.FragmentShortsBinding
 import com.cmc.recipe.presentation.ui.base.BaseFragment
 import com.cmc.recipe.presentation.ui.search.SearchActivity
+import com.cmc.recipe.presentation.viewmodel.RecipeViewModel
 import com.cmc.recipe.utils.Constant
+import com.cmc.recipe.utils.NetworkState
+import dagger.hilt.android.AndroidEntryPoint
 import kotlin.math.abs
 import kotlin.math.max
 
+@AndroidEntryPoint
 class ShortsFragment : BaseFragment<FragmentShortsBinding>(FragmentShortsBinding::inflate) {
+
+    private val recipeViewModel : RecipeViewModel by viewModels()
     private val exoPlayerItems = ArrayList<ExoPlayerItem>()
 
     override fun initFragment() {
         //TODO : 네트워크 연결 후 모델 변경
-        val itemList = arrayListOf(
-            "https://recipe-application-bucket.s3.ap-northeast-2.amazonaws.com/videos/testvideo.mp4",
-            "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4",
-            "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4",
-            "https://d1jg55wkcrciwu.cloudfront.net/videos/testvideo.mp4",
-            "https://www.youtube.com/shorts/ku5PCueK_CY?feature=share"
-        )
-
-        initVideo(itemList)
+        requestRecipeList()
         searchShorts()
+    }
+
+    private fun requestRecipeList(){
+        launchWithLifecycle(lifecycle) {
+            recipeViewModel.getRecipesShortform()
+            recipeViewModel.recipeShortsResult.collect{
+                when(it){
+                    is NetworkState.Success -> {
+                        it.data?.let {data ->
+                            if(data.code == "SUCCESS"){
+                                val itemList = it.data.data.content
+                                initVideo(itemList as ArrayList<ShortsContent>)
+                            }else{
+                                Log.d("data","${data.data}")
+                            }
+                        }
+                        recipeViewModel._recipeResult.value = NetworkState.Loading
+                    }
+                    is NetworkState.Error ->{
+                        showToastMessage(it.message.toString())
+                        recipeViewModel._recipeResult.value = NetworkState.Loading
+                    }
+                    else -> {}
+                }
+            }
+        }
     }
 
     private fun searchShorts(){
@@ -61,7 +87,7 @@ class ShortsFragment : BaseFragment<FragmentShortsBinding>(FragmentShortsBinding
         startActivity(intent)
     }
 
-    private fun initVideo(itemList:ArrayList<String>){
+    private fun initVideo(itemList:ArrayList<ShortsContent>){
         val clickListener = object : ShortsItemHolder.OnClickListener{
             override fun onMoveDetailPage(item:String) {
                 movePage(R.id.action_shortsFragment_to_shortsDetailActivity)

@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import android.widget.Toast
 import com.cmc.recipe.R
 import com.cmc.recipe.data.model.ExoPlayerItem
+import com.cmc.recipe.data.model.response.ShortsContent
 import com.cmc.recipe.databinding.ItemShortsBinding
 import com.cmc.recipe.presentation.ui.base.BaseAdapter
 import com.cmc.recipe.presentation.ui.base.BaseHolder
@@ -17,7 +18,7 @@ import com.google.android.exoplayer2.ui.AspectRatioFrameLayout
 import com.google.android.exoplayer2.upstream.DefaultDataSource
 
 class ShortsAdapter(private val context:Context,val videoPreparedListener: ShortsItemHolder.OnVideoPreparedListener,val clickListener: ShortsItemHolder.OnClickListener):
-    BaseAdapter<String, ItemShortsBinding, ShortsItemHolder>() {
+    BaseAdapter<ShortsContent, ItemShortsBinding, ShortsItemHolder>() {
 
     private lateinit var onShortsListener : onShortsListener
 
@@ -37,9 +38,9 @@ class ShortsAdapter(private val context:Context,val videoPreparedListener: Short
 }
 
 class ShortsItemHolder(viewBinding: ItemShortsBinding, val context: Context,val videoPreparedListener: OnVideoPreparedListener,val clickListener: OnClickListener,val shortsListener: onShortsListener):
-    BaseHolder<String, ItemShortsBinding>(viewBinding){
+    BaseHolder<ShortsContent, ItemShortsBinding>(viewBinding){
 
-    override fun bind(binding: ItemShortsBinding, item: String?) {
+    override fun bind(binding: ItemShortsBinding, item: ShortsContent?) {
         //오디오 처리
         val exoPlayer = ExoPlayer.Builder(context).build()
         exoPlayer.addListener(object : Player.Listener {
@@ -57,6 +58,29 @@ class ShortsItemHolder(viewBinding: ItemShortsBinding, val context: Context,val 
             }
         })
 
+        exoPlayer.seekTo(0)
+        exoPlayer.volume = 0f
+        exoPlayer.repeatMode = Player.REPEAT_MODE_ONE
+
+        binding.videoExoplay.setResizeMode(AspectRatioFrameLayout.RESIZE_MODE_FILL);
+        exoPlayer.setVideoScalingMode(C.VIDEO_SCALING_MODE_SCALE_TO_FIT_WITH_CROPPING);
+
+        val dataSourceFactory = DefaultDataSource.Factory(context)
+
+        val mediaSource = ProgressiveMediaSource.Factory(dataSourceFactory).createMediaSource(
+            MediaItem.fromUri(Uri.parse(item!!.video_url)))
+
+        exoPlayer.setMediaSource(mediaSource)
+        exoPlayer.prepare()
+
+        if (absoluteAdapterPosition == 0) {
+            exoPlayer.playWhenReady = true
+            exoPlayer.play()
+        }
+
+        videoPreparedListener.onVideoPrepared(ExoPlayerItem(exoPlayer, absoluteAdapterPosition))
+
+        // 데이터 바인딩
         binding.let { v ->
             v.shortParent.setOnClickListener {
                 clickListener.onMoveDetailPage("")
@@ -73,29 +97,13 @@ class ShortsItemHolder(viewBinding: ItemShortsBinding, val context: Context,val 
             v.ibHeart.bringToFront()
         }
 
-        exoPlayer.seekTo(0)
-        exoPlayer.volume = 0f
-        exoPlayer.repeatMode = Player.REPEAT_MODE_ONE
+        binding.tvTitle.text = item.writtenBy
+        binding.tvDesc.text = item.shortform_name
+        binding.tvHeartCnt.text = "${item.likes_count}"
+        binding.tvCommentCnt.text = "${item.comments_count}"
+        binding.tvBookmarkCnt.text = "${item.saved_count}"
 
-        binding.videoExoplay.setResizeMode(AspectRatioFrameLayout.RESIZE_MODE_FILL);
-        exoPlayer.setVideoScalingMode(C.VIDEO_SCALING_MODE_SCALE_TO_FIT_WITH_CROPPING);
-
-        val dataSourceFactory = DefaultDataSource.Factory(context)
-
-        val mediaSource = ProgressiveMediaSource.Factory(dataSourceFactory).createMediaSource(
-            MediaItem.fromUri(Uri.parse(item)))
-
-        exoPlayer.setMediaSource(mediaSource)
-        exoPlayer.prepare()
-
-        if (absoluteAdapterPosition == 0) {
-            exoPlayer.playWhenReady = true
-            exoPlayer.play()
-        }
-
-        videoPreparedListener.onVideoPrepared(ExoPlayerItem(exoPlayer, absoluteAdapterPosition))
-
-        var favoriteFlag = true // TODO : 나중에 서버에서 받아오기
+        var favoriteFlag = item.is_liked // TODO : 나중에 서버에서 받아오기
         // 좋아요
         binding.ibHeart.setOnClickListener {
             if(favoriteFlag){
@@ -112,7 +120,7 @@ class ShortsItemHolder(viewBinding: ItemShortsBinding, val context: Context,val 
             shortsListener.onComment()
         }
         // 북마크
-        var bookMarkFlag = true // TODO : 나중에 서버에서 받아오기
+        var bookMarkFlag = item.is_saved
         binding.ibBookmark.setOnClickListener {
             if(bookMarkFlag){
                 binding.ibBookmark.setImageResource(R.drawable.ic_shorts_bookmark_deactivate)
