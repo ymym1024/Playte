@@ -12,4 +12,7 @@ interface SearchService {
     @GET("/api/v1/search/shortform")
     suspend fun getSearchShortform(@Query("keyword") keyword:String) : Response<ShortsResponse>
 
+    @GET("/api/v1/search/keywords")
+    suspend fun getSearchKeywords() : Response<SearchKeywordResponse>
+
 }

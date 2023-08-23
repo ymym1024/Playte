@@ -2,6 +2,7 @@ package com.cmc.recipe.presentation.ui.search
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
@@ -35,7 +36,10 @@ class SearchActivity : BaseActivity<ActivitySearchBinding>({ ActivitySearchBindi
         prevDestination = intent.getStringExtra("currentDestination")!!
         val keyword = intent.getStringExtra("keyword")
 
-        if(keyword?.isNullOrBlank() == true){
+        Log.d("key","${keyword?.isNullOrBlank()}")
+
+        if(keyword?.isNullOrBlank()==null){
+            Log.d("key","여기호출")
             graph.setStartDestination(R.id.searchFragment)
             navController.graph = graph
 

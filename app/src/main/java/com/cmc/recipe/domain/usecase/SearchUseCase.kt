@@ -9,4 +9,6 @@ class SearchUseCase @Inject constructor(
     fun getSearchRecipe(keyword:String) = repository.getSearchRecipe(keyword)
 
     fun getSearchShortform(keyword:String) = repository.getSearchShortform(keyword)
+
+    fun getSearchKeywords() = repository.getSearchKeywords()
 }

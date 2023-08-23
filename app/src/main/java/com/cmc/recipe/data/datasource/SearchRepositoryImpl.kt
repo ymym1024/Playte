@@ -47,4 +47,19 @@ class SearchRepositoryImpl @Inject constructor(
         }
     }
 
+    override fun getSearchKeywords(): Flow<NetworkState<SearchKeywordResponse>> = flow{
+        val response = service.getSearchKeywords()
+        if(response.isSuccessful){
+            response.body()?.let {
+                emit(NetworkState.Success(it))
+            }
+        }else{
+            try {
+                emit(NetworkState.Error(response.code(),response.errorBody()!!.string()))
+            }catch (e: IOException) {
+                e.printStackTrace()
+            }
+        }
+    }
+
 }

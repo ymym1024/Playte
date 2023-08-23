@@ -24,11 +24,9 @@ class SearchShortsFragment : BaseFragment<FragmentSearchShortsBinding>(FragmentS
     private lateinit var itemList:List<ShortsContent>
 
     override fun initFragment() {
-        //TODO : 네트워크 연결 후 삭제
         val keyword = arguments?.getString("keyword")
         binding.searchView.setText(keyword)
         requestRecipeList(keyword!!)
-
 
         //뒤로가기 시 activity 삭제
         requireActivity().onBackPressedDispatcher.addCallback(

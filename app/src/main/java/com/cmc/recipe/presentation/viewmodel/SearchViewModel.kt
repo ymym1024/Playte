@@ -22,6 +22,9 @@ class SearchViewModel @Inject constructor(private val searchUseCase: SearchUseCa
     var _shortsResult: MutableStateFlow<NetworkState<ShortsResponse>> = MutableStateFlow(NetworkState.Loading)
     var shortsResult: StateFlow<NetworkState<ShortsResponse>> = _shortsResult
 
+    var _keywordResult: MutableStateFlow<NetworkState<SearchKeywordResponse>> = MutableStateFlow(NetworkState.Loading)
+    var keywordResult: StateFlow<NetworkState<SearchKeywordResponse>> = _keywordResult
+
     fun getSearchRecipe(keyword:String) = viewModelScope.launch {
         _recipeResult.value = NetworkState.Loading
         searchUseCase.getSearchRecipe(keyword)
@@ -39,6 +42,16 @@ class SearchViewModel @Inject constructor(private val searchUseCase: SearchUseCa
                 _shortsResult.value = NetworkState.Error(400,"${error.message}")
             }.collect { values ->
                 _shortsResult.value = values
+            }
+    }
+
+    fun getSearchKeywords() = viewModelScope.launch {
+        _keywordResult.value = NetworkState.Loading
+        searchUseCase.getSearchKeywords()
+            .catch { error ->
+                _keywordResult.value = NetworkState.Error(400,"${error.message}")
+            }.collect { values ->
+                _keywordResult.value = values
             }
     }
 
