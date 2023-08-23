@@ -7,4 +7,6 @@ class SearchUseCase @Inject constructor(
     private val repository: SearchRepository
     ) {
     fun getSearchRecipe(keyword:String) = repository.getSearchRecipe(keyword)
+
+    fun getSearchShortform(keyword:String) = repository.getSearchShortform(keyword)
 }

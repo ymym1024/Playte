@@ -4,6 +4,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import com.cmc.recipe.data.model.RecipeStep
 import com.cmc.recipe.data.model.SearchShorts
+import com.cmc.recipe.data.model.response.ShortsContent
 import com.cmc.recipe.databinding.ItemRecipeStepBinding
 import com.cmc.recipe.databinding.ItemSearchShortsBinding
 import com.cmc.recipe.presentation.ui.base.BaseAdapter
@@ -13,7 +14,7 @@ import com.cmc.recipe.utils.loadImagesWithGlide
 import com.cmc.recipe.utils.loadImagesWithGlideRound
 
 class SearchShortsAdapter(val clickListener: OnClickListener):
-    BaseAdapter<SearchShorts, ItemSearchShortsBinding, SearchShortsItemHolder>() {
+    BaseAdapter<ShortsContent, ItemSearchShortsBinding, SearchShortsItemHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SearchShortsItemHolder {
         return SearchShortsItemHolder(
             ItemSearchShortsBinding.inflate(LayoutInflater.from(parent.context), parent, false),
@@ -23,13 +24,13 @@ class SearchShortsAdapter(val clickListener: OnClickListener):
 }
 
 class SearchShortsItemHolder(viewBinding: ItemSearchShortsBinding, val clickListener: OnClickListener):
-    BaseHolder<SearchShorts, ItemSearchShortsBinding>(viewBinding){
-    override fun bind(binding: ItemSearchShortsBinding, item: SearchShorts?) {
+    BaseHolder<ShortsContent, ItemSearchShortsBinding>(viewBinding){
+    override fun bind(binding: ItemSearchShortsBinding, item: ShortsContent?) {
         binding.let { view->
-            view.ivShortsThumbnail.loadImagesWithGlideRound(item?.shorts_thumb!!,20)
-            view.tvShortsTime.text = item?.shorts_time
-            view.tvShortsNick.text = item?.shorts_nick
-            view.tvShortsTitle.text = item?.shorts_title
+            view.ivShortsThumbnail.loadImagesWithGlideRound(item?.recipe_thumbnail_img!!,20)
+            view.tvShortsTime.text = "${item?.cook_time}"
+            view.tvShortsNick.text = "${item?.nickname}"
+            view.tvShortsTitle.text = "${item?.recipe_name}"
         }
     }
 }

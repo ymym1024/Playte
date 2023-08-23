@@ -32,4 +32,19 @@ class SearchRepositoryImpl @Inject constructor(
         }
     }
 
+    override fun getSearchShortform(keyword: String): Flow<NetworkState<ShortsResponse>> = flow{
+        val response = service.getSearchShortform(keyword)
+        if(response.isSuccessful){
+            response.body()?.let {
+                emit(NetworkState.Success(it))
+            }
+        }else{
+            try {
+                emit(NetworkState.Error(response.code(),response.errorBody()!!.string()))
+            }catch (e: IOException) {
+                e.printStackTrace()
+            }
+        }
+    }
+
 }
