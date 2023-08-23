@@ -35,17 +35,20 @@ class SearchActivity : BaseActivity<ActivitySearchBinding>({ ActivitySearchBindi
         prevDestination = intent.getStringExtra("currentDestination")!!
         val keyword = intent.getStringExtra("keyword")
 
-        if(startDestination == Constant.RECIPE){
+        if(keyword!!.isNotBlank()){
             val bundle = Bundle()
             bundle.putString("keyword", keyword)
 
-            graph.setStartDestination(R.id.searchRecipeFragment)
-            navController.graph = graph
-            navController.navigate(R.id.searchRecipeFragment,bundle)
-        }else if(startDestination == Constant.SHORTS){
-            graph.setStartDestination(R.id.searchShortsFragment)
-            navController.graph = graph
-        }else{
+            if(startDestination == Constant.RECIPE){
+                graph.setStartDestination(R.id.searchRecipeFragment)
+                navController.graph = graph
+                navController.navigate(R.id.searchRecipeFragment,bundle)
+            }else if(startDestination == Constant.SHORTS){
+                graph.setStartDestination(R.id.searchShortsFragment)
+                navController.graph = graph
+                navController.navigate(R.id.searchShortsFragment,bundle)
+            }
+        } else{
             graph.setStartDestination(R.id.searchFragment)
             navController.graph = graph
         }

@@ -42,9 +42,9 @@ class ShortsFragment : BaseFragment<FragmentShortsBinding>(FragmentShortsBinding
                 val searchText = binding.searchView.text.toString()
 
                 if(searchText.isEmpty()){
-                    movePage(Constant.SHORTS,Constant.SEARCH)
+                    movePage(Constant.SHORTS,Constant.SEARCH,null)
                 }else{
-                    movePage(Constant.SHORTS,Constant.SHORTS)
+                    movePage(Constant.SHORTS,Constant.SHORTS,searchText)
                 }
                 return@setOnEditorActionListener true
             }
@@ -52,12 +52,14 @@ class ShortsFragment : BaseFragment<FragmentShortsBinding>(FragmentShortsBinding
         }
     }
 
-    private fun movePage(current:String,destination:String){
+    private fun movePage(current:String,destination:String,keyword:String?){
         val intent = Intent(requireContext(), SearchActivity::class.java)
         intent.putExtra("startDestination", destination)
         intent.putExtra("currentDestination", current)
+        intent.putExtra("keyword", keyword)
         startActivity(intent)
     }
+
     private fun initVideo(itemList:ArrayList<String>){
         val clickListener = object : ShortsItemHolder.OnClickListener{
             override fun onMoveDetailPage(item:String) {
