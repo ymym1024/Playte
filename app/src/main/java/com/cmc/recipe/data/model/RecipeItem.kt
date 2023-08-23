@@ -8,5 +8,6 @@ data class RecipeItem(
     val rating: Int,
     val recipe_id: Int,
     val recipe_name: String,
-    val recipe_thumbnail_img: String
+    val recipe_thumbnail_img: String,
+    val cook_time:Int
 )

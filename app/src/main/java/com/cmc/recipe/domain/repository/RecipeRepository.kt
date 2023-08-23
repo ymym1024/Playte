@@ -7,12 +7,12 @@ import com.cmc.recipe.utils.NetworkState
 import kotlinx.coroutines.flow.Flow
 
 interface RecipeRepository {
-    fun getRecipes(accessToken:String) : Flow<NetworkState<RecipesResponse>>
+    fun getRecipes() : Flow<NetworkState<RecipesResponse>>
 
-    fun getRecipesDetail(accessToken:String,id:Int) : Flow<NetworkState<RecipeDetailResponse>>
+    fun getRecipesDetail(id:Int) : Flow<NetworkState<RecipeDetailResponse>>
 
-    fun postRecipesSave(accessToken:String,id:Int) : Flow<NetworkState<BaseResponse>>
+    fun postRecipesSave(id:Int) : Flow<NetworkState<BaseResponse>>
 
-    fun postRecipesNotSave(accessToken:String,id:Int) : Flow<NetworkState<BaseResponse>>
+    fun postRecipesNotSave(id:Int) : Flow<NetworkState<BaseResponse>>
 
 }

@@ -1,49 +1,31 @@
-package com.cmc.recipe.presentation.ui.search
+package com.cmc.recipe.presentation.ui.recipe
 
+import android.os.Bundle
 import android.util.Log
+import android.widget.CompoundButton
 import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.viewModels
-import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.cmc.recipe.MainApplication
 import com.cmc.recipe.R
 import com.cmc.recipe.data.model.RecipeItem
-import com.cmc.recipe.databinding.FragmentSearchRecipeBinding
+import com.cmc.recipe.databinding.FragmentRecipeThemeBinding
 import com.cmc.recipe.presentation.ui.base.BaseFragment
 import com.cmc.recipe.presentation.ui.base.OnClickListener
-import com.cmc.recipe.presentation.ui.recipe.RecipeActivity
-import com.cmc.recipe.presentation.ui.recipe.RecipeItemHolder
-import com.cmc.recipe.presentation.ui.recipe.RecipeListAdapter
 import com.cmc.recipe.presentation.viewmodel.RecipeViewModel
-import com.cmc.recipe.presentation.viewmodel.SearchViewModel
-import com.cmc.recipe.utils.CommonTextWatcher
 import com.cmc.recipe.utils.NetworkState
+import com.google.android.material.chip.ChipGroup
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.*
 
 @AndroidEntryPoint
-class SearchRecipeFragment : BaseFragment<FragmentSearchRecipeBinding>(FragmentSearchRecipeBinding::inflate) {
+class RecipeThemeFragment : BaseFragment<FragmentRecipeThemeBinding>(FragmentRecipeThemeBinding::inflate) {
 
-    private val searchViewModel : SearchViewModel by viewModels()
+    private val recipeViewModel : RecipeViewModel by viewModels()
     private lateinit var itemList:List<RecipeItem>
 
-    private var searchJob: Job? = null
-
     override fun initFragment() {
-        val keyword = arguments?.getString("keyword")
-        binding.searchView.setText(keyword)
-        requestRecipeList(keyword!!)
-
-        binding.searchView.addTextChangedListener(CommonTextWatcher(
-            onChanged = { text,_,_,_ ->
-                searchJob?.cancel()
-                if(text!!.isNotEmpty()){
-                    searchJob = CoroutineScope(Dispatchers.Main).launch {
-                        delay(500L)
-                        requestRecipeList("$text")
-                    }
-                }
-            }
-        ))
+        initTitle()
+        requestRecipeList()
 
         //뒤로가기 시 activity 삭제
         requireActivity().onBackPressedDispatcher.addCallback(
@@ -56,15 +38,17 @@ class SearchRecipeFragment : BaseFragment<FragmentSearchRecipeBinding>(FragmentS
         )
     }
 
-    override fun onDestroyView() {
-        super.onDestroyView()
-        searchJob?.cancel()
+    private fun initTitle(){
+        val theme = arguments?.getString("theme")
+
+        val activity = activity as RecipeActivity
+        activity.setToolbarTitle("$theme")
     }
 
-    private fun requestRecipeList(keyword:String){
+    private fun requestRecipeList(){
         launchWithLifecycle(lifecycle) {
-            searchViewModel.getSearchRecipe(keyword)
-            searchViewModel.recipeResult.collect{
+            recipeViewModel.getRecipes()
+            recipeViewModel.recipeResult.collect{
                 when(it){
                     is NetworkState.Success -> {
                         it.data.let { data ->
@@ -75,11 +59,11 @@ class SearchRecipeFragment : BaseFragment<FragmentSearchRecipeBinding>(FragmentS
                                 Log.d("data","${data.data}")
                             }
                         }
-                        searchViewModel._recipeResult.value = NetworkState.Loading
+                        recipeViewModel._recipeResult.value = NetworkState.Loading
                     }
                     is NetworkState.Error ->{
                         showToastMessage(it.message.toString())
-                        searchViewModel._recipeResult.value = NetworkState.Loading
+                        recipeViewModel._recipeResult.value = NetworkState.Loading
                     }
                     else -> {}
                 }
@@ -87,22 +71,23 @@ class SearchRecipeFragment : BaseFragment<FragmentSearchRecipeBinding>(FragmentS
         }
     }
 
-    private fun recipeRecyclerview(){
+    private fun recipeRecyclerview() {
         val clickListener = object : OnClickListener {
             override fun onMovePage(id: Int) {
-               // findNavController().navigate(R.id.action_recipeMainFragment_to_recipeDetailFragment)
+                //movePage(R.id.action_recipeMainFragment_to_recipeActivity)
             }
         }
 
         val adapter = RecipeListAdapter(clickListener)
-        adapter.setListener(object :RecipeItemHolder.onActionListener{
+        adapter.setListener(object : RecipeItemHolder.onActionListener {
             override fun action(item: RecipeItem) {
 
             }
-        })
 
+        })
         binding.rvRecipe.adapter = adapter
-        binding.rvRecipe.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
+        binding.rvRecipe.layoutManager =
+            LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
         adapter.replaceData(itemList)
 
         binding.chipRecipe.setOnCheckedStateChangeListener { group, checkedIds ->
@@ -122,6 +107,6 @@ class SearchRecipeFragment : BaseFragment<FragmentSearchRecipeBinding>(FragmentS
                 }
             }
         }
-    }
 
+    }
 }

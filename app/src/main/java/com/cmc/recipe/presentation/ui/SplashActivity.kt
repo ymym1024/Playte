@@ -1,10 +1,12 @@
 package com.cmc.recipe.presentation.ui
 
+import PermissionSupport
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.widget.Toast
 import androidx.activity.viewModels
+import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
@@ -17,8 +19,11 @@ import com.cmc.recipe.utils.NetworkState
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
+
 @AndroidEntryPoint
 class SplashActivity : AppCompatActivity() {
+
+    private lateinit var permission: PermissionSupport
 
     private lateinit var binding: ActivitySplashBinding
 
@@ -30,7 +35,37 @@ class SplashActivity : AppCompatActivity() {
         binding = ActivitySplashBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        validateLogin()
+        permission = PermissionSupport(this, applicationContext)
+
+        if (!permission.checkPermission()){
+            //권한 요청
+            Log.d("checkPermission","checkPermission")
+            permission.requestPermission()
+        }else{
+            validateLogin()
+        }
+    }
+
+    // Request Permission에 대한 결과 값 받아와
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<String?>,
+        grantResults: IntArray
+    ) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+
+        // If return is false, request permission again
+        if (!permission.onRequestPermissionsResult(requestCode, permissions, grantResults)) {
+            permission.requestPermission()
+        }else{
+            Log.d("onRequestPermissionsResult","이상한곳 호출됨")
+            validateLogin()
+       }
+    }
+
+    private fun handlePermissionDenied() {
+        Toast.makeText(this, "필수 권한을 허용해주세요", Toast.LENGTH_LONG).show()
+        finish()
     }
 
     fun validateLogin(){
@@ -59,6 +94,8 @@ class SplashActivity : AppCompatActivity() {
                         is NetworkState.Error ->{
                             if(it.code==2003){
                                 refreshToken()
+                            }else{
+
                             }
                             userViewModel._myInfoResult.value = NetworkState.Loading
                         }
@@ -91,7 +128,7 @@ class SplashActivity : AppCompatActivity() {
                         }
                         is NetworkState.Error ->{
                             Log.d("error",it.toString())
-                            if(it.code==2005){
+                            if(it.code > 2000){
                                 goLogin()
                             }
                             authViewModel._refreshResult.value = NetworkState.Loading

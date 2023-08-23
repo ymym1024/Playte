@@ -43,8 +43,7 @@ class RecipeDetailFragment : BaseFragment<FragmentRecipeDetailBinding>(FragmentR
 
     private fun requestRecipeDetail(id:Int){
         launchWithLifecycle(lifecycle) {
-            val accessToken = MainApplication.tokenManager.getAccessToken()
-            recipeViewModel.getRecipesDetail(accessToken,id)
+            recipeViewModel.getRecipesDetail(id)
             recipeViewModel.recipeDetailResult.collect{
                 when(it){
                     is NetworkState.Success -> {
