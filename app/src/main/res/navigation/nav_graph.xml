@@ -54,7 +54,12 @@
         android:id="@+id/shortsDetailActivity"
         android:name="com.cmc.recipe.presentation.ui.shortform.ShortsDetailActivity"
         android:label="activity_shorts_detail"
-        tools:layout="@layout/activity_shorts_detail" />
+        tools:layout="@layout/activity_shorts_detail" >
+        <argument
+            android:name="id"
+            app:argType="integer"
+            android:defaultValue="0" />
+    </activity>
     <fragment
         android:id="@+id/mypageFragment"
         android:name="com.cmc.recipe.presentation.ui.mypage.MypageFragment"
