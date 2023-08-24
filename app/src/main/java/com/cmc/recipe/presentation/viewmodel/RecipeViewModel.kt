@@ -25,7 +25,10 @@ class RecipeViewModel @Inject constructor(private val recipeUseCase: RecipeUseCa
     var recipeSaveResult: StateFlow<NetworkState<BaseResponse>> = _recipeSaveResult
 
     var _recipeShortsResult : MutableStateFlow<NetworkState<ShortsResponse>> = MutableStateFlow(NetworkState.Loading)
-    var recipeShortsResult: StateFlow<NetworkState<ShortsResponse>> = _recipeShortsResult
+    var recipeShortsResult: StateFlow<NetworkState<ShortsResponse>> = _recipeShortsResult.asStateFlow()
+
+    var _recipeShortsDetailResult : MutableStateFlow<NetworkState<ShortsDetailResponse>> = MutableStateFlow(NetworkState.Loading)
+    var recipeShortsDetailResult: StateFlow<NetworkState<ShortsDetailResponse>> = _recipeShortsDetailResult
 
     fun getRecipes() = viewModelScope.launch {
         _recipeResult.value = NetworkState.Loading
@@ -74,6 +77,16 @@ class RecipeViewModel @Inject constructor(private val recipeUseCase: RecipeUseCa
                 _recipeShortsResult.value = NetworkState.Error(400,"${error.message}")
             }.collect { values ->
                 _recipeShortsResult.value = values
+            }
+    }
+
+    fun getRecipesShortformDetail(id:Int) = viewModelScope.launch {
+        _recipeShortsDetailResult.value = NetworkState.Loading
+        recipeUseCase.getRecipesShortformDetail(id)
+            .catch { error ->
+                _recipeShortsDetailResult.value = NetworkState.Error(400,"${error.message}")
+            }.collect { values ->
+                _recipeShortsDetailResult.value = values
             }
     }
 }

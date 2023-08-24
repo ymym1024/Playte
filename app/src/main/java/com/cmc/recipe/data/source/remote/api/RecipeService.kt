@@ -21,5 +21,7 @@ interface RecipeService {
     @GET("/api/v1/recipes/shortform")
     suspend fun getRecipesShortform() : Response<ShortsResponse>
 
+    @GET("/api/v1/recipes/shortform/detail/{shortform-id}")
+    suspend fun getRecipesShortformDetail(@Path("shortform-id")id:Int) : Response<ShortsDetailResponse>
 
 }

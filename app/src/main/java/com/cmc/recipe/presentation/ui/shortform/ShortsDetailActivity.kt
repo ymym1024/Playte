@@ -4,17 +4,35 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import androidx.activity.viewModels
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.viewpager2.widget.ViewPager2
 import com.cmc.recipe.R
 import com.cmc.recipe.data.model.ExoPlayerItem
+import com.cmc.recipe.data.model.response.Product
+import com.cmc.recipe.data.model.response.ShortsContent
 import com.cmc.recipe.databinding.ActivityShortsDetailBinding
+import com.cmc.recipe.databinding.ItemShortsDetailBinding
 import com.cmc.recipe.presentation.ui.recipe.BottomSheetDetailDialog
+import com.cmc.recipe.presentation.viewmodel.RecipeViewModel
+import com.cmc.recipe.utils.NetworkState
 import com.cmc.recipe.utils.navigationHeight
 import com.cmc.recipe.utils.setStatusBarTransparent
 import com.cmc.recipe.utils.statusBarHeight
 import com.google.android.material.bottomsheet.BottomSheetBehavior
+import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.launch
 
+@AndroidEntryPoint
 class ShortsDetailActivity : AppCompatActivity() {
+    private val recipeViewModel : RecipeViewModel by viewModels()
+
     private lateinit var binding: ActivityShortsDetailBinding
     private val exoPlayerItems = ArrayList<ExoPlayerItem>()
     private var currentPosition = 0
@@ -26,17 +44,67 @@ class ShortsDetailActivity : AppCompatActivity() {
         binding = ActivityShortsDetailBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        val itemList = arrayListOf(
-            "https://recipe-application-bucket.s3.ap-northeast-2.amazonaws.com/videos/testvideo.mp4",
-            "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4",
-            "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4",
-            "https://d1jg55wkcrciwu.cloudfront.net/videos/testvideo.mp4",
-            "https://www.youtube.com/shorts/ku5PCueK_CY?feature=share"
-        )
+        //position 전달 받음
+        val shortsPosition = ShortsDetailActivityArgs.fromBundle(intent.extras!!).id
+        currentPosition = shortsPosition
 
-        initVideo(itemList)
+        requestRecipeList()
         initMenu()
+    }
 
+    private fun requestRecipeList(){
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                recipeViewModel.getRecipesShortform()
+                recipeViewModel.recipeShortsResult.collect { response ->
+                    when (response) {
+                        is NetworkState.Success -> {
+                            response.data?.let { data ->
+                                if (data.code == "SUCCESS") {
+                                    val itemList = response.data.data.content
+                                    Log.d("여기 호출되는지 확인",itemList[0].video_url)
+                                    initVideo(itemList as ArrayList<ShortsContent>)
+                                } else {
+                                    Log.d("data", "${data.data}")
+                                }
+                            }
+                            recipeViewModel._recipeResult.value = NetworkState.Loading
+                        }
+                        is NetworkState.Error -> {
+                            recipeViewModel._recipeResult.value = NetworkState.Loading
+                        }
+                        else -> {}
+                    }
+                }
+            }
+        }
+    }
+
+    private fun requestRecipeDetail(id:Int){
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                recipeViewModel.getRecipesShortformDetail(id)
+                recipeViewModel.recipeShortsDetailResult.collect {
+                    when (it) {
+                        is NetworkState.Success -> {
+                            it.data?.let { data ->
+                                if (data.code == "SUCCESS") {
+                                    val productList = it.data.data.ingredients
+                                    //initProductAdapter(productList)
+                                } else {
+                                    Log.d("data", "${data.data}")
+                                }
+                            }
+                            recipeViewModel._recipeResult.value = NetworkState.Loading
+                        }
+                        is NetworkState.Error -> {
+                            recipeViewModel._recipeResult.value = NetworkState.Loading
+                        }
+                        else -> {}
+                    }
+                }
+            }
+        }
     }
 
     private fun initMenu(){
@@ -73,7 +141,7 @@ class ShortsDetailActivity : AppCompatActivity() {
         BottomSheetDetailDialog().show(supportFragmentManager,"RemoveBottomSheetFragment")
     }
 
-    private fun initVideo(itemList:ArrayList<String>){
+    private fun initVideo(itemList:ArrayList<ShortsContent>){
         val adapter = ShortsDetailAdapter(applicationContext,object : ShortsItemHolder.OnVideoPreparedListener {
             override fun onVideoPrepared(exoPlayerItem: ExoPlayerItem) {
                 exoPlayerItems.add(exoPlayerItem)
@@ -81,16 +149,13 @@ class ShortsDetailActivity : AppCompatActivity() {
         })
 
         adapter.setShortsListener(object : onShortsListener{
-            override fun onFavorite() {
+            override fun onFavorite() {}
 
-            }
+            override fun onSave() {}
 
-            override fun onSave() {
-
-            }
-
-            override fun onComment() {
-
+            override fun onComment(id:Int) {}
+            override fun requestDetail(id: Int) {
+                requestRecipeDetail(id)
             }
         })
 
@@ -114,7 +179,8 @@ class ShortsDetailActivity : AppCompatActivity() {
                     player.play()
                 }
                 currentPosition = position
-                Log.d("onPageSelected","${previousIndex} , ${newIndex}")
+
+              //  requestRecipeDetail(itemList[currentPosition].shortform_id)
             }
         })
 

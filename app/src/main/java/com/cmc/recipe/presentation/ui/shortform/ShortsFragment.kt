@@ -6,7 +6,6 @@ import android.util.Log
 import android.view.KeyEvent
 import android.view.inputmethod.EditorInfo
 import androidx.fragment.app.viewModels
-import androidx.navigation.NavDirections
 import androidx.navigation.fragment.findNavController
 import androidx.viewpager2.widget.ViewPager2
 import com.cmc.recipe.R
@@ -29,7 +28,7 @@ class ShortsFragment : BaseFragment<FragmentShortsBinding>(FragmentShortsBinding
     private val exoPlayerItems = ArrayList<ExoPlayerItem>()
 
     override fun initFragment() {
-        //TODO : 네트워크 연결 후 모델 변경
+
         requestRecipeList()
         searchShorts()
     }
@@ -89,8 +88,9 @@ class ShortsFragment : BaseFragment<FragmentShortsBinding>(FragmentShortsBinding
 
     private fun initVideo(itemList:ArrayList<ShortsContent>){
         val clickListener = object : ShortsItemHolder.OnClickListener{
-            override fun onMoveDetailPage(item:String) {
-                movePage(R.id.action_shortsFragment_to_shortsDetailActivity)
+            override fun onMoveDetailPage(id:Int) {
+                val action = ShortsFragmentDirections.actionShortsFragmentToShortsDetailActivity(id)
+                findNavController().navigate(action)
             }
         }
 
@@ -109,9 +109,13 @@ class ShortsFragment : BaseFragment<FragmentShortsBinding>(FragmentShortsBinding
 
             }
 
-            override fun onComment() {
-                //숏츠 상세로 이동
-                movePage(R.id.action_shortsFragment_to_shortsDetailActivity)
+            override fun onComment(id:Int) {
+                val action = ShortsFragmentDirections.actionShortsFragmentToShortsDetailActivity(id)
+                findNavController().navigate(action)
+            }
+
+            override fun requestDetail(id: Int) {
+
             }
 
         })
@@ -183,16 +187,6 @@ class ShortsFragment : BaseFragment<FragmentShortsBinding>(FragmentShortsBinding
             player.play()
         }
     }
-
-//    override fun onDestroy() {
-//        super.onDestroy()
-//        if (exoPlayerItems.isNotEmpty()) {
-//            for (item in exoPlayerItems) {
-//                val player = item.exoPlayer
-//                player.release()
-//            }
-//        }
-//    }
 
     override fun onDestroyView() {
         super.onDestroyView()

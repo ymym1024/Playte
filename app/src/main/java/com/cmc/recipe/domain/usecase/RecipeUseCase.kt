@@ -19,4 +19,6 @@ class RecipeUseCase @Inject constructor(
     fun postRecipesNotSave(id:Int) = repository.postRecipesNotSave(id)
 
     fun getRecipesShortform() = repository.getRecipesShortform()
+
+    fun getRecipesShortformDetail(id:Int) = repository.getRecipesShortformDetail(id)
 }

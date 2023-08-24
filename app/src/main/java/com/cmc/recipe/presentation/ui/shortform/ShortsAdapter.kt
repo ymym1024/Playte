@@ -62,8 +62,8 @@ class ShortsItemHolder(viewBinding: ItemShortsBinding, val context: Context,val 
         exoPlayer.volume = 0f
         exoPlayer.repeatMode = Player.REPEAT_MODE_ONE
 
-        binding.videoExoplay.setResizeMode(AspectRatioFrameLayout.RESIZE_MODE_FILL);
-        exoPlayer.setVideoScalingMode(C.VIDEO_SCALING_MODE_SCALE_TO_FIT_WITH_CROPPING);
+        binding.videoExoplay.resizeMode = AspectRatioFrameLayout.RESIZE_MODE_FILL
+        exoPlayer.videoScalingMode = C.VIDEO_SCALING_MODE_SCALE_TO_FIT_WITH_CROPPING
 
         val dataSourceFactory = DefaultDataSource.Factory(context)
 
@@ -83,7 +83,7 @@ class ShortsItemHolder(viewBinding: ItemShortsBinding, val context: Context,val 
         // 데이터 바인딩
         binding.let { v ->
             v.shortParent.setOnClickListener {
-                clickListener.onMoveDetailPage("")
+                clickListener.onMoveDetailPage(item.shortform_id)
             }
             v.videoExoplay.player = exoPlayer
             v.ivEyes.bringToFront()
@@ -117,7 +117,7 @@ class ShortsItemHolder(viewBinding: ItemShortsBinding, val context: Context,val 
         }
         // 댓글
         binding.ibComment.setOnClickListener {
-            shortsListener.onComment()
+            shortsListener.onComment(item.shortform_id)
         }
         // 북마크
         var bookMarkFlag = item.is_saved
@@ -138,6 +138,6 @@ class ShortsItemHolder(viewBinding: ItemShortsBinding, val context: Context,val 
     }
 
     interface OnClickListener{
-        fun onMoveDetailPage(item:String)
+        fun onMoveDetailPage(id:Int)
     }
 }

@@ -10,16 +10,22 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.Toast
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.cmc.recipe.R
 import com.cmc.recipe.data.model.Comment
 import com.cmc.recipe.data.model.ExoPlayerItem
-import com.cmc.recipe.data.model.Product
+import com.cmc.recipe.data.model.response.Product
+import com.cmc.recipe.data.model.response.ShortsContent
+import com.cmc.recipe.data.model.response.ShortsDetailData
 import com.cmc.recipe.databinding.ItemShortsDetailBinding
 import com.cmc.recipe.presentation.ui.base.BaseAdapter
 import com.cmc.recipe.presentation.ui.base.BaseHolder
 import com.cmc.recipe.presentation.ui.common.CommentAdapter
 import com.cmc.recipe.presentation.ui.common.OnCommentListener
+import com.cmc.recipe.utils.NetworkState
 import com.google.android.exoplayer2.ExoPlayer
 import com.google.android.exoplayer2.MediaItem
 import com.google.android.exoplayer2.PlaybackException
@@ -27,9 +33,10 @@ import com.google.android.exoplayer2.Player
 import com.google.android.exoplayer2.source.ProgressiveMediaSource
 import com.google.android.exoplayer2.upstream.DefaultDataSource
 import com.google.android.material.bottomsheet.BottomSheetBehavior
+import kotlinx.coroutines.launch
 
 class ShortsDetailAdapter(private val context:Context,val videoPreparedListener: ShortsItemHolder.OnVideoPreparedListener):
-    BaseAdapter<String, ItemShortsDetailBinding, ShortsDetailHolder>() {
+    BaseAdapter<ShortsContent, ItemShortsDetailBinding, ShortsDetailHolder>() {
 
     private lateinit var onShortsListener : onShortsListener
 
@@ -48,19 +55,20 @@ class ShortsDetailAdapter(private val context:Context,val videoPreparedListener:
 }
 
 class ShortsDetailHolder(viewBinding: ItemShortsDetailBinding, val context: Context,val videoPreparedListener: ShortsItemHolder.OnVideoPreparedListener,val shortsListener: onShortsListener)
-    :BaseHolder<String, ItemShortsDetailBinding>(viewBinding){
+    :BaseHolder<ShortsContent, ItemShortsDetailBinding>(viewBinding){
     private lateinit var bottomSheetBehavior: BottomSheetBehavior<View>
 
-    override fun bind(binding: ItemShortsDetailBinding, item: String?) {
+    override fun bind(binding: ItemShortsDetailBinding, item: ShortsContent?) {
         bottomSheetBehavior = BottomSheetBehavior.from(binding.bottomSheetComment)
 
+        // product recyclerview
+        //initProductAdapter(item!!.shortform_id)
+
+        //댓글 설정
         initCommentAdapter(binding)
 
         //exoplayer 설정
         initShorts(binding)
-
-        // product recyclerview
-        initProductAdapter(binding)
 
         // 댓글
         var favoriteFlag = true // TODO : 나중에 서버에서 받아오기
@@ -143,6 +151,17 @@ class ShortsDetailHolder(viewBinding: ItemShortsDetailBinding, val context: Cont
         }
     }
 
+    private fun initProductAdapter(binding:ItemShortsDetailBinding,itemList:List<Product>){
+        val adapter = ShortsProductAdapter(object :ShortsProductItemHolder.OnClickListener{
+            override fun onMoveSite(url: String) {
+                // 쿠팡 화면으로 이동
+            }
+        })
+        binding.rvProduct.adapter = adapter
+        binding.rvProduct.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+        adapter.replaceData(itemList)
+    }
+
     private fun initCommentAdapter(binding:ItemShortsDetailBinding){
         val adapter = CommentAdapter(object : OnCommentListener{
             override fun onFavorite(id: Int) {
@@ -171,24 +190,6 @@ class ShortsDetailHolder(viewBinding: ItemShortsDetailBinding, val context: Cont
             Comment(comment = "좋은레시피입니다", nickname = "자칭 얼리어답터", comment_time = "2022.03.04", is_like = false, is_reply = false),
             Comment(comment = "좋은레시피입니다", nickname = "자칭 얼리어답터", comment_time = "2022.03.04", is_like = false, is_reply = false),
         )
-        adapter.replaceData(itemList)
-    }
-
-    private fun initProductAdapter(binding:ItemShortsDetailBinding){
-        val adapter = ShortsProductAdapter(object :ShortsProductItemHolder.OnClickListener{
-            override fun onMoveSite(url: String) {
-                // 화면이동
-            }
-        })
-        binding.rvProduct.adapter = adapter
-        binding.rvProduct.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
-        //mock data
-        val itemList = arrayListOf(
-            Product(image = "https://recipe1.ezmember.co.kr/cache/recipe/2022/02/02/dbb3f34bfe348a4bb4d142ff353815651.jpg",name="전남 국내산 대추방...", price = 18000),
-            Product(image = "https://recipe1.ezmember.co.kr/cache/recipe/2022/02/02/dbb3f34bfe348a4bb4d142ff353815651.jpg",name="전남 국내산 대추방...", price = 18000),
-            Product(image = "https://recipe1.ezmember.co.kr/cache/recipe/2022/02/02/dbb3f34bfe348a4bb4d142ff353815651.jpg",name="전남 국내산 대추방...", price = 18000),
-        )
-
         adapter.replaceData(itemList)
     }
 
@@ -235,7 +236,7 @@ class ShortsDetailHolder(viewBinding: ItemShortsDetailBinding, val context: Cont
         val dataSourceFactory = DefaultDataSource.Factory(context)
 
         val mediaSource = ProgressiveMediaSource.Factory(dataSourceFactory).createMediaSource(
-            MediaItem.fromUri(Uri.parse(item)))
+            MediaItem.fromUri(Uri.parse(item?.video_url)))
 
         exoPlayer.setMediaSource(mediaSource)
         exoPlayer.prepare()
