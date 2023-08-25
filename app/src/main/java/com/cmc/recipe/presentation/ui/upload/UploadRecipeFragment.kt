@@ -40,6 +40,7 @@ class UploadRecipeFragment : BaseFragment<FragmentUploadRecipeBinding>(FragmentU
         getThumbnail()
         initRecipeRv()
         initEvent()
+        requestIngredient()
     }
 
     private fun initEvent(){

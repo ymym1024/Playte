@@ -18,17 +18,24 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
 import androidx.core.view.MenuHost
 import androidx.core.view.MenuProvider
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.cmc.recipe.R
 import com.cmc.recipe.data.model.Ingredient
+import com.cmc.recipe.data.model.response.Ingredients
 import com.cmc.recipe.databinding.FragmentUploadShortsBinding
-import com.cmc.recipe.presentation.ui.MainActivity
 import com.cmc.recipe.presentation.ui.base.BaseFragment
+import com.cmc.recipe.presentation.viewmodel.UploadViewModel
 import com.cmc.recipe.utils.Constant.PICK_VIDEO_REQUEST
+import com.cmc.recipe.utils.NetworkState
 import com.cmc.recipe.utils.convertLongToTime
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class UploadShortsFragment : BaseFragment<FragmentUploadShortsBinding>(FragmentUploadShortsBinding::inflate) {
+
+    private val uploadViewModel : UploadViewModel by viewModels()
 
     override fun onDestroyView() {
         super.onDestroyView()
@@ -38,20 +45,38 @@ class UploadShortsFragment : BaseFragment<FragmentUploadShortsBinding>(FragmentU
 
     override fun initFragment() {
         initMenu()
-        initAdapter()
         editScroll()
         uploadShorts()
+        requestIngredient()
     }
 
-    private fun initAdapter(){
-        //TODO : mockup data => 네트워크 연결 후 삭제
-        val dataList = arrayListOf(
-            Ingredient("토마토","재료","개수"),
-            Ingredient("토마토 소스","양념","ml"),
-            Ingredient("토마토","양념","ml"),
-            Ingredient("간장","양념","T")
-        )
+    private fun requestIngredient(){
+        launchWithLifecycle(lifecycle) {
+            uploadViewModel.getIngredients()
+            uploadViewModel.ingredientsResult.collect{
+                when(it){
+                    is NetworkState.Success -> {
+                        it.data?.let {data ->
+                            if(data.code == "SUCCESS"){
+                                Log.d("data",data.data.toString())
+                                initAdapter(data.data)
+                            }else{
+                                Log.d("data","${data.data}")
+                            }
+                        }
+                        uploadViewModel._ingredientsResult.value = NetworkState.Loading
+                    }
+                    is NetworkState.Error ->{
+                        showToastMessage(it.message.toString())
+                        uploadViewModel._ingredientsResult.value = NetworkState.Loading
+                    }
+                    else -> {}
+                }
+            }
+        }
+    }
 
+    private fun initAdapter(dataList:List<Ingredients>){
         val ingredientAdapter = IngredientAdapter()
         ingredientAdapter.setActionListener(object :IngredientItemHolder.actionListener{
             override fun remove(name: String) {
@@ -65,7 +90,7 @@ class UploadShortsFragment : BaseFragment<FragmentUploadShortsBinding>(FragmentU
         binding.etRecipeIngredient.setAdapter(adapter)
         binding.etRecipeIngredient.setOnItemClickListener { _, v, position, _ ->
             val selectedData = adapter.getItem(position)
-            ingredientAdapter.addItem(selectedData.name)
+            ingredientAdapter.addItem(selectedData.ingredient_name)
             binding.etRecipeIngredient.setText("")
             hideKeyboard(v)
         }
