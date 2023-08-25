@@ -3,43 +3,43 @@ package com.cmc.recipe.presentation.ui.upload
 import android.app.Activity
 import android.content.Intent
 import android.graphics.Canvas
-import android.net.Uri
 import android.provider.MediaStore
 import android.util.Log
 import android.view.KeyEvent
 import android.view.inputmethod.EditorInfo
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.cmc.recipe.R
-import com.cmc.recipe.data.model.Ingredient
 import com.cmc.recipe.data.model.RecipeStep
+import com.cmc.recipe.data.model.response.Ingredients
 import com.cmc.recipe.databinding.FragmentUploadRecipeBinding
 import com.cmc.recipe.presentation.ui.base.BaseFragment
 import com.cmc.recipe.presentation.ui.common.RecipeSnackBar
-import com.cmc.recipe.utils.CommonTextWatcher
+import com.cmc.recipe.presentation.viewmodel.UploadViewModel
+import com.cmc.recipe.utils.NetworkState
 import com.cmc.recipe.utils.getRealPathFromURI
 import com.cmc.recipe.utils.loadImagesWithGlideRound
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
+import dagger.hilt.android.AndroidEntryPoint
+import java.io.File
 
-
+@AndroidEntryPoint
 class UploadRecipeFragment : BaseFragment<FragmentUploadRecipeBinding>(FragmentUploadRecipeBinding::inflate) {
 
-    private lateinit var imageUri : Uri
     private var imageString : String? = ""
+    private lateinit var thumbnailFile : File
     private lateinit var ingredientAdapter : IngredientAdapter
     private var count = 1;
+
+    private val uploadViewModel : UploadViewModel by viewModels()
 
     override fun initFragment() {
         selectGallery()
         getThumbnail()
         initRecipeRv()
         initEvent()
-        initAdapter()
     }
 
     private fun initEvent(){
@@ -60,8 +60,14 @@ class UploadRecipeFragment : BaseFragment<FragmentUploadRecipeBinding>(FragmentU
         }
 
         binding.btnSave.setOnClickListener {
-            RecipeSnackBar(binding.btnSave,"레시피가 등록됐습니다!").show()
+            requestUpload()
+
         }
+    }
+
+    private fun requestUpload(){
+
+        RecipeSnackBar(binding.btnSave,"레시피가 등록됐습니다!").show()
     }
 
     private fun initRecipeRv(){
@@ -104,14 +110,32 @@ class UploadRecipeFragment : BaseFragment<FragmentUploadRecipeBinding>(FragmentU
         }
     }
 
-    private fun initAdapter(){
-        val dataList = arrayListOf(
-            Ingredient("토마토","재료","개"),
-            Ingredient("토마토 소스","양념","ml"),
-            Ingredient("토마토","양념","ml"),
-            Ingredient("간장","양념","T")
-        )
-
+    private fun requestIngredient(){
+        launchWithLifecycle(lifecycle) {
+            uploadViewModel.getIngredients()
+            uploadViewModel.ingredientsResult.collect{
+                when(it){
+                    is NetworkState.Success -> {
+                        it.data?.let {data ->
+                            if(data.code == "SUCCESS"){
+                                Log.d("data",data.data.toString())
+                                initAdapter(data.data)
+                            }else{
+                                Log.d("data","${data.data}")
+                            }
+                        }
+                        uploadViewModel._ingredientsResult.value = NetworkState.Loading
+                    }
+                    is NetworkState.Error ->{
+                        showToastMessage(it.message.toString())
+                        uploadViewModel._ingredientsResult.value = NetworkState.Loading
+                    }
+                    else -> {}
+                }
+            }
+        }
+    }
+    private fun initAdapter(dataList:List<Ingredients>){
         ingredientAdapter = IngredientAdapter()
         ingredientAdapter.setActionListener(object :IngredientItemHolder.actionListener{
             override fun remove(name: String) {
@@ -126,7 +150,7 @@ class UploadRecipeFragment : BaseFragment<FragmentUploadRecipeBinding>(FragmentU
         binding.etRecipeIngredient.setAdapter(adapter)
         binding.etRecipeIngredient.setOnItemClickListener { _, v, position, _ ->
             val data = adapter.getItem(position)
-            viewDialog(data.unit,data.name)
+            viewDialog(data.ingredient_unit,data.ingredient_name)
         }
     }
 
@@ -162,8 +186,8 @@ class UploadRecipeFragment : BaseFragment<FragmentUploadRecipeBinding>(FragmentU
             result ->
         if(result.resultCode == Activity.RESULT_OK){
             result?.data?.let { it ->
-                imageUri = it.data!!
                 imageString= requireActivity().getRealPathFromURI(it.data!!)
+                thumbnailFile = File(imageString)
                 binding.ibImage.loadImagesWithGlideRound(imageString!!,10)
             }
         }
