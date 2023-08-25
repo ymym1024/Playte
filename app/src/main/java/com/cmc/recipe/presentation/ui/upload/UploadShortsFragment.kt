@@ -79,7 +79,7 @@ class UploadShortsFragment : BaseFragment<FragmentUploadShortsBinding>(FragmentU
     private fun initAdapter(dataList:List<Ingredients>){
         val ingredientAdapter = IngredientAdapter()
         ingredientAdapter.setActionListener(object :IngredientItemHolder.actionListener{
-            override fun remove(name: String) {
+            override fun remove(name: Ingredients) {
                 ingredientAdapter.removeItem(name)
             }
         })
@@ -90,7 +90,7 @@ class UploadShortsFragment : BaseFragment<FragmentUploadShortsBinding>(FragmentU
         binding.etRecipeIngredient.setAdapter(adapter)
         binding.etRecipeIngredient.setOnItemClickListener { _, v, position, _ ->
             val selectedData = adapter.getItem(position)
-            ingredientAdapter.addItem(selectedData.ingredient_name)
+            ingredientAdapter.addItem(selectedData)
             binding.etRecipeIngredient.setText("")
             hideKeyboard(v)
         }

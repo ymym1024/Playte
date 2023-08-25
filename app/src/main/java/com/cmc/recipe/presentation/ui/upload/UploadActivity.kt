@@ -6,7 +6,9 @@ import androidx.navigation.fragment.NavHostFragment
 import com.cmc.recipe.R
 import com.cmc.recipe.databinding.ActivityUploadBinding
 import com.cmc.recipe.presentation.ui.base.BaseActivity
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class UploadActivity : BaseActivity<ActivityUploadBinding>({ ActivityUploadBinding.inflate(it)}){
     private lateinit var navController: NavController
 

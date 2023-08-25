@@ -9,12 +9,15 @@ import android.view.KeyEvent
 import android.view.inputmethod.EditorInfo
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.cmc.recipe.R
 import com.cmc.recipe.data.model.RecipeStep
 import com.cmc.recipe.data.model.response.Ingredients
+import com.cmc.recipe.data.source.remote.request.Ingredient
+import com.cmc.recipe.data.source.remote.request.UploadRecipeRequest
 import com.cmc.recipe.databinding.FragmentUploadRecipeBinding
 import com.cmc.recipe.presentation.ui.base.BaseFragment
 import com.cmc.recipe.presentation.ui.common.RecipeSnackBar
@@ -23,15 +26,23 @@ import com.cmc.recipe.utils.NetworkState
 import com.cmc.recipe.utils.getRealPathFromURI
 import com.cmc.recipe.utils.loadImagesWithGlideRound
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
+import okhttp3.MediaType
+import okhttp3.MediaType.Companion.toMediaType
+import okhttp3.MultipartBody
+import okhttp3.RequestBody
+import okhttp3.RequestBody.Companion.asRequestBody
 import java.io.File
 
 @AndroidEntryPoint
 class UploadRecipeFragment : BaseFragment<FragmentUploadRecipeBinding>(FragmentUploadRecipeBinding::inflate) {
 
     private var imageString : String? = ""
-    private lateinit var thumbnailFile : File
+    private lateinit var thumbnailUri : String
     private lateinit var ingredientAdapter : IngredientAdapter
     private var count = 1;
+
+    private lateinit var stageAdapter : RecipeStepAdapter
 
     private val uploadViewModel : UploadViewModel by viewModels()
 
@@ -62,27 +73,60 @@ class UploadRecipeFragment : BaseFragment<FragmentUploadRecipeBinding>(FragmentU
 
         binding.btnSave.setOnClickListener {
             requestUpload()
-
         }
     }
 
     private fun requestUpload(){
+        // 레시피 업로드 요청
+        val cook_time = Integer.parseInt(binding.etRecipeTime.text.toString())//조리시간
+        val recipe_description = binding.etRecipeDescription.getText().toString()// 레시피설명
+        val recipe_name = binding.etRecipeName.getText().toString() // 레시피이름
+        val recipe_stage = stageAdapter.getData().toList()
+        val recipe_ingredient = ingredientAdapter.getData().map {
+            Ingredient(ingredient_id =it.ingredient_id, ingredient_size = it.ingredient_count)
+        }
 
-        RecipeSnackBar(binding.btnSave,"레시피가 등록됐습니다!").show()
+        val request = UploadRecipeRequest(cook_time = cook_time, recipe_description = recipe_description, recipe_name = recipe_name,
+            recipe_thumbnail_img = thumbnailUri, serving_size = count, recipe_stages = recipe_stage, ingredients = recipe_ingredient)
+
+        launchWithLifecycle(lifecycle) {
+          //  uploadViewModel.uplo(request)
+//            uploadViewModel.uploadRecipeResult.collect{
+//                when(it){
+//                    is NetworkState.Success -> {
+//                        it.data?.let {data ->
+//                            if(data.code == "SUCCESS"){
+//                                Log.d("data",data.data.toString())
+//                                // 페이지 이동
+//
+//                                RecipeSnackBar(binding.btnSave,"레시피가 등록됐습니다!").show()
+//                            }else{
+//                                Log.d("data","${data.data}")
+//                            }
+//                        }
+//                        uploadViewModel._uploadRecipeResult.value = NetworkState.Loading
+//                    }
+//                    is NetworkState.Error ->{
+//                        showToastMessage(it.message.toString())
+//                        uploadViewModel._uploadRecipeResult.value = NetworkState.Loading
+//                    }
+//                    else -> {}
+//                }
+//            }
+        }
     }
 
     private fun initRecipeRv(){
-
-        val adapter = RecipeStepAdapter()
-        adapter.setListener(object : RecipeStepAdapter.onChangeListener{
+        stageAdapter = RecipeStepAdapter()
+        stageAdapter.setListener(object : RecipeStepAdapter.onChangeListener{
             override fun change() {
-                binding.tvRecipeStepCount.text = "${adapter.itemCount}"
+                //binding.tvRecipeStepCount.text = "${stageAdapter.itemCount}"
             }
 
         })
-        binding.rvStep.adapter = adapter
+        binding.rvStep.adapter = stageAdapter
         binding.rvStep.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
-        val swipeController = ItemTouchCallback(adapter)
+        val swipeController = ItemTouchCallback(stageAdapter)
         val itemTouchHelper = ItemTouchHelper(swipeController)
         itemTouchHelper.attachToRecyclerView(binding.rvStep)
         binding.rvStep.addItemDecoration(object : RecyclerView.ItemDecoration() {
@@ -96,13 +140,13 @@ class UploadRecipeFragment : BaseFragment<FragmentUploadRecipeBinding>(FragmentU
             if (actionId == EditorInfo.IME_ACTION_DONE || (event != null && event.keyCode == KeyEvent.KEYCODE_ENTER)) {
                 val recipeStep = binding.etRecipe.text.toString()
                 val recipeImg = imageString
-                val recipeItem = RecipeStep(recipeImage = recipeImg!!, recipeDesc = recipeStep)
+                val recipeItem = RecipeStep(image_url = recipeImg!!, stage_description = recipeStep)
                 if (recipeStep.isNotEmpty()) {
-                    adapter.addItem(recipeItem)
+                    stageAdapter.addItem(recipeItem)
                     binding.etRecipe.text.clear() // EditText를 초기화
                     imageString = ""
                     binding.ibImage.setImageResource(R.drawable.ic_image)
-                    binding.tvRecipeStepCount.text = "${adapter.itemCount}"
+                    binding.tvRecipeStepCount.text = "${stageAdapter.itemCount}"
                     binding.btnSave.isEnabled =true
                 }
                 return@setOnEditorActionListener true
@@ -136,10 +180,51 @@ class UploadRecipeFragment : BaseFragment<FragmentUploadRecipeBinding>(FragmentU
             }
         }
     }
+
+    private fun uploadImageURI(imageFile:String,type:String){
+        launchWithLifecycle(lifecycle) {
+            val imgfile = File(imageFile)
+            val file = MultipartBody.Part.createFormData(name = "multipartFile", filename = imgfile?.name, body = imgfile.asRequestBody("image/jpg".toMediaType()))
+            uploadViewModel.uploadImage(file)
+            uploadViewModel.uploadImageResult.collect{
+                when(it){
+                    is NetworkState.Success -> {
+                        if(it.data.code == "SUCCESS"){
+                            Log.d("uploadImageURI",it.data.data.toString())
+                            if(type == "thumb") responseThumbImage(imageFile,it.data.data.toString())
+                        }
+                    }
+                    is NetworkState.Error ->{
+                        showToastMessage(it.message.toString())
+                    }
+                    else -> {}
+                }
+            }
+        }
+    }
+
+    private fun responseThumbImage(origin:String,url:String){
+        if(url.isEmpty()){
+            showToastMessage("이미지 업로드에 실패했습니다")
+        }else{
+            thumbnailUri = url
+            binding.ivThumbnail.loadImagesWithGlideRound(origin!!,10)
+        }
+    }
+
+    private fun responseStepImage(origin:String,url:String){
+        if(url.isEmpty()){
+            showToastMessage("이미지 업로드에 실패했습니다")
+        }else{
+            thumbnailUri = url
+            binding.ivThumbnail.loadImagesWithGlideRound(origin!!,10)
+        }
+    }
+
     private fun initAdapter(dataList:List<Ingredients>){
         ingredientAdapter = IngredientAdapter()
         ingredientAdapter.setActionListener(object :IngredientItemHolder.actionListener{
-            override fun remove(name: String) {
+            override fun remove(name: Ingredients) {
                 ingredientAdapter.removeItem(name)
             }
         })
@@ -151,34 +236,35 @@ class UploadRecipeFragment : BaseFragment<FragmentUploadRecipeBinding>(FragmentU
         binding.etRecipeIngredient.setAdapter(adapter)
         binding.etRecipeIngredient.setOnItemClickListener { _, v, position, _ ->
             val data = adapter.getItem(position)
-            viewDialog(data.ingredient_unit,data.ingredient_name)
+            viewDialog(data)
         }
     }
 
-    private fun viewDialog(unit:String,name:String){
-        if(unit == "개") {
-            val dialog = IngredientCountDialog(name)
+    private fun viewDialog(item:Ingredients){
+        if(item.ingredient_unit == "개") {
+            val dialog = IngredientCountDialog(item.ingredient_name)
             dialog.setListener(object : IngredientCountDialog.onCountListener{
                 override fun getCount(count: Int) {
-                    dialogBinding(name,count,unit)
+                    item.ingredient_count = count
+                    dialogBinding(item)
                 }
 
             })
             dialog.show(parentFragmentManager,"IngredientCountDialog")
         }else{
-            val dialog = IngredientEtcDialog(name,unit)
+            val dialog = IngredientEtcDialog(item.ingredient_name,item.ingredient_unit)
             dialog.setListener(object :IngredientEtcDialog.onCountListener{
                 override fun getCount(count: Int) {
-                    dialogBinding(name,count,unit)
+                    item.ingredient_count = count
+                    dialogBinding(item)
                 }
             })
             dialog.show(parentFragmentManager,"IngredientEtcDialog")
         }
     }
 
-    private fun dialogBinding(name:String,count:Int,unit:String){
-        val nameAndCount = "${name} ${count}${unit}"
-        ingredientAdapter.addItem(nameAndCount)
+    private fun dialogBinding(item:Ingredients){
+        ingredientAdapter.addItem(item)
         binding.etRecipeIngredient.setText("")
     }
 
@@ -188,8 +274,10 @@ class UploadRecipeFragment : BaseFragment<FragmentUploadRecipeBinding>(FragmentU
         if(result.resultCode == Activity.RESULT_OK){
             result?.data?.let { it ->
                 imageString= requireActivity().getRealPathFromURI(it.data!!)
-                thumbnailFile = File(imageString)
+                // thumbnailFile = File(imageString)
                 binding.ibImage.loadImagesWithGlideRound(imageString!!,10)
+                // 이미지 업로드
+                Log.d("thumbnail","${thumbnailUri}")
             }
         }
     }
@@ -200,7 +288,8 @@ class UploadRecipeFragment : BaseFragment<FragmentUploadRecipeBinding>(FragmentU
             result?.data?.let { it ->
                 val image = requireActivity().getRealPathFromURI(it.data!!)
                 binding.ivThumbnail.setPadding(0, 0, 0, 0)
-                binding.ivThumbnail.loadImagesWithGlideRound(image!!,10)
+                // 이미지 업로드
+                uploadImageURI(image,"thumb")
             }
         }
     }

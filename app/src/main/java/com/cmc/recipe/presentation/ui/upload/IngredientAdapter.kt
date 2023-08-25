@@ -4,6 +4,7 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import com.cmc.recipe.data.model.RecipeItem
+import com.cmc.recipe.data.model.response.Ingredients
 import com.cmc.recipe.databinding.ItemIngredientBinding
 import com.cmc.recipe.databinding.ItemRecipeBinding
 import com.cmc.recipe.presentation.ui.base.BaseAdapter
@@ -12,7 +13,7 @@ import com.cmc.recipe.presentation.ui.base.OnClickListener
 import com.cmc.recipe.utils.loadImagesWithGlide
 
 class IngredientAdapter:
-    BaseAdapter<String, ItemIngredientBinding, IngredientItemHolder>() {
+    BaseAdapter<Ingredients, ItemIngredientBinding, IngredientItemHolder>() {
 
     lateinit var listener : IngredientItemHolder.actionListener
 
@@ -23,13 +24,13 @@ class IngredientAdapter:
         )
     }
 
-    fun addItem(item:String){
+    fun addItem(item:Ingredients){
         val itemList = getData()
         itemList.addAll(listOf(item))
         notifyDataSetChanged()
     }
 
-    fun removeItem(item:String){
+    fun removeItem(item:Ingredients){
         val itemList = getData()
         itemList.remove(item)
         notifyDataSetChanged()
@@ -42,18 +43,22 @@ class IngredientAdapter:
 }
 
 class IngredientItemHolder(viewBinding: ItemIngredientBinding, val clickListener: actionListener):
-    BaseHolder<String, ItemIngredientBinding>(viewBinding){
+    BaseHolder<Ingredients, ItemIngredientBinding>(viewBinding){
 
-    override fun bind(binding: ItemIngredientBinding, item: String?) {
+    override fun bind(binding: ItemIngredientBinding, item: Ingredients?) {
         binding.let {
-            it.tvIngredientName.text = item
+            if(item?.ingredient_count!! > 0){
+                it.tvIngredientName.text = "${item?.ingredient_name} ${item?.ingredient_count}${item?.ingredient_unit}"
+            }else{
+                it.tvIngredientName.text = item?.ingredient_name
+            }
             it.btnRemove.setOnClickListener {
-                clickListener.remove(item.toString())
+                clickListener.remove(item!!)
             }
         }
     }
 
     interface actionListener{
-        fun remove(name:String)
+        fun remove(name:Ingredients)
     }
 }
