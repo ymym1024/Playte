@@ -23,6 +23,7 @@ import com.cmc.recipe.presentation.ui.MainActivity
 import com.cmc.recipe.presentation.ui.base.BaseFragment
 import com.cmc.recipe.presentation.ui.common.RecipeSnackBar
 import com.cmc.recipe.presentation.viewmodel.UploadViewModel
+import com.cmc.recipe.utils.CommonTextWatcher
 import com.cmc.recipe.utils.NetworkState
 import com.cmc.recipe.utils.getRealPathFromURI
 import com.cmc.recipe.utils.loadImagesWithGlideRound
@@ -71,6 +72,7 @@ class UploadRecipeFragment : BaseFragment<FragmentUploadRecipeBinding>(FragmentU
         }
 
         binding.btnSave.setOnClickListener {
+            validate()
             uploadImageURI(thumbnailUri)
         }
     }
@@ -119,6 +121,19 @@ class UploadRecipeFragment : BaseFragment<FragmentUploadRecipeBinding>(FragmentU
     }
 
     private fun initRecipeRv(){
+        //레시피 이름
+        binding.etRecipeName.editText.addTextChangedListener(CommonTextWatcher(
+            onChanged = { text,_,_,_ ->
+                validate()
+            }
+        ))
+        //레시피 설명
+        binding.etRecipeDescription.editText.addTextChangedListener(CommonTextWatcher(
+            onChanged = { text,_,_,_ ->
+                validate()
+            }
+        ))
+
         stageAdapter = RecipeStepAdapter()
         stageAdapter.setListener(object : RecipeStepAdapter.onChangeListener{
             override fun change() {
@@ -149,12 +164,20 @@ class UploadRecipeFragment : BaseFragment<FragmentUploadRecipeBinding>(FragmentU
                     imageString = ""
                     binding.ibImage.setImageResource(R.drawable.ic_image)
                     binding.tvRecipeStepCount.text = "${stageAdapter.itemCount}"
-                    binding.btnSave.isEnabled =true
+                    validate()
                 }
                 return@setOnEditorActionListener true
             }
             return@setOnEditorActionListener false
         }
+    }
+
+    private fun validate(){
+        // 이름, 재료, 양념, 레시피
+        binding.btnSave.isEnabled =
+            binding.ivThumbnail.drawable !==null &&
+            binding.etRecipeName.editText.text.isNotEmpty() && binding.etRecipeDescription.editText.text.isNotEmpty() &&
+                    Integer.parseInt(binding.etRecipeTime.text.toString()) >= 1 && stageAdapter.itemCount > 0 && ingredientAdapter.itemCount > 0
     }
 
     private fun requestIngredient(){
