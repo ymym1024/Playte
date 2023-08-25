@@ -41,15 +41,15 @@ class UploadViewModel @Inject constructor(private val uploadUseCase: UploadUseCa
         }
     }
 
-//    fun uploadRecipe(request:UploadRecipeRequest) = viewModelScope.launch {
-//        _uploadRecipeResult.value = NetworkState.Loading
-//        uploadUseCase.uploadRecipe(request)
-//            .catch { error ->
-//                _uploadRecipeResult.value = NetworkState.Error(400,"${error.message}")
-//            }.collect { values ->
-//                _uploadRecipeResult.value = values
-//            }
-//    }
+    fun uploadRecipe(request:UploadRecipeRequest) = viewModelScope.launch {
+        _uploadRecipeResult.emit(NetworkState.Loading)
+        uploadUseCase.uploadRecipe(request)
+            .catch { error ->
+                _uploadRecipeResult.emit(NetworkState.Error(400,"${error.message}"))
+            }.collect { values ->
+                _uploadRecipeResult.emit(values)
+            }
+    }
 
     fun getIngredients() = viewModelScope.launch {
         _ingredientsResult.value = NetworkState.Loading

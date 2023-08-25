@@ -6,10 +6,10 @@ import android.graphics.Canvas
 import android.provider.MediaStore
 import android.util.Log
 import android.view.KeyEvent
+import android.view.View
 import android.view.inputmethod.EditorInfo
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -19,6 +19,7 @@ import com.cmc.recipe.data.model.response.Ingredients
 import com.cmc.recipe.data.source.remote.request.Ingredient
 import com.cmc.recipe.data.source.remote.request.UploadRecipeRequest
 import com.cmc.recipe.databinding.FragmentUploadRecipeBinding
+import com.cmc.recipe.presentation.ui.MainActivity
 import com.cmc.recipe.presentation.ui.base.BaseFragment
 import com.cmc.recipe.presentation.ui.common.RecipeSnackBar
 import com.cmc.recipe.presentation.viewmodel.UploadViewModel
@@ -26,13 +27,11 @@ import com.cmc.recipe.utils.NetworkState
 import com.cmc.recipe.utils.getRealPathFromURI
 import com.cmc.recipe.utils.loadImagesWithGlideRound
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.launch
-import okhttp3.MediaType
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.MultipartBody
-import okhttp3.RequestBody
 import okhttp3.RequestBody.Companion.asRequestBody
 import java.io.File
+
 
 @AndroidEntryPoint
 class UploadRecipeFragment : BaseFragment<FragmentUploadRecipeBinding>(FragmentUploadRecipeBinding::inflate) {
@@ -40,7 +39,7 @@ class UploadRecipeFragment : BaseFragment<FragmentUploadRecipeBinding>(FragmentU
     private var imageString : String? = ""
     private lateinit var thumbnailUri : String
     private lateinit var ingredientAdapter : IngredientAdapter
-    private var count = 1;
+    private var count = 1
 
     private lateinit var stageAdapter : RecipeStepAdapter
 
@@ -72,7 +71,7 @@ class UploadRecipeFragment : BaseFragment<FragmentUploadRecipeBinding>(FragmentU
         }
 
         binding.btnSave.setOnClickListener {
-            requestUpload()
+            uploadImageURI(thumbnailUri)
         }
     }
 
@@ -90,29 +89,32 @@ class UploadRecipeFragment : BaseFragment<FragmentUploadRecipeBinding>(FragmentU
             recipe_thumbnail_img = thumbnailUri, serving_size = count, recipe_stages = recipe_stage, ingredients = recipe_ingredient)
 
         launchWithLifecycle(lifecycle) {
-          //  uploadViewModel.uplo(request)
-//            uploadViewModel.uploadRecipeResult.collect{
-//                when(it){
-//                    is NetworkState.Success -> {
-//                        it.data?.let {data ->
-//                            if(data.code == "SUCCESS"){
-//                                Log.d("data",data.data.toString())
-//                                // 페이지 이동
-//
-//                                RecipeSnackBar(binding.btnSave,"레시피가 등록됐습니다!").show()
-//                            }else{
-//                                Log.d("data","${data.data}")
-//                            }
-//                        }
-//                        uploadViewModel._uploadRecipeResult.value = NetworkState.Loading
-//                    }
-//                    is NetworkState.Error ->{
-//                        showToastMessage(it.message.toString())
-//                        uploadViewModel._uploadRecipeResult.value = NetworkState.Loading
-//                    }
-//                    else -> {}
-//                }
-//            }
+            uploadViewModel.uploadRecipe(request)
+            uploadViewModel.uploadRecipeResult.collect{
+                when(it){
+                    is NetworkState.Success -> {
+                        it.data.let { data ->
+                            if(data.code == "SUCCESS"){
+                                requireActivity().finish()
+                                val activity = MainActivity.mainActivity as MainActivity
+                                val rootView: View = activity.window.decorView.rootView // a 액티비티의 레이아웃 최상단 뷰를 가져옴
+                                // 스낵바 생성 및 표시
+                                RecipeSnackBar(rootView,"레시피가 등록됐습니다!").setAnchorView(rootView.findViewById(R.id.bottom_nav)).show()
+                            }else{
+                                Log.d("data","${data.data}")
+                                RecipeSnackBar(binding.btnSave,"${data.data}").show()
+                            }
+                        }
+                    }
+                    is NetworkState.Error ->{
+                        showToastMessage(it.message.toString())
+                    }
+                    is NetworkState.Loading -> {
+                        // progress 로딩
+                    }
+                    else -> {}
+                }
+            }
         }
     }
 
@@ -161,7 +163,7 @@ class UploadRecipeFragment : BaseFragment<FragmentUploadRecipeBinding>(FragmentU
             uploadViewModel.ingredientsResult.collect{
                 when(it){
                     is NetworkState.Success -> {
-                        it.data?.let {data ->
+                        it.data.let { data ->
                             if(data.code == "SUCCESS"){
                                 Log.d("data",data.data.toString())
                                 initAdapter(data.data)
@@ -181,17 +183,16 @@ class UploadRecipeFragment : BaseFragment<FragmentUploadRecipeBinding>(FragmentU
         }
     }
 
-    private fun uploadImageURI(imageFile:String,type:String){
+    private fun uploadImageURI(imageFile:String){
         launchWithLifecycle(lifecycle) {
             val imgfile = File(imageFile)
-            val file = MultipartBody.Part.createFormData(name = "multipartFile", filename = imgfile?.name, body = imgfile.asRequestBody("image/jpg".toMediaType()))
+            val file = MultipartBody.Part.createFormData(name = "multipartFile", filename = imgfile.name, body = imgfile.asRequestBody("image/jpg".toMediaType()))
             uploadViewModel.uploadImage(file)
             uploadViewModel.uploadImageResult.collect{
                 when(it){
                     is NetworkState.Success -> {
                         if(it.data.code == "SUCCESS"){
-                            Log.d("uploadImageURI",it.data.data.toString())
-                            if(type == "thumb") responseThumbImage(imageFile,it.data.data.toString())
+                            requestUpload()
                         }
                     }
                     is NetworkState.Error ->{
@@ -203,13 +204,12 @@ class UploadRecipeFragment : BaseFragment<FragmentUploadRecipeBinding>(FragmentU
         }
     }
 
-    private fun responseThumbImage(origin:String,url:String){
-        if(url.isEmpty()){
-            showToastMessage("이미지 업로드에 실패했습니다")
-        }else{
-            thumbnailUri = url
-            binding.ivThumbnail.loadImagesWithGlideRound(origin!!,10)
-        }
+    private fun moveMainPage(){
+        val intent = Intent(requireContext(), MainActivity::class.java)
+        intent.putExtra("source", "uploadRecipe")
+        startActivity(intent)
+
+        activity?.finish()
     }
 
     private fun responseStepImage(origin:String,url:String){
@@ -217,7 +217,7 @@ class UploadRecipeFragment : BaseFragment<FragmentUploadRecipeBinding>(FragmentU
             showToastMessage("이미지 업로드에 실패했습니다")
         }else{
             thumbnailUri = url
-            binding.ivThumbnail.loadImagesWithGlideRound(origin!!,10)
+            binding.ivThumbnail.loadImagesWithGlideRound(origin,10)
         }
     }
 
@@ -289,7 +289,8 @@ class UploadRecipeFragment : BaseFragment<FragmentUploadRecipeBinding>(FragmentU
                 val image = requireActivity().getRealPathFromURI(it.data!!)
                 binding.ivThumbnail.setPadding(0, 0, 0, 0)
                 // 이미지 업로드
-                uploadImageURI(image,"thumb")
+                thumbnailUri = image
+                binding.ivThumbnail.loadImagesWithGlideRound(image,10)
             }
         }
     }
