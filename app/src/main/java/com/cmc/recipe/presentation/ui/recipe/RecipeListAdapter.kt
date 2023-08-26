@@ -43,7 +43,7 @@ class RecipeItemHolder(viewBinding: ItemRecipeBinding, val type:String,val click
     BaseHolder<RecipeItem, ItemRecipeBinding>(viewBinding){
     override fun bind(binding: ItemRecipeBinding, item: RecipeItem?) {
         binding.recipeItem.setOnClickListener {
-            clickListener.onMovePage(0)
+            clickListener.onMovePage(item?.recipe_id!!)
         }
 
         if(type == Constant.WRITE){

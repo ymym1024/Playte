@@ -110,10 +110,16 @@ class RecipeMainFragment : BaseFragment<FragmentRecipeMainBinding>(FragmentRecip
         startActivity(intent)
     }
 
+    private fun moveDetailPage(id:Int){
+        val intent = Intent(requireContext(), RecipeActivity::class.java)
+        intent.putExtra("id", id)
+        startActivity(intent)
+    }
+
     private fun recipeRecyclerview(){
         val clickListener = object : OnClickListener {
             override fun onMovePage(id: Int) {
-                movePage(R.id.action_recipeMainFragment_to_recipeActivity)
+                moveDetailPage(id)
             }
         }
 
