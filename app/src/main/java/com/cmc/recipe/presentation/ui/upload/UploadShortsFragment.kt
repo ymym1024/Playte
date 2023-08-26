@@ -20,6 +20,7 @@ import androidx.core.view.MenuHost
 import androidx.core.view.MenuProvider
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.cmc.recipe.R
 import com.cmc.recipe.data.model.Ingredient
@@ -29,8 +30,11 @@ import com.cmc.recipe.presentation.ui.base.BaseFragment
 import com.cmc.recipe.presentation.viewmodel.UploadViewModel
 import com.cmc.recipe.utils.Constant.PICK_VIDEO_REQUEST
 import com.cmc.recipe.utils.NetworkState
+import com.cmc.recipe.utils.bitmapImagesWithGlideRound
 import com.cmc.recipe.utils.convertLongToTime
+import com.cmc.recipe.utils.loadImagesWithGlideRound
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class UploadShortsFragment : BaseFragment<FragmentUploadShortsBinding>(FragmentUploadShortsBinding::inflate) {
@@ -51,7 +55,7 @@ class UploadShortsFragment : BaseFragment<FragmentUploadShortsBinding>(FragmentU
     }
 
     private fun requestIngredient(){
-        launchWithLifecycle(lifecycle) {
+        viewLifecycleOwner.lifecycleScope.launch {
             uploadViewModel.getIngredients()
             uploadViewModel.ingredientsResult.collect{
                 when(it){
@@ -64,11 +68,9 @@ class UploadShortsFragment : BaseFragment<FragmentUploadShortsBinding>(FragmentU
                                 Log.d("data","${data.data}")
                             }
                         }
-                        uploadViewModel._ingredientsResult.value = NetworkState.Loading
                     }
-                    is NetworkState.Error ->{
+                    is NetworkState.Error -> {
                         showToastMessage(it.message.toString())
-                        uploadViewModel._ingredientsResult.value = NetworkState.Loading
                     }
                     else -> {}
                 }
@@ -159,7 +161,9 @@ class UploadShortsFragment : BaseFragment<FragmentUploadShortsBinding>(FragmentU
         if (requestCode == PICK_VIDEO_REQUEST && resultCode == Activity.RESULT_OK) {
             data?.data?.let { videoUri ->
                 val bitmap = getFirstFrameFromVideo(videoUri)
-                binding.ivThumbnail.setImageBitmap(bitmap)
+                binding.ivThumbnail.setPadding(0, 0, 0, 0)
+                binding.ivThumbnail.bitmapImagesWithGlideRound(bitmap,10)
+                binding.btnUploadShorts.visibility = View.VISIBLE
                 val time = getVideoDuration(videoUri)
                 settingToolbar(time)
             }
@@ -172,6 +176,7 @@ class UploadShortsFragment : BaseFragment<FragmentUploadShortsBinding>(FragmentU
         val drawablePadding = 6.dp
 
         activity.setToolbarAndIcon(iconDrawable!!,time.convertLongToTime(time),drawablePadding)
+        activity.setToolbarColor()
     }
 
     val Int.dp: Int
@@ -225,6 +230,10 @@ class UploadShortsFragment : BaseFragment<FragmentUploadShortsBinding>(FragmentU
     }
 
     private fun uploadShorts(){
+        binding.ivThumbnail.setOnClickListener {
+            checkPermissionsAndPickVideo()
+        }
+
         binding.btnUploadShorts.setOnClickListener {
             checkPermissionsAndPickVideo()
         }

@@ -1,6 +1,8 @@
 package com.cmc.recipe.presentation.ui.upload
 
+import android.graphics.Color
 import android.graphics.drawable.Drawable
+import androidx.core.content.ContextCompat
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import com.cmc.recipe.R
@@ -47,7 +49,13 @@ class UploadActivity : BaseActivity<ActivityUploadBinding>({ ActivityUploadBindi
     fun setToolbarAndIcon(icon : Drawable, string: String, padding:Int){
         binding.toolbarTitle.setCompoundDrawablesWithIntrinsicBounds(icon, null, null, null)
         binding.toolbarTitle.text = string
+        binding.toolbarTitle.textSize = 14f
         binding.toolbarTitle.compoundDrawablePadding = padding
+    }
+
+    fun setToolbarColor(){
+        val color = ContextCompat.getColor(this, R.color.primary_color)
+        binding.toolbarTitle.setTextColor(color)
     }
 
     fun clearToolbarAndIcon(){
