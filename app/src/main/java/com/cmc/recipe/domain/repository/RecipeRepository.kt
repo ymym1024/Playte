@@ -23,4 +23,5 @@ interface RecipeRepository {
 
     fun postRecipesReview(request: ReviewRequest) : Flow<NetworkState<BaseResponse>>
 
+    fun updateReviewLike(id:Int) : Flow<NetworkState<BaseResponse>>
 }

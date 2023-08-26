@@ -1,5 +1,6 @@
 package com.cmc.recipe.data.datasource
 
+import android.util.Log
 import com.cmc.recipe.data.model.response.*
 import com.cmc.recipe.data.source.remote.api.RecipeService
 import com.cmc.recipe.data.source.remote.request.ReviewRequest
@@ -121,7 +122,20 @@ class RecipeRepositoryImpl @Inject constructor(
     }
 
     override fun postRecipesReview(request: ReviewRequest): Flow<NetworkState<BaseResponse>> =flow{
-        val response = service.postRecipesReview(request)
+        val response = service.postRecipesReview(1,request)
+        if(response.isSuccessful){
+            response.body()?.let { emit(NetworkState.Success(it)) }
+        }else{
+            try {
+                emit(NetworkState.Error(response.code(),response.errorBody()!!.string()))
+            }catch (e: IOException) {
+                e.printStackTrace()
+            }
+        }
+    }
+
+    override fun updateReviewLike(id: Int): Flow<NetworkState<BaseResponse>> = flow{
+        val response = service.updateReviewLike(id)
         if(response.isSuccessful){
             response.body()?.let { emit(NetworkState.Success(it)) }
         }else{

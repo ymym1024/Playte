@@ -27,4 +27,6 @@ class RecipeUseCase @Inject constructor(
     fun getRecipesReviewScores(id:Int) = repository.getRecipesReviewScores(id)
 
     fun postRecipesReview(request:ReviewRequest) = repository.postRecipesReview(request)
+
+    fun updateReviewLike(id:Int) = repository.updateReviewLike(id)
 }

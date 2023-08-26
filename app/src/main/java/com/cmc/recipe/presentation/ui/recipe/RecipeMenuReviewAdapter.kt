@@ -1,6 +1,7 @@
 package com.cmc.recipe.presentation.ui.recipe
 
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.cmc.recipe.R
@@ -36,8 +37,10 @@ class RecipeMenuReviewItemHolder(viewBinding: ItemRecipeReviewBinding,private va
                 view.tvReview.text = review.review_content
                 view.tvRatingbar.rating = review.rating.toFloat()
                 view.tvUpcount.text = "${review.like_count}"
-                if(review.liked) view.ibLike.setImageResource(R.drawable.ic_heart_full)
-                else view.ibLike.setImageResource(R.drawable.ic_heart_gray)
+
+                if(review.liked) binding.ibLike.setImageResource(R.drawable.ic_heart_full)
+                else binding.ibLike.setImageResource(R.drawable.ic_heart_gray)
+
                 val adapter = ImageAdapter(96)
                 view.rvReviewImage.adapter = adapter
                 view.rvReviewImage.layoutManager = LinearLayoutManager(binding.root.context ,
@@ -53,6 +56,8 @@ class RecipeMenuReviewItemHolder(viewBinding: ItemRecipeReviewBinding,private va
                 reviewListener.onReport(item?.review_id!!)
             }
         }
-
     }
+
+
+
 }

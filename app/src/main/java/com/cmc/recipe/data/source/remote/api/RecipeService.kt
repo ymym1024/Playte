@@ -31,6 +31,9 @@ interface RecipeService {
     suspend fun getRecipesReviewScores(@Path("recipe-id")id:Int) : Response<ReviewScoreResponse>
 
     @POST("/api/v1/reviews/recipe/{recipe-id}")
-    suspend fun postRecipesReview(@Body recipe: ReviewRequest) : Response<BaseResponse>
+    suspend fun postRecipesReview(@Path("recipe-id")id:Int, @Body recipe: ReviewRequest) : Response<BaseResponse>
+
+    @POST("/api/v1/reviews/{review-id}/like")
+    suspend fun updateReviewLike(@Path("review-id")id:Int) : Response<BaseResponse>
 
 }

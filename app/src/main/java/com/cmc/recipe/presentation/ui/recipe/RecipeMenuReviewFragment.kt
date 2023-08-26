@@ -4,6 +4,7 @@ import android.content.Intent
 import android.util.Log
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.cmc.recipe.R
@@ -23,12 +24,19 @@ import com.github.mikephil.charting.data.BarDataSet
 import com.github.mikephil.charting.data.BarEntry
 import com.github.mikephil.charting.formatter.IndexAxisValueFormatter
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.take
+import kotlinx.coroutines.launch
 import java.util.*
 
 @AndroidEntryPoint
 class RecipeMenuReviewFragment : BaseFragment<FragmentRecipeMenuReviewBinding>(FragmentRecipeMenuReviewBinding::inflate) {
     private val recipeViewModel : RecipeViewModel by viewModels()
     private var recipeId: Int = 0
+    private lateinit var reviewAdapter : RecipeMenuReviewAdapter
+    private lateinit var reviewItemList : ArrayList<ReviewContent>
 
     override fun initFragment() {
         arguments?.let {
@@ -91,8 +99,8 @@ class RecipeMenuReviewFragment : BaseFragment<FragmentRecipeMenuReviewBinding>(F
     }
 
     private fun initDataBinding(data: ReviewData) {
-
-        initRV(data.content as ArrayList<ReviewContent>)
+        reviewItemList = data.content as ArrayList<ReviewContent>
+        initRV(reviewItemList)
 
         val filteredImages: List<String> = data.content.filter { it.review_images.isNotEmpty() }.flatMap { it.review_images }
         initImageRV(filteredImages)
@@ -110,8 +118,8 @@ class RecipeMenuReviewFragment : BaseFragment<FragmentRecipeMenuReviewBinding>(F
 
     private fun initRV(itemList:ArrayList<ReviewContent>){
         val clickListener = object : OnReviewListener {
-            override fun onFavorite(id: Int) {
-
+            override fun onFavorite(id: Int){
+                requestReviewLike(id)
             }
 
             override fun onReport(id: Int) {
@@ -119,12 +127,47 @@ class RecipeMenuReviewFragment : BaseFragment<FragmentRecipeMenuReviewBinding>(F
             }
         }
 
-        val adapter = RecipeMenuReviewAdapter(clickListener)
-        binding.rvReview.adapter = adapter
+        reviewAdapter = RecipeMenuReviewAdapter(clickListener)
+        binding.rvReview.adapter = reviewAdapter
         binding.rvReview.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
         val dividerItemDecoration = DividerItemDecoration(context, LinearLayoutManager.VERTICAL)
         binding.rvReview.addItemDecoration(dividerItemDecoration)
-        adapter.replaceData(itemList)
+        reviewAdapter.replaceData(itemList)
+    }
+
+    private fun findReviewItemById(reviewId: Int): ReviewContent? {
+        return reviewItemList.find { it.review_id == reviewId }
+    }
+
+    private fun requestReviewLike(id:Int){
+        viewLifecycleOwner.lifecycleScope.launch{
+            recipeViewModel.updateReviewLike(id)
+            recipeViewModel.reviewSaveResult.collect{
+                when(it){
+                    is NetworkState.Success -> {
+                        it.data?.let {data ->
+                            if(data.code == "SUCCESS"){
+                                Log.d("data","${data}")
+                                val review =findReviewItemById(id)
+                                review?.liked = true
+                                review?.like_count = review?.like_count!! + 1
+                                reviewAdapter.notifyDataSetChanged()
+
+                            }else{
+                                Log.d("data","${data.data}")
+                            }
+                        }
+                        recipeViewModel._reviewResult.value = NetworkState.Loading
+                    }
+                    is NetworkState.Error ->{
+                        Log.d("data","${it.message}")
+                        showToastMessage(it.message.toString())
+                        recipeViewModel._reviewResult.value = NetworkState.Loading
+                    }
+                    else -> {}
+                }
+            }
+        }
     }
 
     private fun initBarChart(barChart: BarChart) {

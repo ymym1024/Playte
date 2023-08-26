@@ -25,13 +25,13 @@ data class ReviewData(
 )
 
 data class ReviewContent(
-    val liked: Boolean,
+    var liked: Boolean,
     val modified_at: String,
     val rating: Int,
     val review_content: String,
     val review_id: Int,
     val review_images: List<String>,
-    val like_count: Int,
+    var like_count: Int,
     val review_title: String,
     val writtenby: String
 )
