@@ -39,6 +39,7 @@ class RecipeDetailFragment : BaseFragment<FragmentRecipeDetailBinding>(FragmentR
 
         recipeId = arguments?.getInt("id")!!
 
+        recipeViewModel.updateReicpeId(recipeId)
         requestRecipeDetail(recipeId!!)
     }
 

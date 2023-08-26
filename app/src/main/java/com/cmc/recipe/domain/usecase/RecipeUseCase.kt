@@ -2,6 +2,7 @@ package com.cmc.recipe.domain.usecase
 
 import android.util.Log
 import com.cmc.recipe.data.source.remote.request.RequestNickname
+import com.cmc.recipe.data.source.remote.request.ReviewRequest
 import com.cmc.recipe.domain.repository.AuthRepository
 import com.cmc.recipe.domain.repository.RecipeRepository
 import com.cmc.recipe.domain.repository.UserRepository
@@ -24,4 +25,6 @@ class RecipeUseCase @Inject constructor(
     fun getRecipesReviewPhotos(id:Int) = repository.getRecipesReviewPhotos(id)
 
     fun getRecipesReviewScores(id:Int) = repository.getRecipesReviewScores(id)
+
+    fun postRecipesReview(request:ReviewRequest) = repository.postRecipesReview(request)
 }

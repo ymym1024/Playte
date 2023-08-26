@@ -1,6 +1,8 @@
 package com.cmc.recipe.data.source.remote.api
 
 import com.cmc.recipe.data.model.response.*
+import com.cmc.recipe.data.source.remote.request.ReviewRequest
+import com.cmc.recipe.data.source.remote.request.UploadShortsRequest
 import retrofit2.Response
 import retrofit2.http.*
 
@@ -27,5 +29,8 @@ interface RecipeService {
 
     @GET("/api/v1/reviews/recipe/{recipe-id}/scores")
     suspend fun getRecipesReviewScores(@Path("recipe-id")id:Int) : Response<ReviewScoreResponse>
+
+    @POST("/api/v1/reviews/recipe/{recipe-id}")
+    suspend fun postRecipesReview(@Body recipe: ReviewRequest) : Response<BaseResponse>
 
 }

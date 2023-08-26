@@ -31,6 +31,7 @@ data class ReviewContent(
     val review_content: String,
     val review_id: Int,
     val review_images: List<String>,
+    val like_count: Int,
     val review_title: String,
     val writtenby: String
 )

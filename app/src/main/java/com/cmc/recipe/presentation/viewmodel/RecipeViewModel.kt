@@ -1,9 +1,11 @@
 package com.cmc.recipe.presentation.viewmodel
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.cmc.recipe.data.model.response.*
 import com.cmc.recipe.data.source.remote.request.RequestNickname
+import com.cmc.recipe.data.source.remote.request.ReviewRequest
 import com.cmc.recipe.domain.usecase.AuthUseCase
 import com.cmc.recipe.domain.usecase.RecipeUseCase
 import com.cmc.recipe.utils.NetworkState
@@ -14,6 +16,9 @@ import javax.inject.Inject
 
 @HiltViewModel
 class RecipeViewModel @Inject constructor(private val recipeUseCase: RecipeUseCase) : ViewModel() {
+
+    private val _reciepeId = MutableStateFlow(0)
+    val recipeId : StateFlow<Int> = _reciepeId.asStateFlow()
 
     var _recipeResult: MutableStateFlow<NetworkState<RecipesResponse>> = MutableStateFlow(NetworkState.Loading)
     var recipeResult: StateFlow<NetworkState<RecipesResponse>> = _recipeResult
@@ -32,6 +37,13 @@ class RecipeViewModel @Inject constructor(private val recipeUseCase: RecipeUseCa
 
     var _reviewPhotosResult : MutableStateFlow<NetworkState<PhotoResponse>> = MutableStateFlow(NetworkState.Loading)
     var reviewPhotosResult: StateFlow<NetworkState<PhotoResponse>> = _reviewPhotosResult
+
+    var _reviewAddResult : MutableSharedFlow<NetworkState<BaseResponse>> = MutableSharedFlow()
+    var reviewAddResult = _reviewAddResult.asSharedFlow()
+
+    fun updateReicpeId(id:Int) = viewModelScope.launch {
+        _reciepeId.value = id
+    }
 
     fun getRecipes() = viewModelScope.launch {
         _recipeResult.value = NetworkState.Loading
@@ -101,6 +113,16 @@ class RecipeViewModel @Inject constructor(private val recipeUseCase: RecipeUseCa
                 _reviewScoreResult.value = NetworkState.Error(400,"${error.message}")
             }.collect { values ->
                 _reviewScoreResult.value = values
+            }
+    }
+
+    fun postRecipesReview(request: ReviewRequest) = viewModelScope.launch {
+        _reviewAddResult.emit(NetworkState.Loading)
+        recipeUseCase.postRecipesReview(request)
+            .catch { error ->
+                _reviewAddResult.emit(NetworkState.Error(400,"${error.message}"))
+            }.collect { values ->
+                _reviewAddResult.emit(values)
             }
     }
 }

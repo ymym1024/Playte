@@ -20,6 +20,8 @@ import com.cmc.recipe.presentation.ui.common.ImageAdapter
 import com.cmc.recipe.presentation.viewmodel.RecipeViewModel
 import com.cmc.recipe.utils.NetworkState
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
@@ -33,19 +35,22 @@ class ImageReviewActivity : AppCompatActivity() {
         binding = ActivityImageReviewBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        supportActionBar?.setDisplayShowTitleEnabled(false)
+        // intent
+        val id = intent.getIntExtra("recipeId",0)
 
-        requestReviewImage(0)
+        supportActionBar?.setDisplayShowTitleEnabled(false)
+        requestReviewImage(id)
+
     }
     private fun requestReviewImage(id:Int){
-        recipeViewModel.getRecipesDetail(id)
+        recipeViewModel.getRecipesReviewPhotos(id)
         lifecycleScope.launch {
-            recipeViewModel.recipeDetailResult.collect{
+            recipeViewModel.reviewPhotosResult.collect{
                 when(it){
                     is NetworkState.Success -> {
                         it.data?.let {data ->
                             if(data.code == "SUCCESS"){
-                                imageRV()
+                                imageRV(data.data)
                             }else{
                                 Log.d("data","${data.data}")
                             }
@@ -63,15 +68,7 @@ class ImageReviewActivity : AppCompatActivity() {
 
     }
 
-    private fun imageRV(){
-        val imageList = arrayListOf(
-            "https://recipe1.ezmember.co.kr/cache/recipe/2022/02/02/dbb3f34bfe348a4bb4d142ff353815651.jpg",
-            "https://recipe1.ezmember.co.kr/cache/recipe/2022/02/02/dbb3f34bfe348a4bb4d142ff353815651.jpg",
-            "https://recipe1.ezmember.co.kr/cache/recipe/2022/02/02/dbb3f34bfe348a4bb4d142ff353815651.jpg",
-            "https://recipe1.ezmember.co.kr/cache/recipe/2022/02/02/dbb3f34bfe348a4bb4d142ff353815651.jpg",
-            "https://recipe1.ezmember.co.kr/cache/recipe/2022/02/02/dbb3f34bfe348a4bb4d142ff353815651.jpg",
-        )
-
+    private fun imageRV(imageList: List<String>){
         val imageAdapter = ImageAdapter(null)
         binding.rvGridImage.run {
             adapter = imageAdapter
@@ -79,7 +76,6 @@ class ImageReviewActivity : AppCompatActivity() {
         }
         imageAdapter.replaceData(imageList)
     }
-
 
     class GridSpaceItemDecoration(private val spanCount: Int, private val space: Int): RecyclerView.ItemDecoration() {
 
