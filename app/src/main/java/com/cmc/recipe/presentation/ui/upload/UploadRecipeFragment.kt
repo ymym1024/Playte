@@ -3,6 +3,7 @@ package com.cmc.recipe.presentation.ui.upload
 import android.app.Activity
 import android.content.Intent
 import android.graphics.Canvas
+import android.os.Bundle
 import android.provider.MediaStore
 import android.util.Log
 import android.view.KeyEvent
@@ -47,10 +48,16 @@ class UploadRecipeFragment : BaseFragment<FragmentUploadRecipeBinding>(FragmentU
     private lateinit var thumbnailUri : String
     private lateinit var ingredientAdapter : IngredientAdapter
     private var count = 1
-
     private lateinit var stageAdapter : RecipeStepAdapter
 
     private val uploadViewModel : UploadViewModel by viewModels()
+
+    private lateinit var uploadActivity : UploadActivity
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        uploadActivity = activity as UploadActivity
+    }
 
     override fun initFragment() {
         selectGallery()
@@ -105,6 +112,7 @@ class UploadRecipeFragment : BaseFragment<FragmentUploadRecipeBinding>(FragmentU
                     is NetworkState.Success -> {
                         it.data.let { data ->
                             if(data.code == "SUCCESS"){
+                                uploadActivity.showProgressBar(false)
                                 requireActivity().finish()
                                 val activity = MainActivity.mainActivity as MainActivity
                                 val rootView: View = activity.window.decorView.rootView // a 액티비티의 레이아웃 최상단 뷰를 가져옴
@@ -119,7 +127,7 @@ class UploadRecipeFragment : BaseFragment<FragmentUploadRecipeBinding>(FragmentU
                         showToastMessage(it.message.toString())
                     }
                     is NetworkState.Loading -> {
-                        // progress 로딩
+                        uploadActivity.showProgressBar(true)
                     }
                     else -> {}
                 }
@@ -200,9 +208,7 @@ class UploadRecipeFragment : BaseFragment<FragmentUploadRecipeBinding>(FragmentU
                 val recipeStep = binding.etRecipe.text.toString()
                 val recipeImg = imageString
                 val recipeItem = RecipeStep(image_url = recipeImg, stage_description = recipeStep)
-                Log.d("imageString 확인","${imageString}")
                 if (recipeStep.isNotEmpty() && recipeImg.isNotEmpty()) {
-                    Log.d("몇번호출됨??","${recipeItem}")
                     uploadStepImageURI(recipeItem)
                 }else{
                     stageAdapter.addItem(recipeItem)
@@ -227,6 +233,8 @@ class UploadRecipeFragment : BaseFragment<FragmentUploadRecipeBinding>(FragmentU
                 .onEach{
                     when(it) {
                         is NetworkState.Success -> {
+                            uploadActivity.showProgressBar(false)
+
                             if (it.data.code == "SUCCESS") {
                                 Log.d("여기 호출", "${it.data}")
 
@@ -246,7 +254,11 @@ class UploadRecipeFragment : BaseFragment<FragmentUploadRecipeBinding>(FragmentU
                             }
                         }
                         is NetworkState.Error -> {
+                            uploadActivity.showProgressBar(false)
                             showToastMessage(it.message.toString())
+                        }
+                        is NetworkState.Loading -> {
+                            uploadActivity.showProgressBar(true)
                         }
                         else -> {}
                     }
@@ -264,13 +276,18 @@ class UploadRecipeFragment : BaseFragment<FragmentUploadRecipeBinding>(FragmentU
             uploadViewModel.uploadImageResult.collect {
                 when (it) {
                     is NetworkState.Success -> {
+                        uploadActivity.showProgressBar(false)
                         if (it.data.code == "SUCCESS") {
                             thumbnailUri = it.data.data.toString()
                             requestUpload()
                         }
                     }
                     is NetworkState.Error -> {
+                        uploadActivity.showProgressBar(false)
                         showToastMessage(it.message.toString())
+                    }
+                    is NetworkState.Loading -> {
+                        uploadActivity.showProgressBar(true)
                     }
                     else -> {}
                 }
@@ -299,7 +316,7 @@ class UploadRecipeFragment : BaseFragment<FragmentUploadRecipeBinding>(FragmentU
     }
 
     private fun viewDialog(item:Ingredients){
-        if(item.ingredient_unit == "개") {
+        if(item.ingredient_unit == "PIECE") {
             val dialog = IngredientCountDialog(item.ingredient_name)
             dialog.setListener(object : IngredientCountDialog.onCountListener{
                 override fun getCount(count: Int) {

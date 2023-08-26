@@ -57,6 +57,7 @@ class UploadShortsFragment : BaseFragment<FragmentUploadShortsBinding>(FragmentU
 
     private val uploadViewModel : UploadViewModel by viewModels()
     private lateinit var videoUploadUri: String
+    private lateinit var videoTime: String
 
     private lateinit var ingredientAdapter: IngredientAdapter
 
@@ -226,7 +227,8 @@ class UploadShortsFragment : BaseFragment<FragmentUploadShortsBinding>(FragmentU
         val iconDrawable: Drawable? = ContextCompat.getDrawable(requireContext(), R.drawable.ic_time)
         val drawablePadding = 6.dp
 
-        activity.setToolbarAndIcon(iconDrawable!!,time.convertLongToTime(time),drawablePadding)
+        videoTime = time.convertLongToTime(time)
+        activity.setToolbarAndIcon(iconDrawable!!,videoTime,drawablePadding)
         activity.setToolbarColor()
     }
 
@@ -337,15 +339,16 @@ class UploadShortsFragment : BaseFragment<FragmentUploadShortsBinding>(FragmentU
         }
 
         val request = UploadShortsRequest(description=binding.etRecipeDesc.getText().toString(), shortform_name = binding.etRecipeName.getText().toString(),
-                video_url = shorts_url, ingredients_ids = ingredient_list)
+                video_url = shorts_url, ingredients_ids = ingredient_list, video_time = videoTime)
 
         viewLifecycleOwner.lifecycleScope.launch {
             uploadViewModel.uploadShorts(request)
-            uploadViewModel.uploadVideoResult.collect{
+            uploadViewModel.uploadShortsResult.collect{
                 when(it) {
                     is NetworkState.Success -> {
+                        Log.d("여기로 ","${it}")
+                        uploadActivity.showProgressBar(false)
                         if (it.data.code == "SUCCESS") {
-                            uploadActivity.showProgressBar(false)
                             requireActivity().finish()
                             val activity = MainActivity.mainActivity as MainActivity
                             val rootView: View = activity.window.decorView.rootView // a 액티비티의 레이아웃 최상단 뷰를 가져옴
