@@ -3,6 +3,7 @@ package com.cmc.recipe.utils
 import android.app.Activity
 import android.content.Context
 import android.database.Cursor
+import android.graphics.Bitmap
 import android.net.Uri
 import android.os.Build
 import android.provider.MediaStore
@@ -25,6 +26,16 @@ fun ImageView.loadImagesWithGlide(url: String) {
 }
 
 fun ImageView.loadImagesWithGlideRound(url: String?,radius:Int) {
+
+    Glide.with(this)
+        .load(url)
+        .transform(CenterCrop(), RoundedCorners(radius))
+        .diskCacheStrategy(DiskCacheStrategy.ALL)
+        .into(this)
+
+}
+
+fun ImageView.bitmapImagesWithGlideRound(url: Bitmap?, radius:Int) {
 
     Glide.with(this)
         .load(url)

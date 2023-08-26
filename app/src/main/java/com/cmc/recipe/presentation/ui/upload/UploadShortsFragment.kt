@@ -34,6 +34,9 @@ import com.cmc.recipe.utils.bitmapImagesWithGlideRound
 import com.cmc.recipe.utils.convertLongToTime
 import com.cmc.recipe.utils.loadImagesWithGlideRound
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.take
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
@@ -57,24 +60,27 @@ class UploadShortsFragment : BaseFragment<FragmentUploadShortsBinding>(FragmentU
     private fun requestIngredient(){
         viewLifecycleOwner.lifecycleScope.launch {
             uploadViewModel.getIngredients()
-            uploadViewModel.ingredientsResult.collect{
-                when(it){
-                    is NetworkState.Success -> {
-                        it.data?.let {data ->
-                            if(data.code == "SUCCESS"){
-                                Log.d("data",data.data.toString())
-                                initAdapter(data.data)
-                            }else{
-                                Log.d("data","${data.data}")
+            uploadViewModel.ingredientsResult
+                .take(1)
+                .onEach{
+                    when(it){
+                        is NetworkState.Success -> {
+                            it.data.let { data ->
+                                if(data.code == "SUCCESS"){
+                                    Log.d("data",data.data.toString())
+                                    initAdapter(data.data)
+                                }else{
+                                    Log.d("data","${data.data}")
+                                }
                             }
                         }
+                        is NetworkState.Error -> {
+                            showToastMessage(it.message.toString())
+                        }
+                        else -> {}
                     }
-                    is NetworkState.Error -> {
-                        showToastMessage(it.message.toString())
-                    }
-                    else -> {}
                 }
-            }
+                .launchIn(this)
         }
     }
 
@@ -83,6 +89,8 @@ class UploadShortsFragment : BaseFragment<FragmentUploadShortsBinding>(FragmentU
         ingredientAdapter.setActionListener(object :IngredientItemHolder.actionListener{
             override fun remove(name: Ingredients) {
                 ingredientAdapter.removeItem(name)
+                binding.tvIngredientCnt.text = "${ingredientAdapter.itemCount}"
+                if(ingredientAdapter.itemCount <= 4) binding.etRecipeIngredient.isEnabled = true
             }
         })
         binding.rvCompleteIngredient.adapter = ingredientAdapter
@@ -93,7 +101,9 @@ class UploadShortsFragment : BaseFragment<FragmentUploadShortsBinding>(FragmentU
         binding.etRecipeIngredient.setOnItemClickListener { _, v, position, _ ->
             val selectedData = adapter.getItem(position)
             ingredientAdapter.addItem(selectedData)
+            binding.tvIngredientCnt.text = "${ingredientAdapter.itemCount}"
             binding.etRecipeIngredient.setText("")
+            if(ingredientAdapter.itemCount == 4) binding.etRecipeIngredient.isEnabled = false
             hideKeyboard(v)
         }
     }
@@ -160,12 +170,17 @@ class UploadShortsFragment : BaseFragment<FragmentUploadShortsBinding>(FragmentU
 
         if (requestCode == PICK_VIDEO_REQUEST && resultCode == Activity.RESULT_OK) {
             data?.data?.let { videoUri ->
-                val bitmap = getFirstFrameFromVideo(videoUri)
-                binding.ivThumbnail.setPadding(0, 0, 0, 0)
-                binding.ivThumbnail.bitmapImagesWithGlideRound(bitmap,10)
-                binding.btnUploadShorts.visibility = View.VISIBLE
                 val time = getVideoDuration(videoUri)
-                settingToolbar(time)
+
+                if(time>= 60000L){ // 영상 1분 이내가 아닐 경우 업로드 불가능
+                    showToastMessage("1분 이내의 영상만 업로드 가능합니다")
+                }else{
+                    val bitmap = getFirstFrameFromVideo(videoUri)
+                    binding.ivThumbnail.setPadding(0, 0, 0, 0)
+                    binding.ivThumbnail.bitmapImagesWithGlideRound(bitmap,10)
+                    binding.btnUploadShorts.visibility = View.VISIBLE
+                    settingToolbar(time)
+                }
             }
         }
     }

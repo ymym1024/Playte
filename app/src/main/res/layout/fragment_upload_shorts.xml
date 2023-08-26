@@ -122,9 +122,20 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:layout_marginTop="20dp"
-            android:text="0/4"
+            android:text="0"
+            android:textColor="@color/primary_color"
             android:textFontWeight="500"
             app:layout_constraintStart_toEndOf="@+id/textView19"
+            app:layout_constraintTop_toBottomOf="@+id/et_recipe_desc" />
+
+        <TextView
+            android:id="@+id/tv_ingredient_total"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:text="/4"
+            android:textFontWeight="500"
+            app:layout_constraintStart_toEndOf="@+id/tv_ingredient_cnt"
             app:layout_constraintTop_toBottomOf="@+id/et_recipe_desc" />
 
         <androidx.recyclerview.widget.RecyclerView
