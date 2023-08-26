@@ -190,6 +190,7 @@ class UploadRecipeFragment : BaseFragment<FragmentUploadRecipeBinding>(FragmentU
         itemTouchHelper.attachToRecyclerView(binding.rvStep)
         binding.rvStep.addItemDecoration(object : RecyclerView.ItemDecoration() {
             override fun onDraw(c: Canvas, parent: RecyclerView, state: RecyclerView.State) {
+                binding.tvRecipeStepCount.text = "${stageAdapter.itemCount}"
                 swipeController.onDraw(c)
             }
         })
