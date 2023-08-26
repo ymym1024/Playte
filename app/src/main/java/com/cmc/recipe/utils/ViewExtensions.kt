@@ -16,6 +16,7 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.load.resource.bitmap.CenterCrop
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import java.text.SimpleDateFormat
+import java.util.*
 
 fun ImageView.loadImagesWithGlide(url: String) {
     Glide.with(this)
@@ -114,4 +115,16 @@ fun ImageView.resizeBitmapToSquare(size:Int){
     val pixel = dpToPx(context,size.toFloat())
     this.layoutParams.width = pixel
     this.layoutParams.height = pixel
+}
+
+fun String.parseAndFormatDate(): String {
+    val inputFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSSSS", Locale.getDefault())
+    val outputFormat = SimpleDateFormat("yyyy.MM.dd", Locale.getDefault())
+
+    val date = inputFormat.parse(this)
+    return if (date != null) {
+        outputFormat.format(date)
+    } else {
+        "Invalid Date"
+    }
 }

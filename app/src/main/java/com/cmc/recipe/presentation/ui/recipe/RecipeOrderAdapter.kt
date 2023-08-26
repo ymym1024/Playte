@@ -25,7 +25,12 @@ class RecipeOrderItemHolder(viewBinding: ItemRecipeOrderBinding):
     override fun bind(binding: ItemRecipeOrderBinding, item: Stage?) {
         binding.let { view ->
             item?.let { order ->
-                view.ivThumbnail.loadImagesWithGlideRound(order.stage_image_url,8)
+                if(order.stage_image_url.isEmpty()){
+                   // view.ivThumbnail.setImageResource()
+                }else{
+                    view.ivThumbnail.loadImagesWithGlideRound(order.stage_image_url,8)
+                }
+
                 view.tvOrder.text = if (position < 10) {
                     String.format("%02d", position)
                 } else {

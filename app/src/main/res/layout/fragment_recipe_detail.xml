@@ -216,7 +216,7 @@
                         android:layout_marginTop="21dp"
                         android:layout_marginEnd="23dp"
                         android:text="TextView"
-                        android:textColor="@color/gray_5"
+                        android:textColor="#9A9A9E"
                         android:textSize="12sp"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />

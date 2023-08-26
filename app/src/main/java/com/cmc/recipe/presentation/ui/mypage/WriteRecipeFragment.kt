@@ -14,13 +14,13 @@ import com.cmc.recipe.utils.Constant
 class WriteRecipeFragment : BaseFragment<FragmentWriteRecipeBinding>(FragmentWriteRecipeBinding::inflate) {
     override fun initFragment() {
         //TODO : 네트워크 연결 후 삭제
-        val itemList = arrayListOf(
-            RecipeItem(image_url = "", name = "토마토 계란 볶음밥", time = 10, nickName = "구땡뿡야",star=30, flag = true),
-            RecipeItem(image_url = "", name = "토마토 계란 볶음밥2", time = 10, nickName = "구땡뿡야",star=30, flag = false),
-            RecipeItem(image_url = "", name = "토마토 계란 볶음밥3", time = 10, nickName = "구땡뿡야",star=30, flag = false),
-            RecipeItem(image_url = "", name = "토마토 계란 볶음밥4", time = 10, nickName = "구땡뿡야",star=30, flag = true),
-        )
-        recipeRecyclerview(itemList)
+//        val itemList = arrayListOf(
+//            RecipeItem(image_url = "", name = "토마토 계란 볶음밥", time = 10, nickName = "구땡뿡야",star=30, flag = true),
+//            RecipeItem(image_url = "", name = "토마토 계란 볶음밥2", time = 10, nickName = "구땡뿡야",star=30, flag = false),
+//            RecipeItem(image_url = "", name = "토마토 계란 볶음밥3", time = 10, nickName = "구땡뿡야",star=30, flag = false),
+//            RecipeItem(image_url = "", name = "토마토 계란 볶음밥4", time = 10, nickName = "구땡뿡야",star=30, flag = true),
+//        )
+//        recipeRecyclerview(itemList)
     }
 
     private fun recipeRecyclerview(itemList:ArrayList<RecipeItem>){
