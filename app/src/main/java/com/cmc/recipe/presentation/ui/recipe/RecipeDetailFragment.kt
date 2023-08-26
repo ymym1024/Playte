@@ -2,6 +2,7 @@ package com.cmc.recipe.presentation.ui.recipe
 
 import android.util.Log
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.cmc.recipe.R
 import com.cmc.recipe.data.model.Product
@@ -20,6 +21,7 @@ import dagger.hilt.android.AndroidEntryPoint
 @AndroidEntryPoint
 class RecipeDetailFragment : BaseFragment<FragmentRecipeDetailBinding>(FragmentRecipeDetailBinding::inflate) {
     private val recipeViewModel : RecipeViewModel by viewModels()
+    private var recipeId : Int = 0
 
     // id 전달 받기
     override fun onStop() {
@@ -35,10 +37,8 @@ class RecipeDetailFragment : BaseFragment<FragmentRecipeDetailBinding>(FragmentR
 
         initMenu()
 
-        val id = arguments?.getInt("id")
-        Log.d("id",id.toString())
-
-        requestRecipeDetail(id!!)
+        recipeId = arguments?.getInt("id")!!
+        requestRecipeDetail(recipeId!!)
     }
 
     private fun requestRecipeDetail(id:Int){
@@ -67,22 +67,26 @@ class RecipeDetailFragment : BaseFragment<FragmentRecipeDetailBinding>(FragmentR
     }
     private fun initDatabinding(data:RecipeDetail){
 
+        // 레시피 id
+        recipeId = data.recipe_id
+
         binding.ivThumb.loadImagesWithGlide(data.recipe_thumbnail_img)
-        binding.tvNickname.text = ""
+        binding.tvNickname.text = data.writtenby
         binding.tvRecipeTitle.text = data.recipe_name
         binding.tvRecipeInfo.text = data.recipe_description
         binding.tvRecipeDate.text = data.created_date.parseAndFormatDate()
 
         // 상세정보 바인딩
         binding.tvScore.text = "${data.rating}"
-        binding.tvPeople.text = "${1}인분"
+        binding.tvPeople.text = "${data.serving_size}인분"
         binding.tvTime.text = "${data.cook_time}분"
 
         binding.tvPeople.setOnClickListener {
             showBottomSheet()
         }
         binding.btnReview.setOnClickListener {
-            movePage(R.id.action_recipeDetailFragment_to_recipeMenuFragment)
+            val action = RecipeDetailFragmentDirections.actionRecipeDetailFragmentToRecipeMenuFragment(recipeId)
+            findNavController().navigate(action)
         }
 
         binding.btnWriteReview.setOnClickListener {

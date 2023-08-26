@@ -2,10 +2,7 @@ package com.cmc.recipe.presentation.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.cmc.recipe.data.model.response.BaseResponse
-import com.cmc.recipe.data.model.response.RecipeDetailResponse
-import com.cmc.recipe.data.model.response.RecipesResponse
-import com.cmc.recipe.data.model.response.SignupResponse
+import com.cmc.recipe.data.model.response.*
 import com.cmc.recipe.data.source.remote.request.RequestNickname
 import com.cmc.recipe.domain.usecase.AuthUseCase
 import com.cmc.recipe.domain.usecase.RecipeUseCase
@@ -26,6 +23,9 @@ class RecipeViewModel @Inject constructor(private val recipeUseCase: RecipeUseCa
 
     var _recipeSaveResult : MutableStateFlow<NetworkState<BaseResponse>> = MutableStateFlow(NetworkState.Loading)
     var recipeSaveResult: StateFlow<NetworkState<BaseResponse>> = _recipeSaveResult
+
+    var _reviewResult : MutableStateFlow<NetworkState<ReviewResponse>> = MutableStateFlow(NetworkState.Loading)
+    var reviewResult: StateFlow<NetworkState<ReviewResponse>> = _reviewResult
 
     fun getRecipes() = viewModelScope.launch {
         _recipeResult.value = NetworkState.Loading
@@ -64,6 +64,17 @@ class RecipeViewModel @Inject constructor(private val recipeUseCase: RecipeUseCa
                 _recipeSaveResult.value = NetworkState.Error(400,"${error.message}")
             }.collect { values ->
                 _recipeSaveResult.value = values
+            }
+    }
+
+    // 리뷰
+    fun getRecipesReview(id:Int) = viewModelScope.launch {
+        _reviewResult.value = NetworkState.Loading
+        recipeUseCase.getRecipesReview(id)
+            .catch { error ->
+                _reviewResult.value = NetworkState.Error(400,"${error.message}")
+            }.collect { values ->
+                _reviewResult.value = values
             }
     }
 }

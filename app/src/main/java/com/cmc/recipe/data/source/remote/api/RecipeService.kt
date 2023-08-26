@@ -1,9 +1,6 @@
 package com.cmc.recipe.data.source.remote.api
 
-import com.cmc.recipe.data.model.response.BaseResponse
-import com.cmc.recipe.data.model.response.RecipeDetailResponse
-import com.cmc.recipe.data.model.response.RecipesResponse
-import com.cmc.recipe.data.model.response.SignupResponse
+import com.cmc.recipe.data.model.response.*
 import retrofit2.Response
 import retrofit2.http.*
 
@@ -20,6 +17,10 @@ interface RecipeService {
 
     @POST("/api/v1/recipes/{recipe-id}/unsave")
     suspend fun postRecipesNotSave(@Path("recipe-id")id:Int) : Response<BaseResponse>
+
+    //레시피 리뷰
+    @GET("/api/v1/reviews/recipe/{recipe-id}")
+    suspend fun getRecipesReview(@Path("recipe-id")id:Int) : Response<ReviewResponse>
 
 
 }
