@@ -53,6 +53,8 @@ class UploadShortsFragment : BaseFragment<FragmentUploadShortsBinding>(FragmentU
     private val uploadViewModel : UploadViewModel by viewModels()
     private lateinit var videoUploadUri: String
 
+    private lateinit var ingredientAdapter: IngredientAdapter
+
     override fun onDestroyView() {
         super.onDestroyView()
         val activity = activity as UploadActivity
@@ -95,7 +97,7 @@ class UploadShortsFragment : BaseFragment<FragmentUploadShortsBinding>(FragmentU
     }
 
     private fun initAdapter(dataList:List<Ingredients>){
-        val ingredientAdapter = IngredientAdapter()
+        ingredientAdapter = IngredientAdapter()
         ingredientAdapter.setActionListener(object :IngredientItemHolder.actionListener{
             override fun remove(name: Ingredients) {
                 ingredientAdapter.removeItem(name)
@@ -257,7 +259,7 @@ class UploadShortsFragment : BaseFragment<FragmentUploadShortsBinding>(FragmentU
             override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
                 return when (menuItem.itemId) {
                     R.id.menu_edit_button -> {
-                        requestUploadVideo()
+                        shortsValidate() //유효성 검사 먼저
                         true
                     }
                     else -> false
@@ -268,18 +270,15 @@ class UploadShortsFragment : BaseFragment<FragmentUploadShortsBinding>(FragmentU
 
     private fun requestUploadVideo(){
         viewLifecycleOwner.lifecycleScope.launch {
-            Log.d("videoUpload","${videoUploadUri}")
-            val img_file = File(videoUploadUri)
-            val file = MultipartBody.Part.createFormData(name = "multipartFile", filename = img_file.name, body = img_file.asRequestBody("video/mp4".toMediaType()))
+            val video_file = File(videoUploadUri)
+            val file = MultipartBody.Part.createFormData(name = "multipartFile", filename = video_file.name, body = video_file.asRequestBody("video/mp4".toMediaType()))
             uploadViewModel.uploadVideo(file)
             uploadViewModel.uploadVideoResult.take(1).onEach{
                 when(it) {
                     is NetworkState.Success -> {
                         if (it.data.code == "SUCCESS") {
-                            Log.d("여기 호출", "${it.data}")
-
                             if (it.data.data.toString().isEmpty()) {
-                                showToastMessage("이미지 업로드에 실패했습니다")
+                                showToastMessage("영상 업로드에 실패했습니다")
                             } else {
                                 requestShorts(it.data.data.toString())
 
@@ -296,6 +295,20 @@ class UploadShortsFragment : BaseFragment<FragmentUploadShortsBinding>(FragmentU
                 }
             }
             .launchIn(this)
+        }
+    }
+
+    private fun shortsValidate(){
+        if(videoUploadUri.isEmpty()){
+            showToastMessage("영상 선택은 필수 입니다!")
+        }else if(binding.etRecipeName.getText().isEmpty()){
+            showToastMessage("레시피 이름을 입력해주세요!")
+        }else if(binding.etRecipeDesc.getText().isEmpty()){
+            showToastMessage("레시피 설명을 입력해주세요!")
+        }else if(ingredientAdapter.itemCount <=0){
+            showToastMessage("재료를 한개 이상 선택해주세요!")
+        }else{
+            requestUploadVideo()
         }
     }
 
