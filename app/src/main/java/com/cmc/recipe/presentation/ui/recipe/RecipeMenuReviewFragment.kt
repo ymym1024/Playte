@@ -7,14 +7,11 @@ import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.cmc.recipe.R
-import com.cmc.recipe.data.model.RecipeReview
 import com.cmc.recipe.data.model.response.ReviewContent
 import com.cmc.recipe.data.model.response.ReviewData
 import com.cmc.recipe.data.model.response.ScoreData
 import com.cmc.recipe.databinding.FragmentRecipeMenuReviewBinding
-import com.cmc.recipe.presentation.ui.MainActivity
 import com.cmc.recipe.presentation.ui.base.BaseFragment
-import com.cmc.recipe.presentation.ui.base.OnClickListener
 import com.cmc.recipe.presentation.ui.common.ImageAdapter
 import com.cmc.recipe.presentation.ui.common.OnReviewListener
 import com.cmc.recipe.presentation.viewmodel.RecipeViewModel
@@ -96,8 +93,10 @@ class RecipeMenuReviewFragment : BaseFragment<FragmentRecipeMenuReviewBinding>(F
     private fun initDataBinding(data: ReviewData) {
 
         initRV(data.content as ArrayList<ReviewContent>)
-        initImageRV()
 
+        val filteredImages: List<String> = data.content.filter { it.review_images.isNotEmpty() }.flatMap { it.review_images }
+        initImageRV(filteredImages)
+        binding.tvReviewImageCnt.text = "${filteredImages.count()}개"
         binding.tvReviewCount.text  = "${data.content.count()}개"
 
         binding.btnImgReview.setOnClickListener {
@@ -275,15 +274,10 @@ class RecipeMenuReviewFragment : BaseFragment<FragmentRecipeMenuReviewBinding>(F
         startActivity(intent)
     }
 
-    private fun initImageRV(){
-        val imageList = arrayListOf(
-            "https://recipe1.ezmember.co.kr/cache/recipe/2022/02/02/dbb3f34bfe348a4bb4d142ff353815651.jpg",
-            "https://recipe1.ezmember.co.kr/cache/recipe/2022/02/02/dbb3f34bfe348a4bb4d142ff353815651.jpg",
-            "https://recipe1.ezmember.co.kr/cache/recipe/2022/02/02/dbb3f34bfe348a4bb4d142ff353815651.jpg",
-        )
-        val adapter = ImageAdapter(80)
+    private fun initImageRV(filteredImages: List<String>) {
+        val adapter = ImageAdapter(85)
         binding.rvImage.adapter = adapter
         binding.rvImage.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
-        adapter.replaceData(imageList)
+        adapter.replaceData(filteredImages)
     }
 }
