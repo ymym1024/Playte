@@ -38,6 +38,7 @@ class RecipeDetailFragment : BaseFragment<FragmentRecipeDetailBinding>(FragmentR
         initMenu()
 
         recipeId = arguments?.getInt("id")!!
+
         requestRecipeDetail(recipeId!!)
     }
 
@@ -81,6 +82,9 @@ class RecipeDetailFragment : BaseFragment<FragmentRecipeDetailBinding>(FragmentR
         binding.tvPeople.text = "${data.serving_size}인분"
         binding.tvTime.text = "${data.cook_time}분"
 
+        if(!data.is_saved) binding.ibBookmark.setImageResource(R.drawable.ic_bookmark_deactive)
+        else binding.ibBookmark.setImageResource(R.drawable.ic_bookmark_activate)
+
         binding.tvPeople.setOnClickListener {
             showBottomSheet()
         }
@@ -97,6 +101,8 @@ class RecipeDetailFragment : BaseFragment<FragmentRecipeDetailBinding>(FragmentR
         initRecipeIngredientRV(data.ingredients)
         initRecommendRV(data.recommendation_recipes)
         initProductRV(data.ingredients)
+
+        // 이벤트 바인딩
 
     }
 

@@ -3,6 +3,7 @@ package com.cmc.recipe.presentation.ui.recipe
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import com.cmc.recipe.R
 import com.cmc.recipe.data.model.RecipeOrder
 import com.cmc.recipe.data.model.response.Stage
 import com.cmc.recipe.databinding.ItemRecipeOrderBinding
@@ -26,7 +27,7 @@ class RecipeOrderItemHolder(viewBinding: ItemRecipeOrderBinding):
         binding.let { view ->
             item?.let { order ->
                 if(order.stage_image_url.isEmpty()){
-                   // view.ivThumbnail.setImageResource()
+                    view.ivThumbnail.setImageResource(R.drawable.img_noimage)
                 }else{
                     view.ivThumbnail.loadImagesWithGlideRound(order.stage_image_url,8)
                 }
