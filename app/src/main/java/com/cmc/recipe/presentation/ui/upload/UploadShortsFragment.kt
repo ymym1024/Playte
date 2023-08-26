@@ -2,6 +2,7 @@ package com.cmc.recipe.presentation.ui.upload
 
 import android.Manifest
 import android.app.Activity
+import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
@@ -9,6 +10,8 @@ import android.graphics.drawable.Drawable
 import android.media.MediaMetadataRetriever
 import android.net.Uri
 import android.os.Build
+import android.provider.MediaStore
+import android.provider.OpenableColumns
 import android.util.Log
 import android.view.Menu
 import android.view.MenuInflater
@@ -24,6 +27,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.cmc.recipe.R
 import com.cmc.recipe.data.model.Ingredient
+import com.cmc.recipe.data.model.RecipeStep
 import com.cmc.recipe.data.model.response.Ingredients
 import com.cmc.recipe.databinding.FragmentUploadShortsBinding
 import com.cmc.recipe.presentation.ui.base.BaseFragment
@@ -38,11 +42,16 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.take
 import kotlinx.coroutines.launch
+import okhttp3.MediaType.Companion.toMediaType
+import okhttp3.MultipartBody
+import okhttp3.RequestBody.Companion.asRequestBody
+import java.io.File
 
 @AndroidEntryPoint
 class UploadShortsFragment : BaseFragment<FragmentUploadShortsBinding>(FragmentUploadShortsBinding::inflate) {
 
     private val uploadViewModel : UploadViewModel by viewModels()
+    private lateinit var videoUploadUri: String
 
     override fun onDestroyView() {
         super.onDestroyView()
@@ -56,6 +65,7 @@ class UploadShortsFragment : BaseFragment<FragmentUploadShortsBinding>(FragmentU
         uploadShorts()
         requestIngredient()
     }
+
 
     private fun requestIngredient(){
         viewLifecycleOwner.lifecycleScope.launch {
@@ -170,6 +180,7 @@ class UploadShortsFragment : BaseFragment<FragmentUploadShortsBinding>(FragmentU
 
         if (requestCode == PICK_VIDEO_REQUEST && resultCode == Activity.RESULT_OK) {
             data?.data?.let { videoUri ->
+                videoUploadUri = getFileName(videoUri,requireContext())
                 val time = getVideoDuration(videoUri)
 
                 if(time>= 60000L){ // 영상 1분 이내가 아닐 경우 업로드 불가능
@@ -183,6 +194,17 @@ class UploadShortsFragment : BaseFragment<FragmentUploadShortsBinding>(FragmentU
                 }
             }
         }
+    }
+
+    private fun getFileName(uri: Uri, context: Context): String {
+        val projection = arrayOf(MediaStore.Video.Media.DATA)
+        val cursor = context.contentResolver.query(uri, projection, null, null, null)
+        cursor?.use {
+            val columnIndex = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA)
+            cursor.moveToFirst()
+            return cursor.getString(columnIndex)
+        }
+        return ""
     }
 
     fun settingToolbar(time : Long){
@@ -235,13 +257,50 @@ class UploadShortsFragment : BaseFragment<FragmentUploadShortsBinding>(FragmentU
             override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
                 return when (menuItem.itemId) {
                     R.id.menu_edit_button -> {
-                        Log.d("완료","test")
+                        requestUploadVideo()
                         true
                     }
                     else -> false
                 }
             }
         }, viewLifecycleOwner, Lifecycle.State.RESUMED)
+    }
+
+    private fun requestUploadVideo(){
+        viewLifecycleOwner.lifecycleScope.launch {
+            Log.d("videoUpload","${videoUploadUri}")
+            val img_file = File(videoUploadUri)
+            val file = MultipartBody.Part.createFormData(name = "multipartFile", filename = img_file.name, body = img_file.asRequestBody("video/mp4".toMediaType()))
+            uploadViewModel.uploadVideo(file)
+            uploadViewModel.uploadVideoResult.take(1).onEach{
+                when(it) {
+                    is NetworkState.Success -> {
+                        if (it.data.code == "SUCCESS") {
+                            Log.d("여기 호출", "${it.data}")
+
+                            if (it.data.data.toString().isEmpty()) {
+                                showToastMessage("이미지 업로드에 실패했습니다")
+                            } else {
+                                requestShorts(it.data.data.toString())
+
+                            }
+                        }
+                    }
+                    is NetworkState.Error -> {
+                        Log.d("error","${it.message}")
+                        showToastMessage(it.message.toString())
+                    }
+                    else -> {
+                        // progress bar 띄우기
+                    }
+                }
+            }
+            .launchIn(this)
+        }
+    }
+
+    private fun requestShorts(shorts_url:String){
+
     }
 
     private fun uploadShorts(){

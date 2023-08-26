@@ -24,6 +24,9 @@ class UploadViewModel @Inject constructor(private val uploadUseCase: UploadUseCa
     var _uploadImageResult: MutableSharedFlow<NetworkState<BaseResponse>> = MutableSharedFlow()
     var uploadImageResult = _uploadImageResult.asSharedFlow()
 
+    var _uploadVideoResult: MutableSharedFlow<NetworkState<BaseResponse>> = MutableSharedFlow()
+    var uploadVideoResult = _uploadVideoResult.asSharedFlow()
+
     var _uploadRecipeResult: MutableSharedFlow<NetworkState<BaseResponse>> = MutableSharedFlow()
     var uploadRecipeResult: SharedFlow<NetworkState<BaseResponse>> = _uploadRecipeResult
 
@@ -37,8 +40,18 @@ class UploadViewModel @Inject constructor(private val uploadUseCase: UploadUseCa
                 _uploadImageResult.emit(NetworkState.Error(400, "${error.message}"))
             }
             .collect { values ->
-                Log.d("뷰모델 호출","${values}")
                 _uploadImageResult.emit(values)
+            }
+    }
+
+    fun uploadVideo(file: MultipartBody.Part) = viewModelScope.launch {
+        _uploadVideoResult.emit(NetworkState.Loading)
+        uploadUseCase.uploadVideo(file)
+            .catch { error ->
+                _uploadVideoResult.emit(NetworkState.Error(400, "${error.message}"))
+            }
+            .collect { values ->
+                _uploadVideoResult.emit(values)
             }
     }
 

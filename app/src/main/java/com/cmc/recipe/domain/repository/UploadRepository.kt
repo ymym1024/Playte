@@ -12,6 +12,8 @@ import okhttp3.MultipartBody
 interface UploadRepository {
     fun uploadImage(file: MultipartBody.Part) : Flow<NetworkState<BaseResponse>>
 
+    fun uploadVideo(file: MultipartBody.Part) : Flow<NetworkState<BaseResponse>>
+
     fun uploadRecipe(request:UploadRecipeRequest) : Flow<NetworkState<BaseResponse>>
 
     fun getIngredients() : Flow<NetworkState<IngredientsResponse>>

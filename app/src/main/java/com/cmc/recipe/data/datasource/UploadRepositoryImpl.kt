@@ -30,6 +30,21 @@ class UploadRepositoryImpl @Inject constructor(
         }
     }
 
+    override fun uploadVideo(file: MultipartBody.Part): Flow<NetworkState<BaseResponse>> =flow{
+        val response = service.uploadVideo(file)
+        if(response.isSuccessful){
+            response.body()?.let {
+                emit(NetworkState.Success(it))
+            }
+        }else{
+            try {
+                emit(NetworkState.Error(response.code(),response.errorBody()!!.string()))
+            }catch (e: IOException) {
+                e.printStackTrace()
+            }
+        }
+    }
+
     override fun uploadRecipe(request: UploadRecipeRequest): Flow<NetworkState<BaseResponse>> = flow{
         val response = service.uploadRecipe(request)
         if(response.isSuccessful){

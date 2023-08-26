@@ -13,6 +13,8 @@ class UploadUseCase @Inject constructor(
 
     fun uploadImage(file: MultipartBody.Part) = repository.uploadImage(file)
 
+    fun uploadVideo(file: MultipartBody.Part) = repository.uploadVideo(file)
+
     fun uploadRecipe(request: UploadRecipeRequest) = repository.uploadRecipe(request)
 
     fun getIngredients() = repository.getIngredients()

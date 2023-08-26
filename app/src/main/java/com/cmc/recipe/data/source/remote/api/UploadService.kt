@@ -19,6 +19,10 @@ interface UploadService {
     @POST("/api/v1/file/upload/image")
     suspend fun uploadImage(@Part file: MultipartBody.Part) : Response<BaseResponse>
 
+    @Multipart
+    @POST("/api/v1/file/upload/video")
+    suspend fun uploadVideo(@Part file: MultipartBody.Part) : Response<BaseResponse>
+
     @POST("/api/v1/recipes")
     suspend fun uploadRecipe(@Body recipe: UploadRecipeRequest) : Response<BaseResponse>
 }

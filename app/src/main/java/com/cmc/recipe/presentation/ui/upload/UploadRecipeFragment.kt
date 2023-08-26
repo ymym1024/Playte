@@ -255,10 +255,6 @@ class UploadRecipeFragment : BaseFragment<FragmentUploadRecipeBinding>(FragmentU
         }
     }
 
-    private fun responseStepImage(url:String,desc:String){
-
-    }
-
     private fun uploadImageURI(imageFile:String){
         viewLifecycleOwner.lifecycleScope.launch {
             val imgfile = File(imageFile)
