@@ -73,7 +73,7 @@
                 android:layout_height="wrap_content"
                 android:background="@drawable/bg_circle"
                 android:padding="15dp"
-                tools:srcCompat="@drawable/ic_mypage_item1" />
+                android:src="@drawable/ic_mypage_item1" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -99,7 +99,7 @@
                 android:layout_height="wrap_content"
                 android:background="@drawable/bg_circle"
                 android:padding="15dp"
-                tools:srcCompat="@drawable/ic_mypage_item2" />
+                android:src="@drawable/ic_mypage_item2" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -125,7 +125,7 @@
                 android:layout_height="wrap_content"
                 android:background="@drawable/bg_circle"
                 android:padding="15dp"
-                tools:srcCompat="@drawable/ic_mypage_item3" />
+                android:src="@drawable/ic_mypage_item3" />
 
             <TextView
                 android:id="@+id/textView5"
@@ -157,6 +157,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="20dp"
         android:layout_marginTop="15dp"
+        android:minHeight="176dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView21" />
@@ -175,6 +176,7 @@
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rv_view_recipe"
+        android:minHeight="183dp"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="20dp"
