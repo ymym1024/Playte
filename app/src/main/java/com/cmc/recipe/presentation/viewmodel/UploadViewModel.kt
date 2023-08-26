@@ -9,6 +9,7 @@ import com.cmc.recipe.data.model.response.IngredientsResponse
 import com.cmc.recipe.data.model.response.MyInfoResponse
 import com.cmc.recipe.data.source.remote.request.RequestNickname
 import com.cmc.recipe.data.source.remote.request.UploadRecipeRequest
+import com.cmc.recipe.data.source.remote.request.UploadShortsRequest
 import com.cmc.recipe.domain.usecase.UploadUseCase
 import com.cmc.recipe.domain.usecase.UserUseCase
 import com.cmc.recipe.utils.NetworkState
@@ -29,6 +30,9 @@ class UploadViewModel @Inject constructor(private val uploadUseCase: UploadUseCa
 
     var _uploadRecipeResult: MutableSharedFlow<NetworkState<BaseResponse>> = MutableSharedFlow()
     var uploadRecipeResult: SharedFlow<NetworkState<BaseResponse>> = _uploadRecipeResult
+
+    var _uploadShortsResult: MutableSharedFlow<NetworkState<BaseResponse>> = MutableSharedFlow()
+    var uploadShortsResult: SharedFlow<NetworkState<BaseResponse>> = _uploadShortsResult
 
     var _ingredientsResult: MutableSharedFlow<NetworkState<IngredientsResponse>> = MutableSharedFlow()
     var ingredientsResult: SharedFlow<NetworkState<IngredientsResponse>> = _ingredientsResult
@@ -52,6 +56,16 @@ class UploadViewModel @Inject constructor(private val uploadUseCase: UploadUseCa
             }
             .collect { values ->
                 _uploadVideoResult.emit(values)
+            }
+    }
+
+    fun uploadShorts(request:UploadShortsRequest)= viewModelScope.launch {
+        _uploadShortsResult.emit(NetworkState.Loading)
+        uploadUseCase.uploadShorts(request)
+            .catch { error ->
+                _uploadShortsResult.emit(NetworkState.Error(400,"${error.message}"))
+            }.collect { values ->
+                _uploadShortsResult.emit(values)
             }
     }
 

@@ -5,6 +5,7 @@ import com.cmc.recipe.data.model.response.IngredientsResponse
 import com.cmc.recipe.data.model.response.MyInfoResponse
 import com.cmc.recipe.data.source.remote.request.RequestNickname
 import com.cmc.recipe.data.source.remote.request.UploadRecipeRequest
+import com.cmc.recipe.data.source.remote.request.UploadShortsRequest
 import okhttp3.MultipartBody
 import retrofit2.Response
 import retrofit2.http.*
@@ -25,4 +26,7 @@ interface UploadService {
 
     @POST("/api/v1/recipes")
     suspend fun uploadRecipe(@Body recipe: UploadRecipeRequest) : Response<BaseResponse>
+
+    @POST("/api/v1/recipes/shortform")
+    suspend fun uploadShorts(@Body recipe: UploadShortsRequest) : Response<BaseResponse>
 }

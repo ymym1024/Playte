@@ -1,9 +1,8 @@
 package com.cmc.recipe.domain.usecase
 
-import com.cmc.recipe.data.source.remote.request.RequestNickname
 import com.cmc.recipe.data.source.remote.request.UploadRecipeRequest
+import com.cmc.recipe.data.source.remote.request.UploadShortsRequest
 import com.cmc.recipe.domain.repository.UploadRepository
-import com.cmc.recipe.domain.repository.UserRepository
 import okhttp3.MultipartBody
 import javax.inject.Inject
 
@@ -16,6 +15,8 @@ class UploadUseCase @Inject constructor(
     fun uploadVideo(file: MultipartBody.Part) = repository.uploadVideo(file)
 
     fun uploadRecipe(request: UploadRecipeRequest) = repository.uploadRecipe(request)
+
+    fun uploadShorts(request: UploadShortsRequest) = repository.uploadShorts(request)
 
     fun getIngredients() = repository.getIngredients()
 }

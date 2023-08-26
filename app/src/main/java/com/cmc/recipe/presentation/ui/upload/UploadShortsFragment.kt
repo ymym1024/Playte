@@ -10,6 +10,7 @@ import android.graphics.drawable.Drawable
 import android.media.MediaMetadataRetriever
 import android.net.Uri
 import android.os.Build
+import android.os.Bundle
 import android.provider.MediaStore
 import android.provider.OpenableColumns
 import android.util.Log
@@ -29,8 +30,11 @@ import com.cmc.recipe.R
 import com.cmc.recipe.data.model.Ingredient
 import com.cmc.recipe.data.model.RecipeStep
 import com.cmc.recipe.data.model.response.Ingredients
+import com.cmc.recipe.data.source.remote.request.UploadShortsRequest
 import com.cmc.recipe.databinding.FragmentUploadShortsBinding
+import com.cmc.recipe.presentation.ui.MainActivity
 import com.cmc.recipe.presentation.ui.base.BaseFragment
+import com.cmc.recipe.presentation.ui.common.RecipeSnackBar
 import com.cmc.recipe.presentation.viewmodel.UploadViewModel
 import com.cmc.recipe.utils.Constant.PICK_VIDEO_REQUEST
 import com.cmc.recipe.utils.NetworkState
@@ -38,6 +42,7 @@ import com.cmc.recipe.utils.bitmapImagesWithGlideRound
 import com.cmc.recipe.utils.convertLongToTime
 import com.cmc.recipe.utils.loadImagesWithGlideRound
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.take
@@ -55,10 +60,16 @@ class UploadShortsFragment : BaseFragment<FragmentUploadShortsBinding>(FragmentU
 
     private lateinit var ingredientAdapter: IngredientAdapter
 
+    private lateinit var uploadActivity : UploadActivity
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        uploadActivity = activity as UploadActivity
+    }
+
     override fun onDestroyView() {
         super.onDestroyView()
-        val activity = activity as UploadActivity
-        activity.clearToolbarAndIcon()
+        uploadActivity.clearToolbarAndIcon()
     }
 
     override fun initFragment() {
@@ -89,7 +100,8 @@ class UploadShortsFragment : BaseFragment<FragmentUploadShortsBinding>(FragmentU
                         is NetworkState.Error -> {
                             showToastMessage(it.message.toString())
                         }
-                        else -> {}
+                        else -> {
+                        }
                     }
                 }
                 .launchIn(this)
@@ -273,10 +285,12 @@ class UploadShortsFragment : BaseFragment<FragmentUploadShortsBinding>(FragmentU
             val video_file = File(videoUploadUri)
             val file = MultipartBody.Part.createFormData(name = "multipartFile", filename = video_file.name, body = video_file.asRequestBody("video/mp4".toMediaType()))
             uploadViewModel.uploadVideo(file)
-            uploadViewModel.uploadVideoResult.take(1).onEach{
+            uploadViewModel.uploadVideoResult.collect{
                 when(it) {
                     is NetworkState.Success -> {
                         if (it.data.code == "SUCCESS") {
+                            uploadActivity.showProgressBar(false)
+
                             if (it.data.data.toString().isEmpty()) {
                                 showToastMessage("영상 업로드에 실패했습니다")
                             } else {
@@ -287,14 +301,19 @@ class UploadShortsFragment : BaseFragment<FragmentUploadShortsBinding>(FragmentU
                     }
                     is NetworkState.Error -> {
                         Log.d("error","${it.message}")
+                        uploadActivity.showProgressBar(false)
                         showToastMessage(it.message.toString())
                     }
-                    else -> {
+                    is NetworkState.Loading -> {
                         // progress bar 띄우기
+                        Log.d("loading","여기 로딩됨22")
+                        uploadActivity.showProgressBar(true)
+                    }
+                    else -> {
+                        showToastMessage(it.toString())
                     }
                 }
             }
-            .launchIn(this)
         }
     }
 
@@ -313,7 +332,42 @@ class UploadShortsFragment : BaseFragment<FragmentUploadShortsBinding>(FragmentU
     }
 
     private fun requestShorts(shorts_url:String){
+        val ingredient_list = ingredientAdapter.getData().map {
+            it.ingredient_id
+        }
 
+        val request = UploadShortsRequest(description=binding.etRecipeDesc.getText().toString(), shortform_name = binding.etRecipeName.getText().toString(),
+                video_url = shorts_url, ingredients_ids = ingredient_list)
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            uploadViewModel.uploadShorts(request)
+            uploadViewModel.uploadVideoResult.collect{
+                when(it) {
+                    is NetworkState.Success -> {
+                        if (it.data.code == "SUCCESS") {
+                            uploadActivity.showProgressBar(false)
+                            requireActivity().finish()
+                            val activity = MainActivity.mainActivity as MainActivity
+                            val rootView: View = activity.window.decorView.rootView // a 액티비티의 레이아웃 최상단 뷰를 가져옴
+                            // 스낵바 생성 및 표시
+                            RecipeSnackBar(rootView,"레시피가 등록됐습니다!").setAnchorView(rootView.findViewById(R.id.bottom_nav)).show()
+                        }else{
+                            RecipeSnackBar(binding.root,"${it.data.data}").show()
+                        }
+                    }
+                    is NetworkState.Error -> {
+                        uploadActivity.showProgressBar(false)
+                        showToastMessage(it.message.toString())
+                    }
+                    is NetworkState.Loading -> {
+                        uploadActivity.showProgressBar(true)
+                    }
+                    else -> {
+                        showToastMessage(it.toString())
+                    }
+                }
+            }
+        }
     }
 
     private fun uploadShorts(){
