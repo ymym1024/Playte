@@ -36,4 +36,6 @@ interface RecipeService {
     @POST("/api/v1/reviews/{review-id}/like")
     suspend fun updateReviewLike(@Path("review-id")id:Int) : Response<BaseResponse>
 
+    @POST("/api/v1/reviews/{review-id}/unlike")
+    suspend fun updateReviewUnLike(@Path("review-id")id:Int) : Response<BaseResponse>
 }

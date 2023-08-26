@@ -41,8 +41,11 @@ class RecipeViewModel @Inject constructor(private val recipeUseCase: RecipeUseCa
     var _reviewAddResult : MutableSharedFlow<NetworkState<BaseResponse>> = MutableSharedFlow()
     var reviewAddResult = _reviewAddResult.asSharedFlow()
 
-    var _reviewSaveResult : MutableSharedFlow<NetworkState<BaseResponse>> = MutableSharedFlow()
-    var reviewSaveResult = _reviewSaveResult.asSharedFlow()
+    var _reviewLikeResult : MutableSharedFlow<NetworkState<BaseResponse>> = MutableSharedFlow()
+    var reviewLikeResult = _reviewLikeResult.asSharedFlow()
+
+    var _reviewUnLikeResult : MutableSharedFlow<NetworkState<BaseResponse>> = MutableSharedFlow()
+    var reviewUnLikeResult = _reviewUnLikeResult.asSharedFlow()
 
     fun updateReicpeId(id:Int) = viewModelScope.launch {
         _reciepeId.value = id
@@ -130,12 +133,22 @@ class RecipeViewModel @Inject constructor(private val recipeUseCase: RecipeUseCa
     }
 
     fun updateReviewLike(id:Int) = viewModelScope.launch {
-        _reviewSaveResult.emit(NetworkState.Loading)
+        _reviewLikeResult.emit(NetworkState.Loading)
         recipeUseCase.updateReviewLike(id)
             .catch { error ->
-                _reviewSaveResult.emit(NetworkState.Error(400,"${error.message}"))
+                _reviewLikeResult.emit(NetworkState.Error(400,"${error.message}"))
             }.collect { values ->
-                _reviewSaveResult.emit(values)
+                _reviewLikeResult.emit(values)
+            }
+    }
+
+    fun updateReviewUnLike(id:Int) = viewModelScope.launch {
+        _reviewUnLikeResult.emit(NetworkState.Loading)
+        recipeUseCase.updateReviewUnLike(id)
+            .catch { error ->
+                _reviewUnLikeResult.emit(NetworkState.Error(400,"${error.message}"))
+            }.collect { values ->
+                _reviewUnLikeResult.emit(values)
             }
     }
 }

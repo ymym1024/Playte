@@ -119,7 +119,7 @@ class RecipeMenuReviewFragment : BaseFragment<FragmentRecipeMenuReviewBinding>(F
     private fun initRV(itemList:ArrayList<ReviewContent>){
         val clickListener = object : OnReviewListener {
             override fun onFavorite(id: Int){
-                requestReviewLike(id)
+                requestReviewLikeOrUnLike(id)
             }
 
             override fun onReport(id: Int) {
@@ -135,14 +135,25 @@ class RecipeMenuReviewFragment : BaseFragment<FragmentRecipeMenuReviewBinding>(F
         reviewAdapter.replaceData(itemList)
     }
 
+    private fun requestReviewLikeOrUnLike(id: Int) {
+        val review = findReviewItemById(id)
+        if (review != null) {
+            if (review.liked) {
+                requestReviewUnLike(id)
+            } else {
+                requestReviewLike(id)
+            }
+        }
+    }
+
     private fun findReviewItemById(reviewId: Int): ReviewContent? {
         return reviewItemList.find { it.review_id == reviewId }
     }
 
     private fun requestReviewLike(id:Int){
+        recipeViewModel.updateReviewLike(id)
         viewLifecycleOwner.lifecycleScope.launch{
-            recipeViewModel.updateReviewLike(id)
-            recipeViewModel.reviewSaveResult.collect{
+            recipeViewModel.reviewLikeResult.collect{
                 when(it){
                     is NetworkState.Success -> {
                         it.data?.let {data ->
@@ -151,6 +162,37 @@ class RecipeMenuReviewFragment : BaseFragment<FragmentRecipeMenuReviewBinding>(F
                                 val review =findReviewItemById(id)
                                 review?.liked = true
                                 review?.like_count = review?.like_count!! + 1
+                                reviewAdapter.notifyDataSetChanged()
+
+                            }else{
+                                Log.d("data","${data.data}")
+                            }
+                        }
+                        recipeViewModel._reviewResult.value = NetworkState.Loading
+                    }
+                    is NetworkState.Error ->{
+                        Log.d("data","${it.message}")
+                        showToastMessage(it.message.toString())
+                        recipeViewModel._reviewResult.value = NetworkState.Loading
+                    }
+                    else -> {}
+                }
+            }
+        }
+    }
+
+    private fun requestReviewUnLike(id:Int){
+        recipeViewModel.updateReviewUnLike(id)
+        viewLifecycleOwner.lifecycleScope.launch{
+            recipeViewModel.reviewUnLikeResult.collect{
+                when(it){
+                    is NetworkState.Success -> {
+                        it.data?.let {data ->
+                            if(data.code == "SUCCESS"){
+                                Log.d("data-unlike","${data}")
+                                val review =findReviewItemById(id)
+                                review?.liked = false
+                                review?.like_count = review?.like_count!! - 1
                                 reviewAdapter.notifyDataSetChanged()
 
                             }else{

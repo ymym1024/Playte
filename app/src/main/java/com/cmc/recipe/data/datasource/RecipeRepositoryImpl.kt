@@ -146,4 +146,17 @@ class RecipeRepositoryImpl @Inject constructor(
             }
         }
     }
+
+    override fun updateReviewUnLike(id: Int): Flow<NetworkState<BaseResponse>> = flow{
+        val response = service.updateReviewUnLike(id)
+        if(response.isSuccessful){
+            response.body()?.let { emit(NetworkState.Success(it)) }
+        }else{
+            try {
+                emit(NetworkState.Error(response.code(),response.errorBody()!!.string()))
+            }catch (e: IOException) {
+                e.printStackTrace()
+            }
+        }
+    }
 }
