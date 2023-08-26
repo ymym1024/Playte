@@ -1,5 +1,6 @@
 package com.cmc.recipe.presentation.ui.recipe
 
+import android.content.Intent
 import android.util.Log
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.viewModels
@@ -11,9 +12,11 @@ import com.cmc.recipe.data.model.response.ReviewContent
 import com.cmc.recipe.data.model.response.ReviewData
 import com.cmc.recipe.data.model.response.ScoreData
 import com.cmc.recipe.databinding.FragmentRecipeMenuReviewBinding
+import com.cmc.recipe.presentation.ui.MainActivity
 import com.cmc.recipe.presentation.ui.base.BaseFragment
 import com.cmc.recipe.presentation.ui.base.OnClickListener
 import com.cmc.recipe.presentation.ui.common.ImageAdapter
+import com.cmc.recipe.presentation.ui.common.OnReviewListener
 import com.cmc.recipe.presentation.viewmodel.RecipeViewModel
 import com.cmc.recipe.utils.NetworkState
 import com.github.mikephil.charting.charts.BarChart
@@ -95,6 +98,8 @@ class RecipeMenuReviewFragment : BaseFragment<FragmentRecipeMenuReviewBinding>(F
         initRV(data.content as ArrayList<ReviewContent>)
         initImageRV()
 
+        binding.tvReviewCount.text  = "${data.content.count()}개"
+
         binding.btnImgReview.setOnClickListener {
             goImageActivity()
         }
@@ -105,12 +110,17 @@ class RecipeMenuReviewFragment : BaseFragment<FragmentRecipeMenuReviewBinding>(F
     }
 
     private fun initRV(itemList:ArrayList<ReviewContent>){
-        val clickListener = object : OnClickListener {
-            override fun onMovePage(id: Int) {
+        val clickListener = object : OnReviewListener {
+            override fun onFavorite(id: Int) {
+
+            }
+
+            override fun onReport(id: Int) {
+
             }
         }
 
-        val adapter = RecipeMenuReviewAdapter(clickListener,clickListener)
+        val adapter = RecipeMenuReviewAdapter(clickListener)
         binding.rvReview.adapter = adapter
         binding.rvReview.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
         val dividerItemDecoration = DividerItemDecoration(context, LinearLayoutManager.VERTICAL)
@@ -260,7 +270,9 @@ class RecipeMenuReviewFragment : BaseFragment<FragmentRecipeMenuReviewBinding>(F
     }
 
     private fun goImageActivity(){
-        movePage(R.id.action_recipeMenuFragment_to_imageReviewActivity)
+        val intent = Intent(activity, ImageReviewActivity::class.java)
+        intent.putExtra("recipeId",recipeId)
+        startActivity(intent)
     }
 
     private fun initImageRV(){
