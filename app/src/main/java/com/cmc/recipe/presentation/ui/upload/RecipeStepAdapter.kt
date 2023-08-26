@@ -29,6 +29,7 @@ class RecipeStepAdapter:
     ItemTouchCallback.ItemTouchHelperListener {
 
     private lateinit var listener:onChangeListener
+
     interface onChangeListener{
         fun change()
     }
@@ -45,7 +46,8 @@ class RecipeStepAdapter:
 
     fun addItem(item: RecipeStep) {
         getData().add(item)
-        notifyItemInserted(getData().size - 1)
+        notifyItemInserted(itemCount-1)
+        //notifyDataSetChanged()
     }
 
     override fun onItemMove(from: Int, to: Int) {
