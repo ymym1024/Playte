@@ -39,6 +39,12 @@ object RepositoryModule {
 
     @Provides
     @ViewModelScoped
+    fun providesUploadRepository(
+        service: UploadService
+    ) : UploadRepository = UploadRepositoryImpl(service)
+
+    @Provides
+    @ViewModelScoped
     fun providesGoogleRepository(
         service: GoogleService
     ) : GoogleLoginRepository = GoogleLoginRepositoryImpl(service)

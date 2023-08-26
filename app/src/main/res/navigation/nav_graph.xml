@@ -8,7 +8,7 @@
     <fragment
         android:id="@+id/uploadFragment"
         android:name="com.cmc.recipe.presentation.ui.upload.UploadFragment"
-        android:label="UploadFragment"
+        android:label=""
         tools:layout="@layout/fragment_upload"/>
 
     <fragment

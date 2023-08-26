@@ -35,6 +35,11 @@ object ServiceModule {
 
     @Singleton
     @Provides
+    fun providesUploadService(@Named("RecipeApi")retrofit: Retrofit): UploadService =
+        retrofit.create(UploadService::class.java)
+
+    @Singleton
+    @Provides
     fun providesGoogleService(@Named("GoogleLogin") retrofit: Retrofit): GoogleService =
         retrofit.create(GoogleService::class.java)
 }

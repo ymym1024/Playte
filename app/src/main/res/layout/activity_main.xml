@@ -56,6 +56,7 @@
         app:itemIconSize="17dp"
         app:labelVisibilityMode="labeled"
         app:menu="@menu/menu_bottom_nav"
+        app:layout_dodgeInsetEdges="bottom"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"

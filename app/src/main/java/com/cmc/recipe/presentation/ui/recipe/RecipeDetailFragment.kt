@@ -37,8 +37,10 @@ class RecipeDetailFragment : BaseFragment<FragmentRecipeDetailBinding>(FragmentR
 
         initMenu()
 
-        requestRecipeDetail(1)
+        val id = arguments?.getInt("id")
+        Log.d("id",id.toString())
 
+        requestRecipeDetail(id!!)
     }
 
     private fun requestRecipeDetail(id:Int){
