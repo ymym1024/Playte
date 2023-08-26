@@ -34,13 +34,20 @@
             android:exported="false" />
         <activity
             android:name=".presentation.ui.upload.UploadActivity"
+            android:windowSoftInputMode="adjustResize"
+            android:configChanges="keyboardHidden|orientation|screenSize"
             android:exported="false" />
         <activity
             android:name=".presentation.ui.auth.AuthActivity"
             android:exported="true" />
         <activity
             android:name=".presentation.ui.SplashActivity"
-            android:exported="true" />
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
         <activity
             android:name=".presentation.ui.shortform.ShortsDetailActivity"
             android:exported="true"
@@ -52,11 +59,6 @@
             android:name=".presentation.ui.MainActivity"
             android:exported="true"
             android:windowSoftInputMode="adjustNothing">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
         <activity
             android:name=".presentation.ui.recipe.RecipeActivity"

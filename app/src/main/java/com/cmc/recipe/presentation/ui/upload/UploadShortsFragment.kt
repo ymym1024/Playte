@@ -14,10 +14,7 @@ import android.os.Bundle
 import android.provider.MediaStore
 import android.provider.OpenableColumns
 import android.util.Log
-import android.view.Menu
-import android.view.MenuInflater
-import android.view.MenuItem
-import android.view.View
+import android.view.*
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
 import androidx.core.view.MenuHost
@@ -60,22 +57,18 @@ class UploadShortsFragment : BaseFragment<FragmentUploadShortsBinding>(FragmentU
     private lateinit var videoTime: String
 
     private lateinit var ingredientAdapter: IngredientAdapter
-
     private lateinit var uploadActivity : UploadActivity
+    private var layoutListener: ViewTreeObserver.OnGlobalLayoutListener? = null
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         uploadActivity = activity as UploadActivity
     }
 
-    override fun onDestroyView() {
-        super.onDestroyView()
-        uploadActivity.clearToolbarAndIcon()
-    }
-
     override fun initFragment() {
         initMenu()
-        editScroll()
+       // editScroll()
         uploadShorts()
         requestIngredient()
     }
@@ -123,6 +116,15 @@ class UploadShortsFragment : BaseFragment<FragmentUploadShortsBinding>(FragmentU
 
         val adapter = IngredientListAdapter(requireContext(),dataList)
         binding.etRecipeIngredient.setAdapter(adapter)
+        binding.etRecipeIngredient.onFocusChangeListener =
+            View.OnFocusChangeListener { _, hasFocus ->
+                if (hasFocus) {
+                    // 포커스가 있을 때 실행
+                    scrollToBottomView()
+                }else{
+                    binding.tvEmpty.visibility = View.GONE
+                }
+            }
         binding.etRecipeIngredient.setOnItemClickListener { _, v, position, _ ->
             val selectedData = adapter.getItem(position)
             ingredientAdapter.addItem(selectedData)
@@ -371,6 +373,21 @@ class UploadShortsFragment : BaseFragment<FragmentUploadShortsBinding>(FragmentU
                 }
             }
         }
+    }
+
+    private fun scrollToBottomView() {
+        binding.tvEmpty.visibility = View.VISIBLE
+        layoutListener = ViewTreeObserver.OnGlobalLayoutListener {
+            // Bottom TextView의 아래로 스크롤
+            binding.scrollView?.scrollTo(0, binding.tvEmpty.bottom) // Bottom TextView의 아래로 스크롤
+        }
+        binding.tvEmpty?.viewTreeObserver?.addOnGlobalLayoutListener(layoutListener)
+    }
+
+    override fun onDestroyView() {
+        binding.tvEmpty.viewTreeObserver.removeOnGlobalLayoutListener(layoutListener)
+        super.onDestroyView()
+        uploadActivity.clearToolbarAndIcon()
     }
 
     private fun uploadShorts(){

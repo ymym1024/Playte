@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView
+<androidx.core.widget.NestedScrollView
     android:id="@+id/scrollView"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -105,17 +105,28 @@
             android:layout_marginStart="19dp"
             android:layout_marginTop="8dp"
             android:layout_marginEnd="19dp"
+            android:background="@drawable/bg_gray_radius"
             android:completionThreshold="1"
+            android:hint="@string/recipe_register_ingredient_info"
             android:padding="14dp"
             android:textSize="14sp"
-            android:background="@drawable/bg_gray_radius"
-            android:hint="@string/recipe_register_ingredient_info"
+            app:layout_constraintBottom_toTopOf="@+id/tv_empty"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/textView19"
             app:maxLength="20" />
 
+        <TextView
+            android:id="@+id/tv_empty"
+            android:layout_width="wrap_content"
+            android:layout_height="50dp"
+            android:text=""
+            android:visibility="gone"
+            app:layout_constraintBottom_toTopOf="@+id/rv_complete_ingredient"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/et_recipe_ingredient" />
         <TextView
             android:id="@+id/tv_ingredient_cnt"
             android:layout_width="wrap_content"
@@ -147,7 +158,7 @@
             android:layout_marginEnd="19dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/et_recipe_ingredient" />
+            app:layout_constraintTop_toBottomOf="@+id/tv_empty" />
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/btn_upload_shorts"
@@ -164,4 +175,4 @@
             app:layout_constraintEnd_toEndOf="@+id/iv_thumbnail" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
-</ScrollView>
+</androidx.core.widget.NestedScrollView>

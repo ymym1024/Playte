@@ -32,7 +32,11 @@ class IngredientListAdapter(
         val tvType = view?.findViewById<TextView>(R.id.tv_type)
 
         tvName?.text = filteredData[position].ingredient_name
-        tvType?.text = filteredData[position].ingredient_type
+        if(filteredData[position].ingredient_type == "INGREDIENTS"){
+            tvType?.text = "재료"
+        }else{ // SAUCE
+            tvType?.text = "양념"
+        }
 
         return view!!
     }

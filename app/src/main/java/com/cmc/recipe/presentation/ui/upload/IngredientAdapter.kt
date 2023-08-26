@@ -48,7 +48,11 @@ class IngredientItemHolder(viewBinding: ItemIngredientBinding, val clickListener
     override fun bind(binding: ItemIngredientBinding, item: Ingredients?) {
         binding.let {
             if(item?.ingredient_count!! > 0){
-                it.tvIngredientName.text = "${item?.ingredient_name} ${item?.ingredient_count}${item?.ingredient_unit}"
+                if(item?.ingredient_unit == "PIECE"){
+                    it.tvIngredientName.text = "${item?.ingredient_name} ${item?.ingredient_count}개"
+                }else{
+                    it.tvIngredientName.text = "${item?.ingredient_name} ${item?.ingredient_count}${item?.ingredient_unit}"
+                }
             }else{
                 it.tvIngredientName.text = item?.ingredient_name
             }
