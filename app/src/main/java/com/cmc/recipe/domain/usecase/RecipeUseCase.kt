@@ -20,4 +20,6 @@ class RecipeUseCase @Inject constructor(
 
     // 리뷰
     fun getRecipesReview(id:Int) = repository.getRecipesReview(id)
+
+    fun getRecipesReviewPhotos(id:Int) = repository.getRecipesReviewPhotos(id)
 }

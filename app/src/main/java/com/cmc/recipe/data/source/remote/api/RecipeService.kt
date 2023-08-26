@@ -22,5 +22,8 @@ interface RecipeService {
     @GET("/api/v1/reviews/recipe/{recipe-id}")
     suspend fun getRecipesReview(@Path("recipe-id")id:Int) : Response<ReviewResponse>
 
+    @GET("/api/v1/reviews/photos/recipe/{recipe-id}")
+    suspend fun getRecipesReviewPhotos(@Path("recipe-id")id:Int) : Response<PhotoResponse>
+
 
 }

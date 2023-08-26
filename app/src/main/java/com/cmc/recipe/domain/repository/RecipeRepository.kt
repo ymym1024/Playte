@@ -1,9 +1,6 @@
 package com.cmc.recipe.domain.repository
 
-import com.cmc.recipe.data.model.response.BaseResponse
-import com.cmc.recipe.data.model.response.RecipeDetailResponse
-import com.cmc.recipe.data.model.response.RecipesResponse
-import com.cmc.recipe.data.model.response.ReviewResponse
+import com.cmc.recipe.data.model.response.*
 import com.cmc.recipe.utils.NetworkState
 import kotlinx.coroutines.flow.Flow
 
@@ -18,5 +15,7 @@ interface RecipeRepository {
 
     //리뷰
     fun getRecipesReview(id:Int) : Flow<NetworkState<ReviewResponse>>
+
+    fun getRecipesReviewPhotos(id:Int) : Flow<NetworkState<PhotoResponse>>
 
 }

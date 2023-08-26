@@ -27,6 +27,9 @@ class RecipeViewModel @Inject constructor(private val recipeUseCase: RecipeUseCa
     var _reviewResult : MutableStateFlow<NetworkState<ReviewResponse>> = MutableStateFlow(NetworkState.Loading)
     var reviewResult: StateFlow<NetworkState<ReviewResponse>> = _reviewResult
 
+    var _reviewPhotosResult : MutableStateFlow<NetworkState<PhotoResponse>> = MutableStateFlow(NetworkState.Loading)
+    var reviewPhotosResult: StateFlow<NetworkState<PhotoResponse>> = _reviewPhotosResult
+
     fun getRecipes() = viewModelScope.launch {
         _recipeResult.value = NetworkState.Loading
         recipeUseCase.getRecipes()
@@ -75,6 +78,16 @@ class RecipeViewModel @Inject constructor(private val recipeUseCase: RecipeUseCa
                 _reviewResult.value = NetworkState.Error(400,"${error.message}")
             }.collect { values ->
                 _reviewResult.value = values
+            }
+    }
+
+    fun getRecipesReviewPhotos(id:Int) = viewModelScope.launch {
+        _reviewPhotosResult.value = NetworkState.Loading
+        recipeUseCase.getRecipesReviewPhotos(id)
+            .catch { error ->
+                _reviewPhotosResult.value = NetworkState.Error(400,"${error.message}")
+            }.collect { values ->
+                _reviewPhotosResult.value = values
             }
     }
 }
