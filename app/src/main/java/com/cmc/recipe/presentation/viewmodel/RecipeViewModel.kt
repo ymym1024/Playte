@@ -47,6 +47,9 @@ class RecipeViewModel @Inject constructor(private val recipeUseCase: RecipeUseCa
     var _reviewUnLikeResult : MutableSharedFlow<NetworkState<BaseResponse>> = MutableSharedFlow()
     var reviewUnLikeResult = _reviewUnLikeResult.asSharedFlow()
 
+    var _reviewReportResult : MutableSharedFlow<NetworkState<BaseResponse>> = MutableSharedFlow()
+    var reviewReportResult = _reviewReportResult.asSharedFlow()
+
     fun updateReicpeId(id:Int) = viewModelScope.launch {
         _reciepeId.value = id
     }
@@ -149,6 +152,16 @@ class RecipeViewModel @Inject constructor(private val recipeUseCase: RecipeUseCa
                 _reviewUnLikeResult.emit(NetworkState.Error(400,"${error.message}"))
             }.collect { values ->
                 _reviewUnLikeResult.emit(values)
+            }
+    }
+
+    fun postReviewReport(id:Int) = viewModelScope.launch {
+        _reviewReportResult.emit(NetworkState.Loading)
+        recipeUseCase.postReviewReport(id)
+            .catch { error ->
+                _reviewReportResult.emit(NetworkState.Error(400,"${error.message}"))
+            }.collect { values ->
+                _reviewReportResult.emit(values)
             }
     }
 }

@@ -15,6 +15,7 @@ import com.cmc.recipe.databinding.FragmentRecipeMenuReviewBinding
 import com.cmc.recipe.presentation.ui.base.BaseFragment
 import com.cmc.recipe.presentation.ui.common.ImageAdapter
 import com.cmc.recipe.presentation.ui.common.OnReviewListener
+import com.cmc.recipe.presentation.ui.common.RecipeSnackBar
 import com.cmc.recipe.presentation.viewmodel.RecipeViewModel
 import com.cmc.recipe.utils.NetworkState
 import com.github.mikephil.charting.charts.BarChart
@@ -123,7 +124,7 @@ class RecipeMenuReviewFragment : BaseFragment<FragmentRecipeMenuReviewBinding>(F
             }
 
             override fun onReport(id: Int) {
-
+                requestReviewReport(id)
             }
         }
 
@@ -148,6 +149,31 @@ class RecipeMenuReviewFragment : BaseFragment<FragmentRecipeMenuReviewBinding>(F
 
     private fun findReviewItemById(reviewId: Int): ReviewContent? {
         return reviewItemList.find { it.review_id == reviewId }
+    }
+
+    private fun requestReviewReport(id:Int){
+        recipeViewModel.postReviewReport(id)
+        viewLifecycleOwner.lifecycleScope.launch{
+            recipeViewModel.reviewReportResult.collect{
+                when(it){
+                    is NetworkState.Success -> {
+                        it.data?.let {data ->
+                            if(data.code == "SUCCESS" && data.data.toString().toBoolean()){
+                                Log.d("data","${data}")
+                                RecipeSnackBar(binding.btnWriteReview,"리뷰가 정상적으로 신고되었습니다").show()
+                            }
+                        }
+                        recipeViewModel._reviewResult.value = NetworkState.Loading
+                    }
+                    is NetworkState.Error ->{
+                        Log.d("data","${it.message}")
+                        showToastMessage(it.message.toString())
+                        recipeViewModel._reviewResult.value = NetworkState.Loading
+                    }
+                    else -> {}
+                }
+            }
+        }
     }
 
     private fun requestReviewLike(id:Int){

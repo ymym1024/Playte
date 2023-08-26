@@ -26,4 +26,6 @@ interface RecipeRepository {
     fun updateReviewLike(id:Int) : Flow<NetworkState<BaseResponse>>
 
     fun updateReviewUnLike(id:Int) : Flow<NetworkState<BaseResponse>>
+
+    fun postReviewReport(id:Int) : Flow<NetworkState<BaseResponse>>
 }

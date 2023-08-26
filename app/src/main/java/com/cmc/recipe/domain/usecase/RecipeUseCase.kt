@@ -31,4 +31,6 @@ class RecipeUseCase @Inject constructor(
     fun updateReviewLike(id:Int) = repository.updateReviewLike(id)
 
     fun updateReviewUnLike(id:Int) = repository.updateReviewUnLike(id)
+
+    fun postReviewReport(id:Int) = repository.postReviewReport(id)
 }
