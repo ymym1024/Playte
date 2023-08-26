@@ -26,7 +26,7 @@ class RecipeOrderItemHolder(viewBinding: ItemRecipeOrderBinding):
     override fun bind(binding: ItemRecipeOrderBinding, item: Stage?) {
         binding.let { view ->
             item?.let { order ->
-                if(order.stage_image_url.isEmpty()){
+                if(order.stage_image_url.isNullOrEmpty()){
                     view.ivThumbnail.setImageResource(R.drawable.img_noimage)
                 }else{
                     view.ivThumbnail.loadImagesWithGlideRound(order.stage_image_url,8)

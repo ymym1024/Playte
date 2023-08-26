@@ -17,7 +17,6 @@ class RecipeMenuFragment : BaseFragment<FragmentRecipeMenuBinding>(FragmentRecip
     private val args by navArgs<RecipeMenuFragmentArgs>()
 
     override fun initFragment() {
-
         // id 전달 받기
         val viewPager2Adapter = RecipeViewPager2Adapter(parentFragmentManager, lifecycle, args.recipeId)
         binding.viewPager.adapter = viewPager2Adapter
@@ -42,15 +41,19 @@ class RecipeViewPager2Adapter(
 
     override fun createFragment(position: Int): Fragment {
         return when (position) {
-            0 -> RecipeMenuReviewFragment().apply {
-                arguments = Bundle().apply {
+            0 -> {
+                val fragment = RecipeMenuReviewFragment()
+                fragment.arguments = Bundle().apply {
                     putInt("recipeId", recipeId)
                 }
+                fragment
             }
-            else -> RecipeMenuCommentFragment().apply {
-                arguments = Bundle().apply {
+            else -> {
+                val fragment = RecipeMenuCommentFragment()
+                fragment.arguments = Bundle().apply {
                     putInt("recipeId", recipeId)
                 }
+                fragment
             }
         }
     }
