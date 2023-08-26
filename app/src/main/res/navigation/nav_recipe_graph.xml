@@ -29,6 +29,9 @@
         <action
             android:id="@+id/action_recipeMenuFragment_to_imageReviewActivity"
             app:destination="@id/imageReviewActivity" />
+        <action
+            android:id="@+id/action_recipeMenuFragment_to_recipeReviewFragment"
+            app:destination="@id/recipeReviewFragment" />
     </fragment>
     <fragment
         android:id="@+id/recipeReviewFragment"

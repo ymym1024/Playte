@@ -85,6 +85,10 @@ class RecipeMenuReviewFragment : BaseFragment<FragmentRecipeMenuReviewBinding>(F
         binding.btnImgReview.setOnClickListener {
             goImageActivity()
         }
+
+        binding.btnWriteReview.setOnClickListener {
+            movePage(R.id.action_recipeMenuFragment_to_recipeReviewFragment)
+        }
     }
 
     private fun initRV(itemList:ArrayList<ReviewContent>){
