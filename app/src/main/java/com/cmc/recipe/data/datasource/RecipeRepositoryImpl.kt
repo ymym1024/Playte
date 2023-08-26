@@ -106,4 +106,17 @@ class RecipeRepositoryImpl @Inject constructor(
         }
     }
 
+    override fun getRecipesReviewScores(id: Int): Flow<NetworkState<ReviewScoreResponse>> =flow{
+        val response = service.getRecipesReviewScores(id)
+        if(response.isSuccessful){
+            response.body()?.let { emit(NetworkState.Success(it)) }
+        }else{
+            try {
+                emit(NetworkState.Error(response.code(),response.errorBody()!!.string()))
+            }catch (e: IOException) {
+                e.printStackTrace()
+            }
+        }
+    }
+
 }

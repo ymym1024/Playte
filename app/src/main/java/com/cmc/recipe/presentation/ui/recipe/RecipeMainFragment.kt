@@ -52,7 +52,6 @@ class RecipeMainFragment : BaseFragment<FragmentRecipeMainBinding>(FragmentRecip
     }
 
     private fun moveThemePage(theme:String){
-        //findNavController().navigateUp()
         val action = RecipeMainFragmentDirections.actionRecipeMainFragmentToRecipeActivity(theme = theme)
         findNavController().navigate(action)
     }
@@ -66,14 +65,16 @@ class RecipeMainFragment : BaseFragment<FragmentRecipeMainBinding>(FragmentRecip
                         it.data?.let {data ->
                             if(data.code == "SUCCESS"){
                                 itemList = it.data.data.content
+                                Log.d("data","${data.data}")
                                 recipeRecyclerview()
                             }else{
-                                Log.d("data","${data.data}")
+                                Log.d("data-err","${data.data}")
                             }
                         }
                         recipeViewModel._recipeResult.value = NetworkState.Loading
                     }
                     is NetworkState.Error ->{
+                        Log.d("data-err","${it.message}")
                         showToastMessage(it.message.toString())
                         recipeViewModel._recipeResult.value = NetworkState.Loading
                     }

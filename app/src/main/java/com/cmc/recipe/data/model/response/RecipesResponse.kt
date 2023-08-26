@@ -37,14 +37,3 @@ data class Sort(
     val sorted:Boolean,
     val unsorted:Boolean
 )
-
-data class RecipeContent(
-    val comment_count: Int,
-    val created_date: String,
-    val is_saved: Boolean,
-    val nickname: String,
-    val rating: Int,
-    val recipe_id: Int,
-    val recipe_name: String,
-    val recipe_thumbnail_img: String
-)

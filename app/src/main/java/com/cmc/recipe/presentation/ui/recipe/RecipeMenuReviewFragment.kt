@@ -9,6 +9,7 @@ import com.cmc.recipe.R
 import com.cmc.recipe.data.model.RecipeReview
 import com.cmc.recipe.data.model.response.ReviewContent
 import com.cmc.recipe.data.model.response.ReviewData
+import com.cmc.recipe.data.model.response.ScoreData
 import com.cmc.recipe.databinding.FragmentRecipeMenuReviewBinding
 import com.cmc.recipe.presentation.ui.base.BaseFragment
 import com.cmc.recipe.presentation.ui.base.OnClickListener
@@ -33,10 +34,37 @@ class RecipeMenuReviewFragment : BaseFragment<FragmentRecipeMenuReviewBinding>(F
         arguments?.let {
             recipeId = it.getInt("recipeId", -1)
         }
+        requestScore(recipeId)
         requestReview(recipeId)
-
     }
 
+    private fun requestScore(id:Int){
+        launchWithLifecycle(lifecycle) {
+            recipeViewModel.getRecipesReviewScores(id)
+            recipeViewModel.reviewScoreResult.collect {
+                when (it) {
+                    is NetworkState.Success -> {
+                        it.data?.let { data ->
+                            if (data.code == "SUCCESS") {
+                                binding.tvRating.text = "${data.data.totalRating}"
+                                binding.ratingbar.rating = data.data.totalRating.toFloat()
+                                initBarChart(binding.reviewChart)
+                                setChartData(binding.reviewChart, data.data)
+                            } else {
+                                Log.d("data", "${data.data}")
+                            }
+                        }
+                        recipeViewModel._reviewResult.value = NetworkState.Loading
+                    }
+                    is NetworkState.Error -> {
+                        showToastMessage(it.message.toString())
+                        recipeViewModel._reviewResult.value = NetworkState.Loading
+                    }
+                    else -> {}
+                }
+            }
+        }
+    }
     private fun requestReview(id:Int){
         launchWithLifecycle(lifecycle) {
             recipeViewModel.getRecipesReview(id)
@@ -63,24 +91,9 @@ class RecipeMenuReviewFragment : BaseFragment<FragmentRecipeMenuReviewBinding>(F
     }
 
     private fun initDataBinding(data: ReviewData) {
-        val url = "https://recipe1.ezmember.co.kr/cache/recipe/2022/02/02/dbb3f34bfe348a4bb4d142ff353815651.jpg"
 
-        val itemList = arrayListOf(
-            RecipeReview(nick = "냉파 CMC", date = "2023.05.11", content = "기름이 너무 많아서 망했습니다. 맛은 있는데 약간 짜고 느끼한\n" +
-                    "감이 좀 있어요. 그래도 다들 한번씩 해보길", stars = 3, thumb_up = 2, thumb_down = 2,image_list = arrayListOf(url,url,url)),
-            RecipeReview(nick = "냉파 CMC", date = "2023.05.11", content = "기름이 너무 많아서 망했습니다. 맛은 있는데 약간 짜고 느끼한\n" +
-                    "감이 좀 있어요. 그래도 다들 한번씩 해보길", stars = 3, thumb_up = 2, thumb_down = 2,image_list = arrayListOf(url,url)),
-            RecipeReview(nick = "냉파 CMC", date = "2023.05.11", content = "기름이 너무 많아서 망했습니다. 맛은 있는데 약간 짜고 느끼한\n" +
-                    "감이 좀 있어요. 그래도 다들 한번씩 해보길", stars = 3, thumb_up = 2, thumb_down = 2,image_list = arrayListOf(url,url,url))
-        )
-
-        binding.ratingbar.rating = 4f
         initRV(data.content as ArrayList<ReviewContent>)
-
         initImageRV()
-
-        initBarChart(binding.reviewChart)
-        setChartData(binding.reviewChart)
 
         binding.btnImgReview.setOnClickListener {
             goImageActivity()
@@ -145,7 +158,75 @@ class RecipeMenuReviewFragment : BaseFragment<FragmentRecipeMenuReviewBinding>(F
 
     }
 
-    private fun setChartData(barChart: BarChart) {
+    private fun setChartData(barChart: BarChart, data: ScoreData) {
+
+        // Zoom In / Out 가능 여부 설정
+        barChart.setScaleEnabled(false)
+
+        val values: ArrayList<BarEntry> = ArrayList()
+
+        values.add(BarEntry(5f, data.fivePoint.toFloat()))
+        values.add(BarEntry(4f, data.fourPoint.toFloat()))
+        values.add(BarEntry(3f, data.threePoint.toFloat()))
+        values.add(BarEntry(2f, data.twoPoint.toFloat()))
+        values.add(BarEntry(1f, data.onePoint.toFloat()))
+
+        // BarDataSet 설정
+        val set2 = BarDataSet(values, "")
+            .apply {
+                setDrawIcons(false)
+                setDrawValues(true)
+                color = ContextCompat.getColor(requireContext(), R.color.primary_color)
+                barShadowColor = ContextCompat.getColor(requireContext(), R.color.gray_11)
+            }
+
+        // BarData 설정
+        val barData = BarData(set2)
+        barData.barWidth = 0.5f
+        barData.setValueTextSize(14f)
+
+        // X축 라벨 설정
+        val xLabels: MutableList<String> = ArrayList()
+        xLabels.add("") // 인덱스 0은 빈 값으로 설정
+        xLabels.add("5점")
+        xLabels.add("4점")
+        xLabels.add("3점")
+        xLabels.add("2점")
+        xLabels.add("1점")
+
+        barChart.xAxis.run {
+            valueFormatter = IndexAxisValueFormatter(xLabels)
+        }
+
+        // Y축 설정
+        barChart.axisLeft.run {
+            isEnabled = false
+            axisMinimum = 0f
+            axisMaximum = findMaxValue(data)
+            granularity = 10f
+            setDrawLabels(false)
+        }
+
+        barChart.axisRight.isEnabled = false
+
+        // BarChart에 데이터 설정 및 갱신
+        barChart.data = barData
+        barChart.invalidate()
+    }
+
+    fun findMaxValue(data: ScoreData): Float {
+        val values = listOf(
+            data.fivePoint,
+            data.fourPoint,
+            data.onePoint,
+            data.threePoint,
+            data.twoPoint
+        )
+
+        return values.maxOrNull() ?: 0.0f
+    }
+
+    private fun setChartData2(barChart: BarChart) {
 
         // Zoom In / Out 가능 여부 설정
         barChart.setScaleEnabled(false)
@@ -161,7 +242,6 @@ class RecipeMenuReviewFragment : BaseFragment<FragmentRecipeMenuReviewBinding>(F
         }
 
         // 2. [BarDataSet] 단순 데이터를 막대 모양으로 표시, BarChart의 막대 커스텀
-
         val set2 = BarDataSet(values, "")
             .apply {
                 setDrawIcons(false)
@@ -174,7 +254,6 @@ class RecipeMenuReviewFragment : BaseFragment<FragmentRecipeMenuReviewBinding>(F
         val data = BarData(set2)
         data.barWidth = 0.5f
         data.setValueTextSize(15f)
-
 
         barChart.data = data
         barChart.invalidate()

@@ -28,7 +28,7 @@ data class RecipeDetail(
     val created_date: String,
     val ingredients: List<RecipeIngredient>,
     val is_saved: Boolean,
-    val rating: Int,
+    val rating: Float,
     val recipe_description: String,
     val recipe_id: Int,
     val recipe_name: String,

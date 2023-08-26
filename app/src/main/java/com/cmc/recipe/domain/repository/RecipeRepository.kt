@@ -18,4 +18,6 @@ interface RecipeRepository {
 
     fun getRecipesReviewPhotos(id:Int) : Flow<NetworkState<PhotoResponse>>
 
+    fun getRecipesReviewScores(id:Int) : Flow<NetworkState<ReviewScoreResponse>>
+
 }
