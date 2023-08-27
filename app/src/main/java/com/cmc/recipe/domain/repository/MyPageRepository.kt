@@ -12,4 +12,6 @@ interface MyPageRepository {
     fun getSaveRecipe() : Flow<NetworkState<SaveWriteRecipeResponse>>
 
     fun getWrittenRecipe() : Flow<NetworkState<SaveWriteRecipeResponse>>
+
+    fun deleteRecipe(id:Int) : Flow<NetworkState<BaseResponse>>
 }

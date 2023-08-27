@@ -26,8 +26,8 @@ class RecipeViewModel @Inject constructor(private val recipeUseCase: RecipeUseCa
     var _recipeDetailResult: MutableStateFlow<NetworkState<RecipeDetailResponse>> = MutableStateFlow(NetworkState.Loading)
     var recipeDetailResult: StateFlow<NetworkState<RecipeDetailResponse>> = _recipeDetailResult
 
-    var _recipeSaveResult : MutableStateFlow<NetworkState<BaseResponse>> = MutableStateFlow(NetworkState.Loading)
-    var recipeSaveResult: StateFlow<NetworkState<BaseResponse>> = _recipeSaveResult
+    var _recipeSaveResult : MutableSharedFlow<NetworkState<BaseResponse>> = MutableSharedFlow()
+    var recipeSaveResult = _recipeSaveResult.asSharedFlow()
 
     var _reviewResult : MutableStateFlow<NetworkState<ReviewResponse>> = MutableStateFlow(NetworkState.Loading)
     var reviewResult: StateFlow<NetworkState<ReviewResponse>> = _reviewResult
@@ -75,22 +75,22 @@ class RecipeViewModel @Inject constructor(private val recipeUseCase: RecipeUseCa
     }
 
     fun postRecipesSave(id:Int) = viewModelScope.launch {
-        _recipeSaveResult.value = NetworkState.Loading
+        _recipeSaveResult.emit(NetworkState.Loading)
         recipeUseCase.postRecipesSave(id)
             .catch { error ->
-                _recipeSaveResult.value = NetworkState.Error(400,"${error.message}")
+                _recipeSaveResult.emit(NetworkState.Error(400,"${error.message}"))
             }.collect { values ->
-                _recipeSaveResult.value = values
+                _recipeSaveResult.emit(values)
             }
     }
 
     fun postRecipesNotSave(id:Int) = viewModelScope.launch {
-        _recipeSaveResult.value = NetworkState.Loading
+        _recipeSaveResult.emit(NetworkState.Loading)
         recipeUseCase.postRecipesNotSave(id)
             .catch { error ->
-                _recipeSaveResult.value = NetworkState.Error(400,"${error.message}")
+                _recipeSaveResult.emit(NetworkState.Error(400,"${error.message}"))
             }.collect { values ->
-                _recipeSaveResult.value = values
+                _recipeSaveResult.emit(values)
             }
     }
 

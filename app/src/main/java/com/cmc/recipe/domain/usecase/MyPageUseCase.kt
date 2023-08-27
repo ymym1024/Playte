@@ -15,4 +15,6 @@ class MyPageUseCase @Inject constructor(
     fun getSaveRecipe() = repository.getSaveRecipe()
 
     fun getWrittenRecipe() = repository.getWrittenRecipe()
+
+    fun deleteRecipe(id:Int) = repository.deleteRecipe(id)
 }

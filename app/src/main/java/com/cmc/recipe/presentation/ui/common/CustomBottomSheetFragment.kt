@@ -24,6 +24,7 @@ class CustomBottomSheetFragment : BottomSheetDialogFragment() {
         this.actionListener = actionListener
     }
 
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?

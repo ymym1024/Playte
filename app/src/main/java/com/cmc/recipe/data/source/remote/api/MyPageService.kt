@@ -20,4 +20,7 @@ interface MyPageService {
 
     @GET("/api/v1/recipes/written")
     suspend fun getWrittenRecipe() : Response<SaveWriteRecipeResponse>
+
+    @DELETE("/api/v1/recipes/{recipe-id}")
+    suspend fun deleteRecipe(@Path("recipe-id")id:Int) : Response<BaseResponse>
 }

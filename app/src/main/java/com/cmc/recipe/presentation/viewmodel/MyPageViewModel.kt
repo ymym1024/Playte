@@ -28,6 +28,10 @@ class MyPageViewModel @Inject constructor(private val myPageUseCase: MyPageUseCa
     var _reviewDeleteResult: MutableSharedFlow<NetworkState<BaseResponse>> = MutableSharedFlow()
     var reviewDeleteResult: SharedFlow<NetworkState<BaseResponse>> = _reviewDeleteResult.asSharedFlow()
 
+    var _recipeDeleteResult: MutableSharedFlow<NetworkState<BaseResponse>> = MutableSharedFlow()
+    var recipeDeleteResult: SharedFlow<NetworkState<BaseResponse>> = _recipeDeleteResult.asSharedFlow()
+
+
     fun getMyReview() = viewModelScope.launch {
         _myReviewResult.value = NetworkState.Loading
         myPageUseCase.getMyReview()
@@ -64,6 +68,21 @@ class MyPageViewModel @Inject constructor(private val myPageUseCase: MyPageUseCa
     fun deleteReview(id:Int) = viewModelScope.launch {
         _reviewDeleteResult.emit(NetworkState.Loading)
         myPageUseCase.deleteReview(id)
+            .catch { error ->
+                _reviewDeleteResult.emit(NetworkState.Error(400,"${error.message}"))
+            }.collect { values ->
+                if (values is NetworkState.Error) {
+                    _reviewDeleteResult.emit(NetworkState.Error(values.code,"${values.message}"))
+                } else if (values is NetworkState.Success) {
+                    _reviewDeleteResult.emit(values)
+                }
+            }
+
+    }
+
+    fun deleteRecipe(id:Int) = viewModelScope.launch {
+        _reviewDeleteResult.emit(NetworkState.Loading)
+        myPageUseCase.deleteRecipe(id)
             .catch { error ->
                 _reviewDeleteResult.emit(NetworkState.Error(400,"${error.message}"))
             }.collect { values ->
