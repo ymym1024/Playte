@@ -42,7 +42,7 @@ class MyPageRepositoryImpl @Inject constructor(
         }
     }
 
-    override fun getSaveRecipe(): Flow<NetworkState<RecipesResponse>> =flow{
+    override fun getSaveRecipe(): Flow<NetworkState<SaveWriteRecipeResponse>> =flow{
         val response = service.getSaveRecipe()
         if(response.isSuccessful){
             response.body()?.let {

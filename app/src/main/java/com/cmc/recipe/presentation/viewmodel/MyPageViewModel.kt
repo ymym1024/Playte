@@ -19,12 +19,11 @@ class MyPageViewModel @Inject constructor(private val myPageUseCase: MyPageUseCa
     var _myReviewResult: MutableStateFlow<NetworkState<ReviewMyResponse>> = MutableStateFlow(NetworkState.Loading)
     var myReviewResult: StateFlow<NetworkState<ReviewMyResponse>> = _myReviewResult
 
-    var _saveRecipeResult: MutableStateFlow<NetworkState<RecipesResponse>> = MutableStateFlow(NetworkState.Loading)
-    var saveRecipeResult: StateFlow<NetworkState<RecipesResponse>> = _saveRecipeResult
+    var _saveRecipeResult: MutableStateFlow<NetworkState<SaveWriteRecipeResponse>> = MutableStateFlow(NetworkState.Loading)
+    var saveRecipeResult: StateFlow<NetworkState<SaveWriteRecipeResponse>> = _saveRecipeResult
 
     var _writtenRecipeResult: MutableStateFlow<NetworkState<SaveWriteRecipeResponse>> = MutableStateFlow(NetworkState.Loading)
     var writtenRecipeResult: StateFlow<NetworkState<SaveWriteRecipeResponse>> = _writtenRecipeResult
-
 
     var _reviewDeleteResult: MutableSharedFlow<NetworkState<BaseResponse>> = MutableSharedFlow()
     var reviewDeleteResult: SharedFlow<NetworkState<BaseResponse>> = _reviewDeleteResult.asSharedFlow()

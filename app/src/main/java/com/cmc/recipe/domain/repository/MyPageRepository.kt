@@ -9,7 +9,7 @@ interface MyPageRepository {
 
     fun deleteReview(id:Int) : Flow<NetworkState<BaseResponse>>
 
-    fun getSaveRecipe() : Flow<NetworkState<RecipesResponse>>
+    fun getSaveRecipe() : Flow<NetworkState<SaveWriteRecipeResponse>>
 
     fun getWrittenRecipe() : Flow<NetworkState<SaveWriteRecipeResponse>>
 }

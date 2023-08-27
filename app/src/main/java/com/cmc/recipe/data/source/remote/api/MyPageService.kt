@@ -16,7 +16,7 @@ interface MyPageService {
     suspend fun deleteReview(@Path("review-id")id:Int) : Response<BaseResponse>
 
     @GET("/api/v1/recipes/saved")
-    suspend fun getSaveRecipe() : Response<RecipesResponse>
+    suspend fun getSaveRecipe() : Response<SaveWriteRecipeResponse>
 
     @GET("/api/v1/recipes/written")
     suspend fun getWrittenRecipe() : Response<SaveWriteRecipeResponse>

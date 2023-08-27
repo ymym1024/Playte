@@ -31,7 +31,7 @@ class SaveRecipeFragment : BaseFragment<FragmentSaveRecipeBinding>(FragmentSaveR
                     is NetworkState.Success -> {
                         it.data.let { data ->
                             if(data.code == "SUCCESS"){
-                                recipeRecyclerview(it.data.data.content as ArrayList<RecipeItem>)
+                                recipeRecyclerview(it.data.data as ArrayList<RecipeItem>)
                             }else{
                                 Log.d("data","${data.data}")
                             }
