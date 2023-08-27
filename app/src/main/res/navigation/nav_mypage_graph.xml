@@ -37,12 +37,12 @@
     <fragment
         android:id="@+id/mypageQnaFragment"
         android:name="com.cmc.recipe.presentation.ui.mypage.MypageQnaFragment"
-        android:label="fragment_mypage_qna"
+        android:label="Q&amp;A"
         tools:layout="@layout/fragment_mypage_qna" />
     <fragment
         android:id="@+id/mypageTermsFragment"
         android:name="com.cmc.recipe.presentation.ui.mypage.MypageTermsFragment"
-        android:label="fragment_mypage_terms"
+        android:label="이용약관"
         tools:layout="@layout/fragment_mypage_terms" />
     <fragment
         android:id="@+id/mypageNicknameFragment"

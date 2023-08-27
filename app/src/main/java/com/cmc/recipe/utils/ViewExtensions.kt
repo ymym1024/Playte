@@ -10,15 +10,21 @@ import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.os.Build
 import android.provider.MediaStore
+import android.text.Spannable
+import android.text.SpannableString
+import android.text.style.ForegroundColorSpan
 import android.util.Log
 import android.util.TypedValue
 import android.view.WindowManager
 import android.widget.ImageView
+import androidx.core.content.ContentProviderCompat.requireContext
+import androidx.core.content.ContextCompat
 import androidx.core.view.WindowCompat
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.load.resource.bitmap.CenterCrop
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
+import com.cmc.recipe.R
 import com.cmc.recipe.presentation.ui.common.CustomBottomSheetFragment
 import java.text.SimpleDateFormat
 import java.util.*
@@ -186,4 +192,22 @@ fun Date.formatDateRelativeToNow(): String {
         timeDifferenceInSeconds < 2592000 -> "${timeDifferenceInSeconds / 86400}일 전"
         else -> SimpleDateFormat("yyyy.MM.dd", Locale.getDefault()).format(this)
     }
+}
+
+fun Context.highlightText(full: String, highlight: String): CharSequence {
+    val color = ContextCompat.getColor(this, R.color.primary_color)
+
+    val spannableString = SpannableString(full)
+    val startIndex = full.indexOf(highlight)
+
+    if (startIndex != -1) {
+        val colorSpan = ForegroundColorSpan(color)
+        spannableString.setSpan(
+            colorSpan,
+            startIndex,
+            startIndex + highlight.length,
+            Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
+        )
+    }
+    return spannableString
 }
