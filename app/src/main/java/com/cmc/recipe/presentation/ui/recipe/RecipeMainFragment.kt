@@ -6,7 +6,6 @@ import android.view.KeyEvent
 import android.view.inputmethod.EditorInfo
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
-import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.cmc.recipe.R
 import com.cmc.recipe.data.model.RecipeItem
@@ -127,7 +126,7 @@ class RecipeMainFragment : BaseFragment<FragmentRecipeMainBinding>(FragmentRecip
         val adapter = RecipeListAdapter(clickListener)
         adapter.setListener(object :RecipeItemHolder.onActionListener{
             override fun action(item: RecipeItem) {
-                requestRecipeSave()
+                requestRecipeSave(item.recipe_id)
             }
 
         })
@@ -154,10 +153,10 @@ class RecipeMainFragment : BaseFragment<FragmentRecipeMainBinding>(FragmentRecip
         }
     }
 
-    private fun requestRecipeSave(){
+    private fun requestRecipeSave(recipeId: Int) {
+        recipeViewModel.postRecipesSave(recipeId)
         launchWithLifecycle(lifecycle) {
-            recipeViewModel.postRecipesSave(1)
-            recipeViewModel._recipeSaveResult.collect{
+            recipeViewModel.recipeSaveResult.collect{
                 when(it){
                     is NetworkState.Success -> {
                         it.data?.let {data ->
