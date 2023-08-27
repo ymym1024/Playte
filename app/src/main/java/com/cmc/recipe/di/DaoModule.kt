@@ -14,4 +14,8 @@ object DaoModule {
     @Singleton
     @Provides
     fun providesRecipeDao(appDatabase: AppDatabase) = appDatabase.recipeDao()
+
+    @Singleton
+    @Provides
+    fun providesSearchDao(appDatabase: AppDatabase) = appDatabase.searchDao()
 }

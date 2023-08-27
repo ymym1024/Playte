@@ -30,6 +30,8 @@ class SearchRecipeFragment : BaseFragment<FragmentSearchRecipeBinding>(FragmentS
 
     override fun initFragment() {
         val keyword = arguments?.getString("keyword")
+        searchViewModel.insertRecentRecipe(keyword!!) //검색어 저장
+
         binding.searchView.setText(keyword)
         requestRecipeList(keyword!!)
 
