@@ -22,6 +22,10 @@ class MyPageViewModel @Inject constructor(private val myPageUseCase: MyPageUseCa
     var _saveRecipeResult: MutableStateFlow<NetworkState<RecipesResponse>> = MutableStateFlow(NetworkState.Loading)
     var saveRecipeResult: StateFlow<NetworkState<RecipesResponse>> = _saveRecipeResult
 
+    var _writtenRecipeResult: MutableStateFlow<NetworkState<SaveWriteRecipeResponse>> = MutableStateFlow(NetworkState.Loading)
+    var writtenRecipeResult: StateFlow<NetworkState<SaveWriteRecipeResponse>> = _writtenRecipeResult
+
+
     var _reviewDeleteResult: MutableSharedFlow<NetworkState<BaseResponse>> = MutableSharedFlow()
     var reviewDeleteResult: SharedFlow<NetworkState<BaseResponse>> = _reviewDeleteResult.asSharedFlow()
 
@@ -43,6 +47,17 @@ class MyPageViewModel @Inject constructor(private val myPageUseCase: MyPageUseCa
                 _saveRecipeResult.value = NetworkState.Error(400,"${error.message}")
             }.collect { values ->
                 _saveRecipeResult.value = values
+            }
+
+    }
+
+    fun getWrittenRecipe() = viewModelScope.launch {
+        _writtenRecipeResult.value = NetworkState.Loading
+        myPageUseCase.getWrittenRecipe()
+            .catch { error ->
+                _writtenRecipeResult.value = NetworkState.Error(400,"${error.message}")
+            }.collect { values ->
+                _writtenRecipeResult.value = values
             }
 
     }

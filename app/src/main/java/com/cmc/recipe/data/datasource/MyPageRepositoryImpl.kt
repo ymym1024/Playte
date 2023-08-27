@@ -57,4 +57,19 @@ class MyPageRepositoryImpl @Inject constructor(
         }
     }
 
+    override fun getWrittenRecipe(): Flow<NetworkState<SaveWriteRecipeResponse>> =flow{
+        val response = service.getWrittenRecipe()
+        if(response.isSuccessful){
+            response.body()?.let {
+                emit(NetworkState.Success(it))
+            }
+        }else{
+            try {
+                emit(NetworkState.Error(response.code(),response.errorBody()!!.string()))
+            }catch (e: IOException) {
+                e.printStackTrace()
+            }
+        }
+    }
+
 }
