@@ -1,4 +1,4 @@
-package com.cmc.recipe.domain.model.entity
+package com.cmc.recipe.data.model.entity
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity

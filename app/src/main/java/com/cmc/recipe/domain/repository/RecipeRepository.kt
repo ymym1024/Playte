@@ -1,5 +1,7 @@
 package com.cmc.recipe.domain.repository
 
+import com.cmc.recipe.data.model.RecipeItem
+import com.cmc.recipe.data.model.entity.RecipeEntity
 import com.cmc.recipe.data.model.response.*
 import com.cmc.recipe.data.source.remote.request.ReviewRequest
 import com.cmc.recipe.utils.NetworkState
@@ -28,4 +30,11 @@ interface RecipeRepository {
     fun updateReviewUnLike(id:Int) : Flow<NetworkState<BaseResponse>>
 
     fun postReviewReport(id:Int) : Flow<NetworkState<BaseResponse>>
+
+    // 최근 본 레시피 저장
+    suspend fun insertRecentRecipe(item: RecipeItem): Boolean
+
+    fun loadRecentRecipes() : Flow<List<RecipeEntity>>
+
+
 }

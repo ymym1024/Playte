@@ -1,7 +1,11 @@
 package com.cmc.recipe.data.datasource
 
 import android.util.Log
+import com.cmc.recipe.data.model.RecipeItem
+import com.cmc.recipe.data.model.RecipeMapper.toEntity
+import com.cmc.recipe.data.model.entity.RecipeEntity
 import com.cmc.recipe.data.model.response.*
+import com.cmc.recipe.data.source.local.dao.RecipeDao
 import com.cmc.recipe.data.source.remote.api.RecipeService
 import com.cmc.recipe.data.source.remote.request.ReviewRequest
 import com.cmc.recipe.domain.repository.RecipeRepository
@@ -13,7 +17,8 @@ import javax.inject.Inject
 import kotlin.math.ceil
 
 class RecipeRepositoryImpl @Inject constructor(
-    private val service: RecipeService
+    private val service: RecipeService,
+    private val dao : RecipeDao
 ) :RecipeRepository{
 
     override fun getRecipes(): Flow<NetworkState<RecipesResponse>> = flow {
@@ -169,6 +174,23 @@ class RecipeRepositoryImpl @Inject constructor(
                 emit(NetworkState.Error(response.code(),response.errorBody()!!.string()))
             }catch (e: IOException) {
                 e.printStackTrace()
+            }
+        }
+    }
+
+    override suspend fun insertRecentRecipe(item: RecipeItem): Boolean {
+        return try{
+            dao.insert(item.toEntity())
+            true
+        }catch (e: IOException) {
+            false
+        }
+    }
+
+    override fun loadRecentRecipes(): Flow<List<RecipeEntity>> {
+        return flow {
+            dao.selectAll().collect { list ->
+                emit(list)
             }
         }
     }

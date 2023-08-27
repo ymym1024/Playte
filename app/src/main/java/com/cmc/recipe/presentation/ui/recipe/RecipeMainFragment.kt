@@ -31,6 +31,7 @@ class RecipeMainFragment : BaseFragment<FragmentRecipeMainBinding>(FragmentRecip
         initEventBinding()
         requestRecipeList()
         searchRecipe()
+
     }
 
     private fun initEventBinding(){
@@ -116,10 +117,18 @@ class RecipeMainFragment : BaseFragment<FragmentRecipeMainBinding>(FragmentRecip
         startActivity(intent)
     }
 
+    private fun saveLocalDB(id:Int){
+        val item = itemList.find { it.recipe_id == id }
+
+        recipeViewModel.insertRecentRecipe(item!!)
+    }
+
     private fun recipeRecyclerview(){
         val clickListener = object : OnClickListener {
             override fun onMovePage(id: Int) {
                 moveDetailPage(id)
+                //item 저장
+                saveLocalDB(id)
             }
         }
 

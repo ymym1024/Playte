@@ -1,6 +1,7 @@
 package com.cmc.recipe.domain.usecase
 
 import android.util.Log
+import com.cmc.recipe.data.model.RecipeItem
 import com.cmc.recipe.data.source.remote.request.RequestNickname
 import com.cmc.recipe.data.source.remote.request.ReviewRequest
 import com.cmc.recipe.domain.repository.AuthRepository
@@ -33,4 +34,11 @@ class RecipeUseCase @Inject constructor(
     fun updateReviewUnLike(id:Int) = repository.updateReviewUnLike(id)
 
     fun postReviewReport(id:Int) = repository.postReviewReport(id)
+
+    //최근 본 레시피
+    suspend fun insertRecentRecipe(item:RecipeItem) = repository.insertRecentRecipe(item)
+
+    fun loadRecentRecipes() = repository.loadRecentRecipes()
+
+
 }
