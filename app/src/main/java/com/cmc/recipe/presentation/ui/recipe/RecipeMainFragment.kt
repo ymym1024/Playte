@@ -6,7 +6,6 @@ import android.view.KeyEvent
 import android.view.inputmethod.EditorInfo
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
-import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.cmc.recipe.R
 import com.cmc.recipe.data.model.RecipeItem
@@ -32,6 +31,7 @@ class RecipeMainFragment : BaseFragment<FragmentRecipeMainBinding>(FragmentRecip
         initEventBinding()
         requestRecipeList()
         searchRecipe()
+
     }
 
     private fun initEventBinding(){
@@ -117,17 +117,25 @@ class RecipeMainFragment : BaseFragment<FragmentRecipeMainBinding>(FragmentRecip
         startActivity(intent)
     }
 
+    private fun saveLocalDB(id:Int){
+        val item = itemList.find { it.recipe_id == id }
+
+        recipeViewModel.insertRecentRecipe(item!!)
+    }
+
     private fun recipeRecyclerview(){
         val clickListener = object : OnClickListener {
             override fun onMovePage(id: Int) {
                 moveDetailPage(id)
+                //item 저장
+                saveLocalDB(id)
             }
         }
 
         val adapter = RecipeListAdapter(clickListener)
         adapter.setListener(object :RecipeItemHolder.onActionListener{
             override fun action(item: RecipeItem) {
-                requestRecipeSave()
+                requestRecipeSave(item.recipe_id)
             }
 
         })
@@ -136,28 +144,32 @@ class RecipeMainFragment : BaseFragment<FragmentRecipeMainBinding>(FragmentRecip
         adapter.replaceData(itemList)
 
         binding.chipRecipe.setOnCheckedStateChangeListener { group, checkedIds ->
-            when (checkedIds) {
-                binding.btnNewest -> {
-                    itemList.sortedByDescending { it.created_date }
-                    adapter.replaceData(itemList)
+            when (checkedIds[0]) {
+                R.id.btn_newest -> {
+                    val newList = itemList.sortedByDescending { it.created_date }
+                    adapter.replaceData(newList)
                     binding.btnNewest.isCheckable = true
                 }
-                binding.btnPopular -> {
-                    itemList.sortedByDescending { it.rating }
-                    adapter.replaceData(itemList)
+                R.id.btn_popular -> {
+                    val newList = itemList.sortedBy { it.rating }
+                    adapter.replaceData(newList)
                     binding.btnPopular.isCheckable = true
                 }
-                binding.btnMiniumTime -> {
+                R.id.btn_minium_time -> {
+                    val newList = itemList.sortedBy { it.cook_time }
+                    adapter.replaceData(newList)
                     binding.btnPopular.isCheckable = true
                 }
             }
         }
+
+
     }
 
-    private fun requestRecipeSave(){
+    private fun requestRecipeSave(recipeId: Int) {
+        recipeViewModel.postRecipesSave(recipeId)
         launchWithLifecycle(lifecycle) {
-            recipeViewModel.postRecipesSave(1)
-            recipeViewModel._recipeSaveResult.collect{
+            recipeViewModel.recipeSaveResult.collect{
                 when(it){
                     is NetworkState.Success -> {
                         it.data?.let {data ->

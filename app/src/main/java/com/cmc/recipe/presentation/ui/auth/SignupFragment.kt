@@ -42,14 +42,30 @@ class SignupFragment : BaseFragment<FragmentSignupBinding>(FragmentSignupBinding
     private fun onActiveButton(){
         binding.etNickName.addTextChangedListener(CommonTextWatcher(
             onChanged = { text,_,_,_ ->
-                searchJob?.cancel()
+                if(text.contentEquals(" ")){
+                    showImage(false,"띄어쓰기를 제외한 한글 닉네임으로 작성해주세요")
+                }else{
+                    searchJob?.cancel()
 
-                searchJob = CoroutineScope(Dispatchers.Main).launch {
-                    delay(500L)
-                    requestVerifyNickname(text.toString())
+                    searchJob = CoroutineScope(Dispatchers.Main).launch {
+                        delay(500L)
+                        requestVerifyNickname(text.toString())
+                    }
                 }
             }
         ))
+    }
+
+    private fun showImage(flag:Boolean,msg:String){
+        if(flag){
+            binding.llValidateMsg.text = msg
+            binding.ivEditIcon.setImageResource(R.drawable.ic_check)
+            binding.btnNext.isEnabled = true
+        }else{
+            binding.llValidateMsg.text = msg
+            binding.ivEditIcon.setImageResource(R.drawable.ic_validate_error)
+            binding.btnNext.isEnabled = false
+        }
     }
 
     private fun requestVerifyNickname(nickname:String){
@@ -63,15 +79,10 @@ class SignupFragment : BaseFragment<FragmentSignupBinding>(FragmentSignupBinding
                         when(it){
                             is NetworkState.Success -> {
                                 it.data?.let {data ->
-                                    Log.d("SUCCESS","${it.data}")
-                                    if(data.code == "SUCCESS"){
-                                        binding.llValidateMsg.text = "사용 가능한 닉네임입니다"
-                                        binding.ivEditIcon.setImageResource(R.drawable.ic_check)
-                                        binding.btnNext.isEnabled = true
-                                    }else{
-                                        binding.llValidateMsg.text = "중복된 닉네임입니다"
-                                        binding.ivEditIcon.setImageResource(R.drawable.ic_validate_error)
-                                        binding.btnNext.isEnabled = false
+                                    if (data.code == "SUCCESS") {
+                                        showImage(true,data.message)
+                                    } else {
+                                        showImage(false,data.message)
                                     }
                                 }
                                 userViewModel._verifyResult.value = NetworkState.Loading

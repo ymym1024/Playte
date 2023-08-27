@@ -1,17 +1,9 @@
 package com.cmc.recipe.data.datasource
 
-import android.util.Log
-import com.cmc.recipe.data.model.response.BaseResponse
-import com.cmc.recipe.data.model.response.MyInfoResponse
-import com.cmc.recipe.data.model.response.ReviewMyResponse
-import com.cmc.recipe.data.model.response.ReviewResponse
+import com.cmc.recipe.data.model.response.*
 import com.cmc.recipe.data.source.remote.api.MyPageService
-import com.cmc.recipe.data.source.remote.api.UserService
-import com.cmc.recipe.data.source.remote.request.RequestNickname
 import com.cmc.recipe.domain.repository.MyPageRepository
-import com.cmc.recipe.domain.repository.UserRepository
 import com.cmc.recipe.utils.NetworkState
-import com.google.gson.Gson
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import java.io.IOException
@@ -37,6 +29,66 @@ class MyPageRepositoryImpl @Inject constructor(
 
     override fun deleteReview(id:Int): Flow<NetworkState<BaseResponse>> = flow{
         val response = service.deleteReview(id)
+        if(response.isSuccessful){
+            response.body()?.let {
+                emit(NetworkState.Success(it))
+            }
+        }else{
+            try {
+                emit(NetworkState.Error(response.code(),response.errorBody()!!.string()))
+            }catch (e: IOException) {
+                e.printStackTrace()
+            }
+        }
+    }
+
+    override fun getSaveRecipe(): Flow<NetworkState<SaveWriteRecipeResponse>> =flow{
+        val response = service.getSaveRecipe()
+        if(response.isSuccessful){
+            response.body()?.let {
+                emit(NetworkState.Success(it))
+            }
+        }else{
+            try {
+                emit(NetworkState.Error(response.code(),response.errorBody()!!.string()))
+            }catch (e: IOException) {
+                e.printStackTrace()
+            }
+        }
+    }
+
+    override fun getWrittenRecipe(): Flow<NetworkState<SaveWriteRecipeResponse>> =flow{
+        val response = service.getWrittenRecipe()
+        if(response.isSuccessful){
+            response.body()?.let {
+                emit(NetworkState.Success(it))
+            }
+        }else{
+            try {
+                emit(NetworkState.Error(response.code(),response.errorBody()!!.string()))
+            }catch (e: IOException) {
+                e.printStackTrace()
+            }
+        }
+    }
+
+    override fun deleteRecipe(id:Int): Flow<NetworkState<BaseResponse>> = flow{
+        val response = service.deleteRecipe(id)
+        if(response.isSuccessful){
+            response.body()?.let {
+                emit(NetworkState.Success(it))
+            }
+        }else{
+            try {
+                emit(NetworkState.Error(response.code(),response.errorBody()!!.string()))
+            }catch (e: IOException) {
+                e.printStackTrace()
+            }
+        }
+    }
+
+    override fun getNotice(): Flow<NetworkState<NoticeResponse>> = flow{
+        val response = service.getNotice()
         if(response.isSuccessful){
             response.body()?.let {
                 emit(NetworkState.Success(it))

@@ -1,8 +1,6 @@
 package com.cmc.recipe.domain.repository
 
-import com.cmc.recipe.data.model.response.BaseResponse
-import com.cmc.recipe.data.model.response.ReviewMyResponse
-import com.cmc.recipe.data.model.response.ReviewResponse
+import com.cmc.recipe.data.model.response.*
 import com.cmc.recipe.utils.NetworkState
 import kotlinx.coroutines.flow.Flow
 
@@ -11,4 +9,11 @@ interface MyPageRepository {
 
     fun deleteReview(id:Int) : Flow<NetworkState<BaseResponse>>
 
+    fun getSaveRecipe() : Flow<NetworkState<SaveWriteRecipeResponse>>
+
+    fun getWrittenRecipe() : Flow<NetworkState<SaveWriteRecipeResponse>>
+
+    fun deleteRecipe(id:Int) : Flow<NetworkState<BaseResponse>>
+
+    fun getNotice() : Flow<NetworkState<NoticeResponse>>
 }

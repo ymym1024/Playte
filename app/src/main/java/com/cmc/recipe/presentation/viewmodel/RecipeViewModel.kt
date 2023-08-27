@@ -3,6 +3,8 @@ package com.cmc.recipe.presentation.viewmodel
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.cmc.recipe.data.model.RecipeItem
+import com.cmc.recipe.data.model.entity.RecipeEntity
 import com.cmc.recipe.data.model.response.*
 import com.cmc.recipe.data.source.remote.request.RequestNickname
 import com.cmc.recipe.data.source.remote.request.ReviewRequest
@@ -10,6 +12,7 @@ import com.cmc.recipe.domain.usecase.AuthUseCase
 import com.cmc.recipe.domain.usecase.RecipeUseCase
 import com.cmc.recipe.utils.NetworkState
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -26,8 +29,8 @@ class RecipeViewModel @Inject constructor(private val recipeUseCase: RecipeUseCa
     var _recipeDetailResult: MutableStateFlow<NetworkState<RecipeDetailResponse>> = MutableStateFlow(NetworkState.Loading)
     var recipeDetailResult: StateFlow<NetworkState<RecipeDetailResponse>> = _recipeDetailResult
 
-    var _recipeSaveResult : MutableStateFlow<NetworkState<BaseResponse>> = MutableStateFlow(NetworkState.Loading)
-    var recipeSaveResult: StateFlow<NetworkState<BaseResponse>> = _recipeSaveResult
+    var _recipeSaveResult : MutableSharedFlow<NetworkState<BaseResponse>> = MutableSharedFlow()
+    var recipeSaveResult = _recipeSaveResult.asSharedFlow()
 
     var _reviewResult : MutableStateFlow<NetworkState<ReviewResponse>> = MutableStateFlow(NetworkState.Loading)
     var reviewResult: StateFlow<NetworkState<ReviewResponse>> = _reviewResult
@@ -49,6 +52,10 @@ class RecipeViewModel @Inject constructor(private val recipeUseCase: RecipeUseCa
 
     var _reviewReportResult : MutableSharedFlow<NetworkState<BaseResponse>> = MutableSharedFlow()
     var reviewReportResult = _reviewReportResult.asSharedFlow()
+
+    private val _recentRecipeResult = MutableSharedFlow<List<RecipeEntity>>()
+    val recentRecipeResult: Flow<List<RecipeEntity>>
+        get() = _recentRecipeResult
 
     fun updateReicpeId(id:Int) = viewModelScope.launch {
         _reciepeId.value = id
@@ -75,22 +82,22 @@ class RecipeViewModel @Inject constructor(private val recipeUseCase: RecipeUseCa
     }
 
     fun postRecipesSave(id:Int) = viewModelScope.launch {
-        _recipeSaveResult.value = NetworkState.Loading
+        _recipeSaveResult.emit(NetworkState.Loading)
         recipeUseCase.postRecipesSave(id)
             .catch { error ->
-                _recipeSaveResult.value = NetworkState.Error(400,"${error.message}")
+                _recipeSaveResult.emit(NetworkState.Error(400,"${error.message}"))
             }.collect { values ->
-                _recipeSaveResult.value = values
+                _recipeSaveResult.emit(values)
             }
     }
 
     fun postRecipesNotSave(id:Int) = viewModelScope.launch {
-        _recipeSaveResult.value = NetworkState.Loading
+        _recipeSaveResult.emit(NetworkState.Loading)
         recipeUseCase.postRecipesNotSave(id)
             .catch { error ->
-                _recipeSaveResult.value = NetworkState.Error(400,"${error.message}")
+                _recipeSaveResult.emit(NetworkState.Error(400,"${error.message}"))
             }.collect { values ->
-                _recipeSaveResult.value = values
+                _recipeSaveResult.emit(values)
             }
     }
 
@@ -162,6 +169,20 @@ class RecipeViewModel @Inject constructor(private val recipeUseCase: RecipeUseCa
                 _reviewReportResult.emit(NetworkState.Error(400,"${error.message}"))
             }.collect { values ->
                 _reviewReportResult.emit(values)
+            }
+    }
+
+    //최근 본 레시피
+    fun insertRecentRecipe(item:RecipeItem){
+        viewModelScope.launch (Dispatchers.IO){
+            recipeUseCase.insertRecentRecipe(item)
+        }
+    }
+
+    fun loadRecentRecipes() = viewModelScope.launch {
+        recipeUseCase.loadRecentRecipes()
+            .collect{ values ->
+                _recentRecipeResult.emit(values)
             }
     }
 }

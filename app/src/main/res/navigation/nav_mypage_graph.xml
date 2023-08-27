@@ -2,7 +2,8 @@
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/nav_graph" >
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/mypageNoticeFragment">
     <fragment
         android:id="@+id/writeRecipeFragment"
         android:name="com.cmc.recipe.presentation.ui.mypage.WriteRecipeFragment"
@@ -32,17 +33,20 @@
         <action
             android:id="@+id/action_settingFragment_to_mypageTermsFragment"
             app:destination="@id/mypageTermsFragment" />
+        <action
+            android:id="@+id/action_settingFragment_to_mypageNoticeFragment"
+            app:destination="@id/mypageNoticeFragment" />
     </fragment>
 
     <fragment
         android:id="@+id/mypageQnaFragment"
         android:name="com.cmc.recipe.presentation.ui.mypage.MypageQnaFragment"
-        android:label="fragment_mypage_qna"
+        android:label="Q&amp;A"
         tools:layout="@layout/fragment_mypage_qna" />
     <fragment
         android:id="@+id/mypageTermsFragment"
         android:name="com.cmc.recipe.presentation.ui.mypage.MypageTermsFragment"
-        android:label="fragment_mypage_terms"
+        android:label="이용약관"
         tools:layout="@layout/fragment_mypage_terms" />
     <fragment
         android:id="@+id/mypageNicknameFragment"
@@ -52,4 +56,8 @@
     <action
         android:id="@+id/action_settingFragment_to_loginFragment"
         app:destination="@id/loginFragment" />
+    <fragment
+        android:id="@+id/mypageNoticeFragment"
+        android:name="com.cmc.recipe.presentation.ui.mypage.MypageNoticeFragment"
+        android:label="공지사항" />
 </navigation>
