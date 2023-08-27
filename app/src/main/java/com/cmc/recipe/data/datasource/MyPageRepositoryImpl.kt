@@ -1,5 +1,6 @@
 package com.cmc.recipe.data.datasource
 
+import android.util.Log
 import com.cmc.recipe.data.model.response.BaseResponse
 import com.cmc.recipe.data.model.response.MyInfoResponse
 import com.cmc.recipe.data.model.response.ReviewMyResponse

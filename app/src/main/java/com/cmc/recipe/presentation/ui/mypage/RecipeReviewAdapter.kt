@@ -34,9 +34,10 @@ class RecipeReviewAdapter:
         this.listener = listener
     }
 
-    fun removeItem(item:ReviewMyData){
+    fun removeItem(id:Int){
         val itemList = getData()
-        itemList.remove(item)
+        val itemToRemove = itemList.find { it.review_id == id }
+        itemList.remove(itemToRemove)
         notifyDataSetChanged()
     }
 }

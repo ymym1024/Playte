@@ -1,5 +1,6 @@
 package com.cmc.recipe.presentation.viewmodel
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.cmc.recipe.data.model.response.BaseResponse
@@ -21,8 +22,8 @@ class MyPageViewModel @Inject constructor(private val myPageUseCase: MyPageUseCa
     var _myReviewResult: MutableStateFlow<NetworkState<ReviewMyResponse>> = MutableStateFlow(NetworkState.Loading)
     var myReviewResult: StateFlow<NetworkState<ReviewMyResponse>> = _myReviewResult
 
-    var _reviewDeleteResult: MutableStateFlow<NetworkState<BaseResponse>> = MutableStateFlow(NetworkState.Loading)
-    var reviewDeleteResult: StateFlow<NetworkState<BaseResponse>> = _reviewDeleteResult
+    var _reviewDeleteResult: MutableSharedFlow<NetworkState<BaseResponse>> = MutableSharedFlow()
+    var reviewDeleteResult: SharedFlow<NetworkState<BaseResponse>> = _reviewDeleteResult.asSharedFlow()
 
     fun getMyReview() = viewModelScope.launch {
         _myReviewResult.value = NetworkState.Loading
@@ -36,12 +37,16 @@ class MyPageViewModel @Inject constructor(private val myPageUseCase: MyPageUseCa
     }
 
     fun deleteReview(id:Int) = viewModelScope.launch {
-        _reviewDeleteResult.value = NetworkState.Loading
+        _reviewDeleteResult.emit(NetworkState.Loading)
         myPageUseCase.deleteReview(id)
             .catch { error ->
-                _reviewDeleteResult.value = NetworkState.Error(400,"${error.message}")
+                _reviewDeleteResult.emit(NetworkState.Error(400,"${error.message}"))
             }.collect { values ->
-                _reviewDeleteResult.value = values
+                if (values is NetworkState.Error) {
+                    _reviewDeleteResult.emit(NetworkState.Error(values.code,"${values.message}"))
+                } else if (values is NetworkState.Success) {
+                    _reviewDeleteResult.emit(values)
+                }
             }
 
     }

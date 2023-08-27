@@ -44,7 +44,7 @@ class CustomBottomSheetFragment : BottomSheetDialogFragment() {
         }
 
         val actionButton : Button = view.findViewById(R.id.btn_yes)
-        noButton.setOnClickListener {
+        actionButton.setOnClickListener {
             actionListener?.invoke()
             dismiss()
         }
