@@ -113,7 +113,7 @@ class RecipeMenuReviewFragment : BaseFragment<FragmentRecipeMenuReviewBinding>(F
         }
 
         binding.btnWriteReview.setOnClickListener {
-            movePage(R.id.action_recipeMenuFragment_to_recipeReviewFragment)
+           // movePage(R.id.action_recipeMenuFragment_to_recipeReviewFragment)
         }
     }
 

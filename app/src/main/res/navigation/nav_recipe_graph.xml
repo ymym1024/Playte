@@ -14,8 +14,8 @@
             android:id="@+id/action_recipeDetailFragment_to_recipeMenuFragment"
             app:destination="@id/recipeMenuFragment" />
         <action
-            android:id="@+id/action_recipeDetailFragment_to_recipeReviewFragment"
-            app:destination="@id/recipeReviewFragment" />
+            android:id="@+id/action_recipeDetailFragment_to_reviewRegisterActivity"
+            app:destination="@id/reviewRegisterActivity" />
     </fragment>
 
     <fragment
@@ -30,14 +30,9 @@
             android:id="@+id/action_recipeMenuFragment_to_imageReviewActivity"
             app:destination="@id/imageReviewActivity" />
         <action
-            android:id="@+id/action_recipeMenuFragment_to_recipeReviewFragment"
-            app:destination="@id/recipeReviewFragment" />
+            android:id="@+id/action_recipeMenuFragment_to_reviewRegisterActivity"
+            app:destination="@id/reviewRegisterActivity" />
     </fragment>
-    <fragment
-        android:id="@+id/recipeReviewFragment"
-        android:name="com.cmc.recipe.presentation.ui.recipe.RecipeReviewFragment"
-        android:label="@string/recipe_review"
-        tools:layout="@layout/fragment_recipe_review" />
     <activity
         android:id="@+id/imageReviewActivity"
         android:name="com.cmc.recipe.presentation.ui.recipe.ImageReviewActivity"
@@ -58,4 +53,17 @@
             android:id="@+id/action_recipeThemeFragment_to_recipeDetailFragment"
             app:destination="@id/recipeDetailFragment" />
     </fragment>
+    <activity
+        android:id="@+id/reviewRegisterActivity"
+        android:name="com.cmc.recipe.presentation.ui.recipe.ReviewRegisterActivity"
+        android:label="activity_review_register"
+        tools:layout="@layout/activity_review_register" >
+        <argument
+            android:name="recipeId"
+            app:argType="integer"
+            android:defaultValue="0" />
+        <argument
+            android:name="recipeImg"
+            app:argType="string" />
+    </activity>
 </navigation>

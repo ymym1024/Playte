@@ -3,14 +3,10 @@ package com.cmc.recipe.presentation.ui.recipe
 import android.app.Activity
 import android.content.Intent
 import android.provider.MediaStore
-import android.util.Log
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.bumptech.glide.Glide
 import com.cmc.recipe.databinding.FragmentRecipeReviewBinding
 import com.cmc.recipe.presentation.ui.base.BaseFragment
-import com.cmc.recipe.presentation.ui.common.ImageAdapter
-import com.cmc.recipe.utils.Constant
 import com.cmc.recipe.utils.dpToPx
 import com.cmc.recipe.utils.getRealPathFromURI
 import com.cmc.recipe.utils.loadImagesWithGlideRound
@@ -19,20 +15,28 @@ class RecipeReviewFragment : BaseFragment<FragmentRecipeReviewBinding>(FragmentR
 
     private lateinit var adapter: ReviewImageAdapter
     private var imageCount:Int = 0
+    private var recipeId: Int = 0
 
     override fun initFragment() {
-        initView()
-        initRV()
+        var recipeImg: String = ""
+
+        arguments?.let {
+            recipeId = it.getInt("recipeId", -1)
+            recipeImg = it.getString("recipeImg", "")
+        }
+
+        initView(recipeImg)
         getRatingScore()
+        initRV()
+
         addImageButton()
     }
 
-    private fun initView(){
-        val url = "https://recipe1.ezmember.co.kr/cache/recipe/2022/02/02/dbb3f34bfe348a4bb4d142ff353815651.jpg";
+    private fun initView(thumb: String) {
         val pixel = dpToPx(requireContext(),100.toFloat())
         binding.ivRecipeThumbnail.layoutParams.width = pixel
         binding.ivRecipeThumbnail.layoutParams.height = pixel
-        binding.ivRecipeThumbnail.loadImagesWithGlideRound(url,10)
+        binding.ivRecipeThumbnail.loadImagesWithGlideRound(thumb,10)
     }
 
     private fun getRatingScore(){

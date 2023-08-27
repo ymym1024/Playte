@@ -1,5 +1,6 @@
 package com.cmc.recipe.presentation.ui.recipe
 
+import android.content.Intent
 import android.util.Log
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
@@ -12,6 +13,7 @@ import com.cmc.recipe.data.model.response.RecommendationRecipe
 import com.cmc.recipe.data.model.response.Stage
 import com.cmc.recipe.databinding.FragmentRecipeDetailBinding
 import com.cmc.recipe.presentation.ui.base.BaseFragment
+import com.cmc.recipe.presentation.ui.search.SearchActivity
 import com.cmc.recipe.presentation.ui.shortform.ShortsProductAdapter
 import com.cmc.recipe.presentation.ui.shortform.ShortsProductItemHolder
 import com.cmc.recipe.presentation.viewmodel.RecipeViewModel
@@ -22,20 +24,31 @@ import dagger.hilt.android.AndroidEntryPoint
 class RecipeDetailFragment : BaseFragment<FragmentRecipeDetailBinding>(FragmentRecipeDetailBinding::inflate) {
     private val recipeViewModel : RecipeViewModel by viewModels()
     private var recipeId : Int = 0
+    private var recipeImg : String = ""
 
     // id 전달 받기
-    override fun onStop() {
-        super.onStop()
-
+    override fun onDestroyView() {
+        super.onDestroyView()
         val activity = activity as RecipeActivity
         activity.hideToolbar(false)
+        requireActivity().setStatusBarOrigin()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        requireActivity().setStatusBarOrigin()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        Log.d("여기 확인","onResume")
+
+        initMenu()
     }
 
     override fun initFragment() {
         val activity = activity as RecipeActivity
         activity.hideToolbar(true)
-
-        initMenu()
 
         recipeId = arguments?.getInt("id")!!
 
@@ -71,8 +84,9 @@ class RecipeDetailFragment : BaseFragment<FragmentRecipeDetailBinding>(FragmentR
 
         // 레시피 id
         recipeId = data.recipe_id
+        recipeImg = data.recipe_thumbnail_img
 
-        binding.ivThumb.loadImagesWithGlide(data.recipe_thumbnail_img)
+        binding.ivThumb.loadImagesWithGlide(recipeImg)
         binding.tvNickname.text = data.writtenby
         binding.tvRecipeTitle.text = data.recipe_name
         binding.tvRecipeInfo.text = data.recipe_description
@@ -95,7 +109,12 @@ class RecipeDetailFragment : BaseFragment<FragmentRecipeDetailBinding>(FragmentR
         }
 
         binding.btnWriteReview.setOnClickListener {
-            movePage(R.id.action_recipeDetailFragment_to_recipeReviewFragment)
+//            val action = RecipeDetailFragmentDirections.actionRecipeDetailFragmentToReviewRegisterActivity(recipeId = recipeId, recipeImg = recipeImg)
+//            findNavController().navigate(action)
+            val intent = Intent(requireContext(), ReviewRegisterActivity::class.java)
+            intent.putExtra("recipeId", recipeId)
+            intent.putExtra("recipeImg", recipeImg)
+            startActivity(intent)
         }
 
         initRecipeRV(data.stages)
@@ -108,9 +127,7 @@ class RecipeDetailFragment : BaseFragment<FragmentRecipeDetailBinding>(FragmentR
     }
 
     private fun initMenu(){
-        // 프래그먼트 내에서 투명한 상태 표시줄 설정
         requireActivity().setStatusBarTransparent()
-
         binding.innerContainer.setPadding(
             0,
             requireContext().statusBarHeight(),
@@ -176,8 +193,4 @@ class RecipeDetailFragment : BaseFragment<FragmentRecipeDetailBinding>(FragmentR
         adapter.replaceData(recommendationRecipes)
     }
 
-    override fun onDestroyView() {
-        super.onDestroyView()
-        requireActivity().setStatusBarOrigin()
-    }
 }
