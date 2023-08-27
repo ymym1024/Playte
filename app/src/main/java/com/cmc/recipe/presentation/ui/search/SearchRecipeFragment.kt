@@ -106,18 +106,20 @@ class SearchRecipeFragment : BaseFragment<FragmentSearchRecipeBinding>(FragmentS
         adapter.replaceData(itemList)
 
         binding.chipRecipe.setOnCheckedStateChangeListener { group, checkedIds ->
-            when (checkedIds) {
-                binding.btnRecipeNewest -> {
-                    itemList.sortedByDescending { it.created_date }
-                    adapter.replaceData(itemList)
+            when (checkedIds[0]) {
+                R.id.btn_recipe_newest -> {
+                    val newList = itemList.sortedByDescending { it.created_date }
+                    adapter.replaceData(newList)
                     binding.btnRecipeNewest.isCheckable = true
                 }
-                binding.btnRecipePopular -> {
-                    itemList.sortedByDescending { it.rating }
-                    adapter.replaceData(itemList)
+                R.id.btn_recipe_popular -> {
+                    val newList = itemList.sortedBy { it.rating }
+                    adapter.replaceData(newList)
                     binding.btnRecipePopular.isCheckable = true
                 }
-                binding.btnRecipeMiniumTime -> {
+                R.id.btn_recipe_minium_time -> {
+                    val newList = itemList.sortedBy { it.cook_time }
+                    adapter.replaceData(newList)
                     binding.btnRecipeMiniumTime.isCheckable = true
                 }
             }
