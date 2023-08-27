@@ -80,4 +80,22 @@ class AuthRepositoryImpl @Inject constructor(
         }
     }
 
+    override fun withdrawal(): Flow<NetworkState<BaseResponse>> =flow{
+        val response = service.withdrawal()
+        if(response.isSuccessful){
+            response.body()?.let {
+                emit(NetworkState.Success(it))
+            }
+        }else{
+            try {
+                val error = response.errorBody()!!.string().trimIndent()
+                val result = Gson().fromJson(error, BaseResponse::class.java)
+
+                emit(NetworkState.Error(result.code.toInt(),result.message))
+            }catch (e: IOException) {
+                e.printStackTrace()
+            }
+        }
+    }
+
 }

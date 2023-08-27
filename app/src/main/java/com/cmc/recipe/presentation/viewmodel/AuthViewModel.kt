@@ -31,6 +31,9 @@ class AuthViewModel @Inject constructor(private val AuthUseCase: AuthUseCase) : 
     var _refreshResult: MutableStateFlow<NetworkState<SignupResponse>> = MutableStateFlow(NetworkState.Loading)
     var refreshResult: StateFlow<NetworkState<SignupResponse>> = _refreshResult
 
+    var _withdrawalResult: MutableSharedFlow<NetworkState<BaseResponse>> = MutableSharedFlow()
+    var withdrawalResult = _withdrawalResult.asSharedFlow()
+
     fun signup(accessToken:String,name: String) = viewModelScope.launch {
         val nickname = RequestNickname(name)
         _signupResult.value = NetworkState.Loading
@@ -61,6 +64,17 @@ class AuthViewModel @Inject constructor(private val AuthUseCase: AuthUseCase) : 
                 _logoutResult.value = NetworkState.Error(400,"${error.message}")
             }.collect { values ->
                 _logoutResult.value = values
+            }
+
+    }
+
+    fun withdrawal() = viewModelScope.launch {
+        _withdrawalResult.emit(NetworkState.Loading)
+        AuthUseCase.withdrawal()
+            .catch { error ->
+                _withdrawalResult.emit(NetworkState.Error(400,"${error.message}"))
+            }.collect { values ->
+                _withdrawalResult.emit(values)
             }
 
     }

@@ -46,7 +46,7 @@ class SettingFragment : BaseFragment<FragmentSettingBinding>(FragmentSettingBind
 
             it.menuLogout.setOnClickListener {
                 val bottomSheetFragment = CustomBottomSheetFragment()
-                bottomSheetFragment.setTitle("로그아웃하시겠습니까??")
+                bottomSheetFragment.setTitle("로그아웃하시겠습니까?")
                 bottomSheetFragment.setListener {
                     logout()
                 }
@@ -54,7 +54,12 @@ class SettingFragment : BaseFragment<FragmentSettingBinding>(FragmentSettingBind
             }
 
             it.menuWithdrawal.setOnClickListener {
-                withdrawal()
+                val bottomSheetFragment = CustomBottomSheetFragment()
+                bottomSheetFragment.setTitle("정말 탈퇴하시겠습니까?")
+                bottomSheetFragment.setListener {
+                    withdrawal()
+                }
+                bottomSheetFragment.show(fragmentManager!!, bottomSheetFragment.tag)
             }
         }
     }
@@ -116,6 +121,26 @@ class SettingFragment : BaseFragment<FragmentSettingBinding>(FragmentSettingBind
     }
 
     private fun withdrawal(){
+        authViewModel.withdrawal()
 
+        launchWithLifecycle(lifecycle) {
+            authViewModel.withdrawalResult.collect{
+                when(it){
+                    is NetworkState.Success -> {
+                        it.data?.let {data ->
+                            if(data.code == "SUCCESS"){
+                                moveLoginPage()
+                            }else{
+                                Log.d("data","${data.data}")
+                            }
+                        }
+                    }
+                    is NetworkState.Error ->{
+                        showToastMessage(it.message.toString())
+                    }
+                    else -> {}
+                }
+            }
+        }
     }
 }
