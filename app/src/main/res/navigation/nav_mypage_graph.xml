@@ -2,7 +2,8 @@
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/nav_graph" >
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/mypageNoticeFragment">
     <fragment
         android:id="@+id/writeRecipeFragment"
         android:name="com.cmc.recipe.presentation.ui.mypage.WriteRecipeFragment"
@@ -32,6 +33,9 @@
         <action
             android:id="@+id/action_settingFragment_to_mypageTermsFragment"
             app:destination="@id/mypageTermsFragment" />
+        <action
+            android:id="@+id/action_settingFragment_to_mypageNoticeFragment"
+            app:destination="@id/mypageNoticeFragment" />
     </fragment>
 
     <fragment
@@ -52,4 +56,8 @@
     <action
         android:id="@+id/action_settingFragment_to_loginFragment"
         app:destination="@id/loginFragment" />
+    <fragment
+        android:id="@+id/mypageNoticeFragment"
+        android:name="com.cmc.recipe.presentation.ui.mypage.MypageNoticeFragment"
+        android:label="공지사항" />
 </navigation>

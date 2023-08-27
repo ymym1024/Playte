@@ -33,7 +33,7 @@ class SettingFragment : BaseFragment<FragmentSettingBinding>(FragmentSettingBind
             }
 
             it.menuInfo.setOnClickListener {
-
+                movePage(R.id.action_settingFragment_to_mypageNoticeFragment)
             }
 
             it.menuTerms.setOnClickListener {
