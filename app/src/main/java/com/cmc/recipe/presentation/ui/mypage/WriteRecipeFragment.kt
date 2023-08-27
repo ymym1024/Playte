@@ -5,7 +5,7 @@ import com.cmc.recipe.data.model.RecipeItem
 import com.cmc.recipe.databinding.FragmentWriteRecipeBinding
 import com.cmc.recipe.presentation.ui.base.BaseFragment
 import com.cmc.recipe.presentation.ui.base.OnClickListener
-import com.cmc.recipe.presentation.ui.common.RemoveBottomSheetFragment
+import com.cmc.recipe.presentation.ui.common.CustomBottomSheetFragment
 import com.cmc.recipe.presentation.ui.recipe.RecipeItemHolder
 import com.cmc.recipe.presentation.ui.recipe.RecipeListAdapter
 import com.cmc.recipe.utils.Constant
@@ -35,7 +35,7 @@ class WriteRecipeFragment : BaseFragment<FragmentWriteRecipeBinding>(FragmentWri
         adapter.setListener(object : RecipeItemHolder.onActionListener{
             override fun action(item: RecipeItem) {
                 // bottom sheet show
-                RemoveBottomSheetFragment().show(fragmentManager!!, "RemoveBottomSheetFragment")
+                CustomBottomSheetFragment().show(fragmentManager!!, "RemoveBottomSheetFragment")
             }
         })
 

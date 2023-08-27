@@ -15,6 +15,12 @@ object RepositoryModule {
 
     @Provides
     @ViewModelScoped
+    fun providesMyPageRepository(
+        service: MyPageService
+    ) : MyPageRepository = MyPageRepositoryImpl(service)
+
+    @Provides
+    @ViewModelScoped
     fun providesUserRepository(
         service: UserService
     ) : UserRepository = UserRepositoryImpl(service)

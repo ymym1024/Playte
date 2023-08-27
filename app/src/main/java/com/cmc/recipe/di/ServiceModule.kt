@@ -40,6 +40,11 @@ object ServiceModule {
 
     @Singleton
     @Provides
+    fun providesMyPageService(@Named("RecipeApi")retrofit: Retrofit): MyPageService =
+        retrofit.create(MyPageService::class.java)
+
+    @Singleton
+    @Provides
     fun providesGoogleService(@Named("GoogleLogin") retrofit: Retrofit): GoogleService =
         retrofit.create(GoogleService::class.java)
 }
