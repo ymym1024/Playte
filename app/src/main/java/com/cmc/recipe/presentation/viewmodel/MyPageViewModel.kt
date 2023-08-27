@@ -21,6 +21,9 @@ class MyPageViewModel @Inject constructor(private val myPageUseCase: MyPageUseCa
     var _myReviewResult: MutableStateFlow<NetworkState<ReviewMyResponse>> = MutableStateFlow(NetworkState.Loading)
     var myReviewResult: StateFlow<NetworkState<ReviewMyResponse>> = _myReviewResult
 
+    var _reviewDeleteResult: MutableStateFlow<NetworkState<BaseResponse>> = MutableStateFlow(NetworkState.Loading)
+    var reviewDeleteResult: StateFlow<NetworkState<BaseResponse>> = _reviewDeleteResult
+
     fun getMyReview() = viewModelScope.launch {
         _myReviewResult.value = NetworkState.Loading
         myPageUseCase.getMyReview()
@@ -28,6 +31,17 @@ class MyPageViewModel @Inject constructor(private val myPageUseCase: MyPageUseCa
                 _myReviewResult.value = NetworkState.Error(400,"${error.message}")
             }.collect { values ->
                 _myReviewResult.value = values
+            }
+
+    }
+
+    fun getMyReview(id:Int) = viewModelScope.launch {
+        _reviewDeleteResult.value = NetworkState.Loading
+        myPageUseCase.deleteReview(id)
+            .catch { error ->
+                _reviewDeleteResult.value = NetworkState.Error(400,"${error.message}")
+            }.collect { values ->
+                _reviewDeleteResult.value = values
             }
 
     }

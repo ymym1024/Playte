@@ -9,4 +9,6 @@ import kotlinx.coroutines.flow.Flow
 interface MyPageRepository {
     fun getMyReview() : Flow<NetworkState<ReviewMyResponse>>
 
+    fun deleteReview(id:Int) : Flow<NetworkState<BaseResponse>>
+
 }

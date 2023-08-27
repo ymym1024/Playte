@@ -9,4 +9,6 @@ class MyPageUseCase @Inject constructor(
     private val repository: MyPageRepository
     ) {
     fun getMyReview() = repository.getMyReview()
+
+    fun deleteReview(id:Int) = repository.deleteReview(id)
 }

@@ -34,4 +34,19 @@ class MyPageRepositoryImpl @Inject constructor(
         }
     }
 
+    override fun deleteReview(id:Int): Flow<NetworkState<BaseResponse>> = flow{
+        val response = service.deleteReview(id)
+        if(response.isSuccessful){
+            response.body()?.let {
+                emit(NetworkState.Success(it))
+            }
+        }else{
+            try {
+                emit(NetworkState.Error(response.code(),response.errorBody()!!.string()))
+            }catch (e: IOException) {
+                e.printStackTrace()
+            }
+        }
+    }
+
 }

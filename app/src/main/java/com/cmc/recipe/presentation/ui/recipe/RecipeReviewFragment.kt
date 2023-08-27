@@ -149,7 +149,7 @@ class RecipeReviewFragment : BaseFragment<FragmentRecipeReviewBinding>(FragmentR
         val request = ReviewRequest(review_content = binding.etReview.getText().toString(), review_imgs = imageUploadList, review_rating = binding.ratingBar.rating.toInt())
         recipeViewModel.postRecipesReview(id,request)
         lifecycleScope.launch {
-            recipeViewModel._reviewAddResult.collect{
+            recipeViewModel.reviewAddResult.collect{
                 when(it){
                     is NetworkState.Success -> {
                         it.data.let { data ->
@@ -160,11 +160,14 @@ class RecipeReviewFragment : BaseFragment<FragmentRecipeReviewBinding>(FragmentR
                                 Log.d("data","${data.data}")
                             }
                         }
-                        recipeViewModel._recipeResult.value = NetworkState.Loading
                     }
                     is NetworkState.Error ->{
                         Toast.makeText(requireContext(), "${it.message}", Toast.LENGTH_SHORT).show()
-                        recipeViewModel._recipeResult.value = NetworkState.Loading
+                      //  recipeViewModel._recipeResult.value = NetworkState.Loading
+                    }
+                    is NetworkState.Loading ->{
+                        Toast.makeText(requireContext(), "${it}", Toast.LENGTH_SHORT).show()
+                        //  recipeViewModel._recipeResult.value = NetworkState.Loading
                     }
                     else -> {}
                 }
