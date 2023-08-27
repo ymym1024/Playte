@@ -35,7 +35,7 @@ class MyPageViewModel @Inject constructor(private val myPageUseCase: MyPageUseCa
 
     }
 
-    fun getMyReview(id:Int) = viewModelScope.launch {
+    fun deleteReview(id:Int) = viewModelScope.launch {
         _reviewDeleteResult.value = NetworkState.Loading
         myPageUseCase.deleteReview(id)
             .catch { error ->
