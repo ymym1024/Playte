@@ -1,5 +1,6 @@
 package com.cmc.recipe.presentation.ui.mypage
 
+import android.content.Intent
 import android.util.Log
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
@@ -9,7 +10,9 @@ import androidx.navigation.fragment.findNavController
 import com.cmc.recipe.MainApplication
 import com.cmc.recipe.R
 import com.cmc.recipe.databinding.FragmentSettingBinding
+import com.cmc.recipe.presentation.ui.auth.AuthActivity
 import com.cmc.recipe.presentation.ui.base.BaseFragment
+import com.cmc.recipe.presentation.ui.common.CustomBottomSheetFragment
 import com.cmc.recipe.presentation.viewmodel.AuthViewModel
 import com.cmc.recipe.presentation.viewmodel.UserViewModel
 import com.cmc.recipe.utils.NetworkState
@@ -42,7 +45,12 @@ class SettingFragment : BaseFragment<FragmentSettingBinding>(FragmentSettingBind
             }
 
             it.menuLogout.setOnClickListener {
-                logout()
+                val bottomSheetFragment = CustomBottomSheetFragment()
+                bottomSheetFragment.setTitle("로그아웃하시겠습니까??")
+                bottomSheetFragment.setListener {
+                    logout()
+                }
+                bottomSheetFragment.show(fragmentManager!!, bottomSheetFragment.tag)
             }
 
             it.menuWithdrawal.setOnClickListener {
@@ -76,31 +84,35 @@ class SettingFragment : BaseFragment<FragmentSettingBinding>(FragmentSettingBind
 
     private fun logout(){
         val refreshToken = MainApplication.tokenManager.getRefreshToken()
-        val accessToken = MainApplication.tokenManager.getAccessToken()
-        authViewModel.logout(accessToken,refreshToken)
+        authViewModel.logout(refreshToken)
 
         launchWithLifecycle(lifecycle) {
             authViewModel.logoutResult.collect{
                 when(it){
                     is NetworkState.Success -> {
                         it.data?.let {data ->
-                            if(data.code == "SUCCESS"){ // TODO : 변경
-                                Log.d("data","${data.data}")
-                                movePage(R.id.action_settingFragment_to_loginFragment)
+                            if(data.code == "SUCCESS"){
+                                moveLoginPage()
                             }else{
                                 Log.d("data","${data.data}")
                             }
                         }
-                        authViewModel._signupResult.value = NetworkState.Loading
+                        authViewModel._logoutResult.value = NetworkState.Loading
                     }
                     is NetworkState.Error ->{
                         showToastMessage(it.message.toString())
-                        authViewModel._signupResult.value = NetworkState.Loading
+                        authViewModel._logoutResult.value = NetworkState.Loading
                     }
                     else -> {}
                 }
             }
         }
+    }
+
+    private fun moveLoginPage(){
+        val intent = Intent(requireContext(), AuthActivity::class.java)
+        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+        startActivity(intent)
     }
 
     private fun withdrawal(){

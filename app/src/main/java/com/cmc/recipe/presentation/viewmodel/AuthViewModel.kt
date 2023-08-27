@@ -54,9 +54,9 @@ class AuthViewModel @Inject constructor(private val AuthUseCase: AuthUseCase) : 
 
     }
 
-    fun logout(accessToken:String,refreshToken:String) = viewModelScope.launch {
+    fun logout(refreshToken:String) = viewModelScope.launch {
         _logoutResult.value = NetworkState.Loading
-        AuthUseCase.logout(accessToken,refreshToken)
+        AuthUseCase.logout(refreshToken)
             .catch { error ->
                 _logoutResult.value = NetworkState.Error(400,"${error.message}")
             }.collect { values ->

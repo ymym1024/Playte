@@ -47,8 +47,8 @@ class AuthRepositoryImpl @Inject constructor(
         }
     }
 
-    override fun logout(accessToken: String,refreshToken: String): Flow<NetworkState<BaseResponse>> = flow{
-        val response = service.logout(accessToken,refreshToken)
+    override fun logout(refreshToken: String): Flow<NetworkState<BaseResponse>> = flow{
+        val response = service.logout(refreshToken)
         if(response.isSuccessful){
             response.body()?.let {
                 emit(NetworkState.Success(it))
