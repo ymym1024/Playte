@@ -1,6 +1,7 @@
 package com.cmc.recipe.data.source.remote.api
 
 import com.cmc.recipe.data.model.response.BaseResponse
+import com.cmc.recipe.data.model.response.RecipesResponse
 import com.cmc.recipe.data.model.response.ReviewMyResponse
 import com.cmc.recipe.data.model.response.ReviewResponse
 import retrofit2.Response
@@ -17,5 +18,6 @@ interface MyPageService {
     @DELETE("/api/v1/reviews/{review-id}")
     suspend fun deleteReview(@Path("review-id")id:Int) : Response<BaseResponse>
 
-
+    @GET("/api/v1/recipes/saved")
+    suspend fun getSaveRecipe() : Response<RecipesResponse>
 }

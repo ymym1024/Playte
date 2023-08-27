@@ -3,10 +3,7 @@ package com.cmc.recipe.presentation.viewmodel
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.cmc.recipe.data.model.response.BaseResponse
-import com.cmc.recipe.data.model.response.MyInfoResponse
-import com.cmc.recipe.data.model.response.ReviewMyResponse
-import com.cmc.recipe.data.model.response.ReviewResponse
+import com.cmc.recipe.data.model.response.*
 import com.cmc.recipe.data.source.remote.request.RequestNickname
 import com.cmc.recipe.domain.usecase.MyPageUseCase
 import com.cmc.recipe.domain.usecase.UserUseCase
@@ -22,6 +19,9 @@ class MyPageViewModel @Inject constructor(private val myPageUseCase: MyPageUseCa
     var _myReviewResult: MutableStateFlow<NetworkState<ReviewMyResponse>> = MutableStateFlow(NetworkState.Loading)
     var myReviewResult: StateFlow<NetworkState<ReviewMyResponse>> = _myReviewResult
 
+    var _saveRecipeResult: MutableStateFlow<NetworkState<RecipesResponse>> = MutableStateFlow(NetworkState.Loading)
+    var saveRecipeResult: StateFlow<NetworkState<RecipesResponse>> = _saveRecipeResult
+
     var _reviewDeleteResult: MutableSharedFlow<NetworkState<BaseResponse>> = MutableSharedFlow()
     var reviewDeleteResult: SharedFlow<NetworkState<BaseResponse>> = _reviewDeleteResult.asSharedFlow()
 
@@ -32,6 +32,17 @@ class MyPageViewModel @Inject constructor(private val myPageUseCase: MyPageUseCa
                 _myReviewResult.value = NetworkState.Error(400,"${error.message}")
             }.collect { values ->
                 _myReviewResult.value = values
+            }
+
+    }
+
+    fun getSaveRecipe() = viewModelScope.launch {
+        _saveRecipeResult.value = NetworkState.Loading
+        myPageUseCase.getSaveRecipe()
+            .catch { error ->
+                _saveRecipeResult.value = NetworkState.Error(400,"${error.message}")
+            }.collect { values ->
+                _saveRecipeResult.value = values
             }
 
     }
