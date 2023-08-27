@@ -1,5 +1,6 @@
 package com.cmc.recipe.presentation.viewmodel
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.cmc.recipe.data.model.response.BaseResponse
@@ -28,7 +29,12 @@ class UserViewModel @Inject constructor(private val userUseCase: UserUseCase) : 
             .catch { error ->
                 _verifyResult.value = NetworkState.Error(400,"${error.message}")
             }.collect { values ->
-                _verifyResult.value = values
+                if (values is NetworkState.Error) {
+                    Log.d("err","${values.code} ${values.message}")
+                    _verifyResult.emit(NetworkState.Error(values.code,"${values.message}"))
+                } else if (values is NetworkState.Success) {
+                    _verifyResult.emit(values)
+                }
             }
 
     }
