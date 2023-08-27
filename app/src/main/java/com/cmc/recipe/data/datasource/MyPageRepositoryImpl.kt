@@ -87,4 +87,19 @@ class MyPageRepositoryImpl @Inject constructor(
         }
     }
 
+    override fun getNotice(): Flow<NetworkState<NoticeResponse>> = flow{
+        val response = service.getNotice()
+        if(response.isSuccessful){
+            response.body()?.let {
+                emit(NetworkState.Success(it))
+            }
+        }else{
+            try {
+                emit(NetworkState.Error(response.code(),response.errorBody()!!.string()))
+            }catch (e: IOException) {
+                e.printStackTrace()
+            }
+        }
+    }
+
 }
