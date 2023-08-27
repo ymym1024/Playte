@@ -24,6 +24,13 @@ class RecipeMenuReviewAdapter(private val reviewListener: OnReviewListener):
             reviewListener
         )
     }
+
+    fun removeItem(id:Int){
+        val itemList = getData()
+        val itemToRemove = itemList.find { it.review_id == id }
+        itemList.remove(itemToRemove)
+        notifyDataSetChanged()
+    }
 }
 
 class RecipeMenuReviewItemHolder(viewBinding: ItemRecipeReviewBinding,private val reviewListener: OnReviewListener):

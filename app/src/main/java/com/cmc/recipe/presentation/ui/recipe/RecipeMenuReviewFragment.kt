@@ -160,6 +160,9 @@ class RecipeMenuReviewFragment : BaseFragment<FragmentRecipeMenuReviewBinding>(F
                         it.data?.let {data ->
                             if(data.code == "SUCCESS" && data.data.toString().toBoolean()){
                                 Log.d("data","${data}")
+                                // 리뷰 신고 시 해당 리뷰 안보이게
+                                reviewAdapter.removeItem(id)
+                                binding.tvReviewCount.text = "${reviewAdapter.itemCount}개"
                                 RecipeSnackBar(binding.btnWriteReview,"리뷰가 정상적으로 신고되었습니다").show()
                             }
                         }
