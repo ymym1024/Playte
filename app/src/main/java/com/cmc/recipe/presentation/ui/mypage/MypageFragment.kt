@@ -1,7 +1,6 @@
 package com.cmc.recipe.presentation.ui.mypage
 
 
-import android.util.Log
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
@@ -9,17 +8,9 @@ import androidx.core.view.MenuHost
 import androidx.core.view.MenuProvider
 import androidx.lifecycle.Lifecycle
 import androidx.navigation.fragment.findNavController
-import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.LinearLayoutManager
 import com.cmc.recipe.R
-import com.cmc.recipe.data.model.RecipeItem
-import com.cmc.recipe.data.model.SearchShorts
 import com.cmc.recipe.databinding.FragmentMypageBinding
 import com.cmc.recipe.presentation.ui.base.BaseFragment
-import com.cmc.recipe.presentation.ui.base.OnClickListener
-import com.cmc.recipe.presentation.ui.recipe.RecipeRecommendAdapter
-import com.cmc.recipe.presentation.ui.search.SearchShortsAdapter
-
 
 class MypageFragment : BaseFragment<FragmentMypageBinding>(FragmentMypageBinding::inflate) {
 
@@ -38,15 +29,21 @@ class MypageFragment : BaseFragment<FragmentMypageBinding>(FragmentMypageBinding
     private fun initView() {
         binding.let {
             it.btnSaveRecipe.setOnClickListener {
-                movePage(R.id.action_mypageFragment_to_saveRecipeFragment)
+                moveMyPage("saveRecipeFragment")
             }
             it.btnWriteRecipe.setOnClickListener {
-                movePage(R.id.action_mypageFragment_to_writeRecipeFragment)
+                moveMyPage("writeRecipeFragment")
             }
             it.btnMyReview.setOnClickListener {
-                movePage(R.id.action_mypageFragment_to_myReviewFragment)
+                moveMyPage("myReviewFragment")
             }
+
         }
+    }
+
+    private fun moveMyPage(destination:String){
+        val action = MypageFragmentDirections.actionMypageFragmentToMypageActivity(destination)
+        findNavController().navigate(action)
     }
 
     private fun initMenu(){
@@ -60,7 +57,7 @@ class MypageFragment : BaseFragment<FragmentMypageBinding>(FragmentMypageBinding
             override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
                 return when (menuItem.itemId) {
                     R.id.menu_edit_button -> {
-                        movePage(R.id.action_mypageFragment_to_settingFragment)
+                        moveMyPage("settingFragment")
                         true
                     }
                     else -> false

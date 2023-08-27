@@ -30,6 +30,9 @@
         android:theme="@style/Theme.Recipe_Android"
         tools:targetApi="31">
         <activity
+            android:name=".presentation.ui.mypage.MypageActivity"
+            android:exported="false" />
+        <activity
             android:name=".presentation.ui.recipe.ReviewRegisterActivity"
             android:exported="false" />
         <activity
@@ -62,7 +65,7 @@
         <activity
             android:name=".presentation.ui.MainActivity"
             android:exported="true"
-            android:windowSoftInputMode="adjustNothing"></activity>
+            android:windowSoftInputMode="adjustNothing" />
         <activity
             android:name=".presentation.ui.recipe.RecipeActivity"
             android:exported="true" />
