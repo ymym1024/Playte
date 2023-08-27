@@ -11,6 +11,7 @@ import com.cmc.recipe.R
 import com.cmc.recipe.databinding.FragmentSettingBinding
 import com.cmc.recipe.presentation.ui.base.BaseFragment
 import com.cmc.recipe.presentation.viewmodel.AuthViewModel
+import com.cmc.recipe.presentation.viewmodel.UserViewModel
 import com.cmc.recipe.utils.NetworkState
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
@@ -18,6 +19,7 @@ import kotlinx.coroutines.launch
 @AndroidEntryPoint
 class SettingFragment : BaseFragment<FragmentSettingBinding>(FragmentSettingBinding::inflate) {
     private val authViewModel : AuthViewModel by viewModels()
+    private val userViewModel : UserViewModel by viewModels()
 
     override fun initFragment() {
 
@@ -50,35 +52,52 @@ class SettingFragment : BaseFragment<FragmentSettingBinding>(FragmentSettingBind
     }
 
     private fun initView() {
-        binding.textView50.text = "CMC냉파"
+        userViewModel.getMyInfo()
+        launchWithLifecycle(lifecycle) {
+            userViewModel.myInfoResult.collect{
+                when(it){
+                    is NetworkState.Success -> {
+                        it.data?.let {data ->
+                            if(data.code == "SUCCESS"){
+                                binding.tvNick.text = it.data.data.nickname
+                            }
+                        }
+                        userViewModel._myInfoResult.value = NetworkState.Loading
+                    }
+                    is NetworkState.Error ->{
+                        showToastMessage(it.message.toString())
+                        userViewModel._myInfoResult.value = NetworkState.Loading
+                    }
+                    else -> {}
+                }
+            }
+        }
     }
 
     private fun logout(){
-        lifecycleScope.launch {
-            repeatOnLifecycle(Lifecycle.State.STARTED){
-                val refreshToken = MainApplication.tokenManager.getRefreshToken()
-                val accessToken = MainApplication.tokenManager.getAccessToken()
+        val refreshToken = MainApplication.tokenManager.getRefreshToken()
+        val accessToken = MainApplication.tokenManager.getAccessToken()
+        authViewModel.logout(accessToken,refreshToken)
 
-                authViewModel.logout(accessToken,refreshToken)
-                authViewModel.logoutResult.collect{
-                    when(it){
-                        is NetworkState.Success -> {
-                            it.data?.let {data ->
-                                if(data.code == "SUCCESS"){ // TODO : 변경
-                                    Log.d("data","${data.data}")
-                                    movePage(R.id.action_settingFragment_to_loginFragment)
-                                }else{
-                                    Log.d("data","${data.data}")
-                                }
+        launchWithLifecycle(lifecycle) {
+            authViewModel.logoutResult.collect{
+                when(it){
+                    is NetworkState.Success -> {
+                        it.data?.let {data ->
+                            if(data.code == "SUCCESS"){ // TODO : 변경
+                                Log.d("data","${data.data}")
+                                movePage(R.id.action_settingFragment_to_loginFragment)
+                            }else{
+                                Log.d("data","${data.data}")
                             }
-                            authViewModel._signupResult.value = NetworkState.Loading
                         }
-                        is NetworkState.Error ->{
-                            showToastMessage(it.message.toString())
-                            authViewModel._signupResult.value = NetworkState.Loading
-                        }
-                        else -> {}
+                        authViewModel._signupResult.value = NetworkState.Loading
                     }
+                    is NetworkState.Error ->{
+                        showToastMessage(it.message.toString())
+                        authViewModel._signupResult.value = NetworkState.Loading
+                    }
+                    else -> {}
                 }
             }
         }
