@@ -12,8 +12,10 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.cmc.recipe.R
+import com.cmc.recipe.data.source.remote.request.RequestNickname
 import com.cmc.recipe.databinding.FragmentMypageNicknameBinding
 import com.cmc.recipe.presentation.ui.base.BaseFragment
+import com.cmc.recipe.presentation.ui.common.RecipeSnackBar
 import com.cmc.recipe.presentation.viewmodel.AuthViewModel
 import com.cmc.recipe.presentation.viewmodel.UserViewModel
 import com.cmc.recipe.utils.CommonTextWatcher
@@ -21,6 +23,9 @@ import com.cmc.recipe.utils.NetworkState
 import com.cmc.recipe.utils.highlightText
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.*
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.take
 
 @AndroidEntryPoint
 class MypageNicknameFragment : BaseFragment<FragmentMypageNicknameBinding>(FragmentMypageNicknameBinding::inflate) {
@@ -32,6 +37,7 @@ class MypageNicknameFragment : BaseFragment<FragmentMypageNicknameBinding>(Fragm
         initView()
 
         onActiveButton()
+        saveButton()
     }
 
     override fun onDestroyView() {
@@ -61,6 +67,12 @@ class MypageNicknameFragment : BaseFragment<FragmentMypageNicknameBinding>(Fragm
                 }
             }
         ))
+    }
+
+    private fun saveButton() {
+        binding.btnNext.setOnClickListener {
+            chnageNickname(binding.etNickName.text.toString())
+        }
     }
 
     private fun showImage(flag:Boolean,msg:String){
@@ -103,6 +115,27 @@ class MypageNicknameFragment : BaseFragment<FragmentMypageNicknameBinding>(Fragm
 
                 }
             }
+        }
+    }
+
+    private fun chnageNickname(nickname: String) {
+        userViewModel.changeNickname(RequestNickname(nickname))
+        launchWithLifecycle(lifecycle) {
+            userViewModel.changeResult.take(1).onEach{
+                when(it) {
+                    is NetworkState.Success -> {
+                        if (it.data.code == "SUCCESS") {
+                            RecipeSnackBar(binding.root,"닉네임이 변경되었습니다.").show()
+                        }
+                    }
+                    is NetworkState.Error -> {
+                        showToastMessage("닉네임 변경에 실패했습니다. ${it.message.toString()}")
+                    }
+                    else -> {
+                        showToastMessage("${it}")
+                    }
+                }
+            }.launchIn(this)
         }
     }
 }

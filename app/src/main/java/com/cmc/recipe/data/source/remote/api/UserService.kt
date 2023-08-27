@@ -16,5 +16,8 @@ interface UserService {
     @GET("/api/v1/users/me")
     suspend fun getMyInfo() : Response<MyInfoResponse>
 
+    @POST("/api/v1/users/change-nickname")
+    suspend fun changeNickname(@Body nickname: RequestNickname) : Response<BaseResponse>
+
 
 }

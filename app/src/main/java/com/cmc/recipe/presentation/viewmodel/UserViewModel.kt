@@ -22,6 +22,9 @@ class UserViewModel @Inject constructor(private val userUseCase: UserUseCase) : 
     var _myInfoResult: MutableStateFlow<NetworkState<MyInfoResponse>> = MutableStateFlow(NetworkState.Loading)
     var myInfoResult: StateFlow<NetworkState<MyInfoResponse>> = _myInfoResult
 
+    var _changeResult: MutableSharedFlow<NetworkState<BaseResponse>> = MutableSharedFlow()
+    var changeResult = _changeResult
+
     fun verifyNickname(name: String) = viewModelScope.launch {
         val nickname = RequestNickname(name)
         _verifyResult.value = NetworkState.Loading
@@ -46,6 +49,17 @@ class UserViewModel @Inject constructor(private val userUseCase: UserUseCase) : 
                 _myInfoResult.value = NetworkState.Error(400,"${error.message}")
             }.collect { values ->
                 _myInfoResult.value = values
+            }
+
+    }
+
+    fun changeNickname(request:RequestNickname) = viewModelScope.launch {
+        _changeResult.emit(NetworkState.Loading)
+        userUseCase.changeNickname(request)
+            .catch { error ->
+                _changeResult.emit(NetworkState.Error(400,"${error.message}"))
+            }.collect { values ->
+                _changeResult.emit(values)
             }
 
     }
