@@ -1,29 +1,65 @@
 package com.cmc.recipe.presentation.ui.mypage
 
 
+import android.util.Log
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
 import androidx.core.view.MenuHost
 import androidx.core.view.MenuProvider
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.navigation.fragment.findNavController
 import com.cmc.recipe.R
 import com.cmc.recipe.databinding.FragmentMypageBinding
 import com.cmc.recipe.presentation.ui.base.BaseFragment
+import com.cmc.recipe.presentation.viewmodel.AuthViewModel
+import com.cmc.recipe.presentation.viewmodel.MyPageViewModel
+import com.cmc.recipe.presentation.viewmodel.UserViewModel
+import com.cmc.recipe.utils.NetworkState
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MypageFragment : BaseFragment<FragmentMypageBinding>(FragmentMypageBinding::inflate) {
+
+    private val userViewModel : UserViewModel by viewModels()
 
     override fun initFragment() {
 
         initMenu()
-
         initView()
+
+        reqeustMyInfo()
 
         recipeRecyclerview()
 
         shortsRecyclerview()
 
+    }
+
+    private fun reqeustMyInfo(){
+        userViewModel.getMyInfo()
+        launchWithLifecycle(lifecycle) {
+            userViewModel.myInfoResult.collect{
+                when(it){
+                    is NetworkState.Success -> {
+                        it.data?.let {data ->
+                            if(data.code == "SUCCESS"){
+                                //닉네임, 아이디 설정
+                                binding.tvNick.text = it.data.data.nickname
+                                binding.tvEmail.text = it.data.data.email
+                            }
+                        }
+                        userViewModel._myInfoResult.value = NetworkState.Loading
+                    }
+                    is NetworkState.Error ->{
+                        showToastMessage(it.message.toString())
+                        userViewModel._myInfoResult.value = NetworkState.Loading
+                    }
+                    else -> {}
+                }
+            }
+        }
     }
 
     private fun initView() {
