@@ -29,6 +29,7 @@
                 android:layout_marginTop="26dp"
                 android:layout_marginEnd="20dp"
                 android:background="@drawable/bg_radius"
+                android:maxHeight="265dp"
                 android:elevation="14dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -52,8 +53,9 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="46dp"
                     android:layout_marginTop="40dp"
-                    android:layout_marginBottom="55dp"
                     android:layout_marginEnd="46dp"
+                    android:layout_marginBottom="40dp"
+                    android:gravity="center_vertical"
                     android:orientation="vertical"
                     app:layout_constraintBottom_toTopOf="@+id/rv_image"
                     app:layout_constraintEnd_toStartOf="@+id/review_chart"
@@ -61,6 +63,7 @@
                     app:layout_constraintTop_toTopOf="parent">
 
                     <TextView
+                        android:id="@+id/tv_rating"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
@@ -89,8 +92,6 @@
                 </LinearLayout>
 
 
-
-
                 <com.cmc.recipe.presentation.component.RoundedBarChart
                     android:id="@+id/review_chart"
                     app:radius="10dp"
@@ -102,6 +103,7 @@
                     android:layout_marginEnd="25dp"
                     android:layout_marginBottom="31dp"
                     android:minWidth="170dp"
+                    android:maxHeight="217dp"
                     app:layout_constraintBottom_toTopOf="@+id/rv_image"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toEndOf="@+id/view"
@@ -111,9 +113,8 @@
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/rv_image"
                     android:layout_width="0dp"
-                    android:layout_height="wrap_content"
+                    android:layout_height="100dp"
                     android:layout_marginStart="15dp"
-                    android:layout_marginTop="25dp"
                     android:layout_marginEnd="9dp"
                     android:layout_marginBottom="15dp"
                     app:layout_constraintBottom_toBottomOf="parent"
@@ -134,7 +135,7 @@
                     app:layout_constraintTop_toBottomOf="@+id/view" />
 
                 <TextView
-                    android:id="@+id/textView15"
+                    android:id="@+id/tv_review_image_cnt"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
@@ -219,7 +220,7 @@
                 app:layout_constraintTop_toBottomOf="@+id/linearLayout5" />
 
             <TextView
-                android:id="@+id/textView14"
+                android:id="@+id/tv_review_count"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="5dp"

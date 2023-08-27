@@ -4,6 +4,9 @@ import android.app.Activity
 import android.content.Context
 import android.database.Cursor
 import android.graphics.Bitmap
+import android.graphics.Canvas
+import android.graphics.drawable.BitmapDrawable
+import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.os.Build
 import android.provider.MediaStore
@@ -16,6 +19,7 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.load.resource.bitmap.CenterCrop
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import java.text.SimpleDateFormat
+import java.util.*
 
 fun ImageView.loadImagesWithGlide(url: String) {
     Glide.with(this)
@@ -89,6 +93,38 @@ fun Activity.setStatusBarTransparent() {
 
 }
 
+fun ImageView.compressAndSetImage() {
+    // Get the original drawable from ImageView
+    val drawable = this.drawable ?: return
+    val bitmap = drawableToBitmap(drawable)
+
+    val screenWidth = resources.displayMetrics.widthPixels
+    val targetWidth = screenWidth / 2 // 50% 압축
+
+    val originalWidth = bitmap.width
+    val originalHeight = bitmap.height
+    val scaleFactor = originalWidth.toFloat() / targetWidth.toFloat()
+    val targetHeight = (originalHeight / scaleFactor).toInt()
+
+    val compressedBitmap = Bitmap.createScaledBitmap(bitmap, targetWidth, targetHeight, false)
+    setImageBitmap(compressedBitmap)
+}
+private fun drawableToBitmap(drawable: Drawable): Bitmap {
+    if (drawable is BitmapDrawable) {
+        return drawable.bitmap
+    }
+
+    val bitmap = Bitmap.createBitmap(
+        drawable.intrinsicWidth,
+        drawable.intrinsicHeight,
+        Bitmap.Config.ARGB_8888
+    )
+    val canvas = Canvas(bitmap)
+    drawable.setBounds(0, 0, canvas.width, canvas.height)
+    drawable.draw(canvas)
+    return bitmap
+}
+
 fun Activity.setStatusBarOrigin() {
     window.apply {
         clearFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS)
@@ -114,4 +150,16 @@ fun ImageView.resizeBitmapToSquare(size:Int){
     val pixel = dpToPx(context,size.toFloat())
     this.layoutParams.width = pixel
     this.layoutParams.height = pixel
+}
+
+fun String.parseAndFormatDate(): String {
+    val inputFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSSSS", Locale.getDefault())
+    val outputFormat = SimpleDateFormat("yyyy.MM.dd", Locale.getDefault())
+
+    val date = inputFormat.parse(this)
+    return if (date != null) {
+        outputFormat.format(date)
+    } else {
+        "Invalid Date"
+    }
 }

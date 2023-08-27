@@ -53,7 +53,13 @@ class RecipeActivity : AppCompatActivity() {
 
             graph.setStartDestination(R.id.recipeThemeFragment)
             navController.graph = graph
-            navController.navigate(R.id.recipeThemeFragment,bundle)
+
+            val navOptions = NavOptions.Builder()
+                .setLaunchSingleTop(true)  // 이미 스택에 해당 프래그먼트가 있다면 재사용
+                .setPopUpTo(R.id.recipeThemeFragment, false) // 백스택에서 해당 프래그먼트 위로 모두 제거
+                .build()
+
+            navController.navigate(R.id.recipeThemeFragment, bundle, navOptions)
         } else {
             graph.setStartDestination(R.id.recipeDetailFragment)
             navController.graph = graph

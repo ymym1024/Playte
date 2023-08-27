@@ -27,15 +27,6 @@ class RecipeThemeFragment : BaseFragment<FragmentRecipeThemeBinding>(FragmentRec
         initTitle()
         requestRecipeList()
 
-        //뒤로가기 시 activity 삭제
-        requireActivity().onBackPressedDispatcher.addCallback(
-            viewLifecycleOwner,
-            object : OnBackPressedCallback(true) {
-                override fun handleOnBackPressed() {
-                    requireActivity().finish()
-                }
-            }
-        )
     }
 
     private fun initTitle(){

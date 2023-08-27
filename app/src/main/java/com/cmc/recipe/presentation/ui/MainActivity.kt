@@ -41,8 +41,8 @@ class MainActivity : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
         // 재개됐을 때 숏폼 프래그먼트로 이동
-        val navGraph = navController.navInflater.inflate(R.navigation.nav_graph) // 네비게이션 그래프 리소스를 로드
-        navController.graph = navGraph
+//        val navGraph = navController.navInflater.inflate(R.navigation.nav_graph) // 네비게이션 그래프 리소스를 로드
+//        navController.graph = navGraph
     }
 
     private fun navSetting(){
