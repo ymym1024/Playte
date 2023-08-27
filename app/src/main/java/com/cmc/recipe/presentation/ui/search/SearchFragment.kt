@@ -14,6 +14,8 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.cmc.recipe.R
 import com.cmc.recipe.data.model.RecipeItem
+import com.cmc.recipe.data.model.RecipeMapper.toRecipe
+import com.cmc.recipe.data.model.response.RecommendationRecipe
 import com.cmc.recipe.databinding.FragmentSearchBinding
 import com.cmc.recipe.presentation.ui.base.BaseFragment
 import com.cmc.recipe.presentation.ui.recipe.RecipeActivity
@@ -39,13 +41,19 @@ class SearchFragment : BaseFragment<FragmentSearchBinding>(FragmentSearchBinding
     }
 
     private fun initRV(){
-        val itemList = arrayListOf("토마토 계란 볶음밥","토마토 계란 볶음밥","토마토 계란 볶음밥")
-
-        //최신 검색어
         val adapter = SearchItemAdapter()
-        binding.rvRecent.adapter = adapter
-        binding.rvRecent.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
-        adapter.replaceData(itemList)
+        //최신 검색어
+        launchWithLifecycle(lifecycle){
+            searchViewModel.loadRecentSearch()
+            var itemList = mutableListOf<String>()
+            searchViewModel.recentKeywordResult.collect{ list ->
+                for(item in list) itemList.add(item.keyword)
+                Log.d("recentRecipeResult--2","${itemList}")
+                binding.rvRecent.adapter = adapter
+                binding.rvRecent.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL,false)
+                adapter.replaceData(itemList)
+            }
+        }
 
         requestKeywordList()
 
