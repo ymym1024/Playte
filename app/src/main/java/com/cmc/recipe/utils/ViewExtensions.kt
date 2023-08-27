@@ -4,6 +4,9 @@ import android.app.Activity
 import android.content.Context
 import android.database.Cursor
 import android.graphics.Bitmap
+import android.graphics.Canvas
+import android.graphics.drawable.BitmapDrawable
+import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.os.Build
 import android.provider.MediaStore
@@ -88,6 +91,38 @@ fun Activity.setStatusBarTransparent() {
         WindowCompat.setDecorFitsSystemWindows(window, false)
     }
 
+}
+
+fun ImageView.compressAndSetImage() {
+    // Get the original drawable from ImageView
+    val drawable = this.drawable ?: return
+    val bitmap = drawableToBitmap(drawable)
+
+    val screenWidth = resources.displayMetrics.widthPixels
+    val targetWidth = screenWidth / 2 // 50% 압축
+
+    val originalWidth = bitmap.width
+    val originalHeight = bitmap.height
+    val scaleFactor = originalWidth.toFloat() / targetWidth.toFloat()
+    val targetHeight = (originalHeight / scaleFactor).toInt()
+
+    val compressedBitmap = Bitmap.createScaledBitmap(bitmap, targetWidth, targetHeight, false)
+    setImageBitmap(compressedBitmap)
+}
+private fun drawableToBitmap(drawable: Drawable): Bitmap {
+    if (drawable is BitmapDrawable) {
+        return drawable.bitmap
+    }
+
+    val bitmap = Bitmap.createBitmap(
+        drawable.intrinsicWidth,
+        drawable.intrinsicHeight,
+        Bitmap.Config.ARGB_8888
+    )
+    val canvas = Canvas(bitmap)
+    drawable.setBounds(0, 0, canvas.width, canvas.height)
+    drawable.draw(canvas)
+    return bitmap
 }
 
 fun Activity.setStatusBarOrigin() {

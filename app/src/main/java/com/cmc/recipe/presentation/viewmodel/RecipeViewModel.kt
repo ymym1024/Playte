@@ -125,9 +125,9 @@ class RecipeViewModel @Inject constructor(private val recipeUseCase: RecipeUseCa
             }
     }
 
-    fun postRecipesReview(request: ReviewRequest) = viewModelScope.launch {
+    fun postRecipesReview(id:Int,request: ReviewRequest) = viewModelScope.launch {
         _reviewAddResult.emit(NetworkState.Loading)
-        recipeUseCase.postRecipesReview(request)
+        recipeUseCase.postRecipesReview(id,request)
             .catch { error ->
                 _reviewAddResult.emit(NetworkState.Error(400,"${error.message}"))
             }.collect { values ->

@@ -132,7 +132,7 @@
         app:layout_constraintTop_toBottomOf="@+id/et_review" />
 
     <Button
-        android:id="@+id/button7"
+        android:id="@+id/btn_register"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="20dp"

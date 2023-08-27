@@ -121,8 +121,8 @@ class RecipeRepositoryImpl @Inject constructor(
         }
     }
 
-    override fun postRecipesReview(request: ReviewRequest): Flow<NetworkState<BaseResponse>> =flow{
-        val response = service.postRecipesReview(1,request)
+    override fun postRecipesReview(id:Int,request: ReviewRequest): Flow<NetworkState<BaseResponse>> =flow{
+        val response = service.postRecipesReview(id,request)
         if(response.isSuccessful){
             response.body()?.let { emit(NetworkState.Success(it)) }
         }else{
