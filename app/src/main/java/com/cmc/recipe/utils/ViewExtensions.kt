@@ -163,3 +163,25 @@ fun String.parseAndFormatDate(): String {
         "Invalid Date"
     }
 }
+
+fun String.parseDateTime(): Date? {
+    val dateFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSSS", Locale.getDefault())
+    return try {
+        dateFormat.parse(this)
+    } catch (e: Exception) {
+        null
+    }
+}
+
+fun Date.formatDateRelativeToNow(): String {
+    val currentDate = Date()
+    val timeDifferenceInSeconds = ((currentDate.time - this.time) / 1000).toInt()
+
+    return when {
+        timeDifferenceInSeconds < 60 -> "${timeDifferenceInSeconds}초 전"
+        timeDifferenceInSeconds < 3600 -> "${timeDifferenceInSeconds / 60}분 전"
+        timeDifferenceInSeconds < 86400 -> "${timeDifferenceInSeconds / 3600}시간 전"
+        timeDifferenceInSeconds < 2592000 -> "${timeDifferenceInSeconds / 86400}일 전"
+        else -> SimpleDateFormat("yyyy.MM.dd", Locale.getDefault()).format(this)
+    }
+}

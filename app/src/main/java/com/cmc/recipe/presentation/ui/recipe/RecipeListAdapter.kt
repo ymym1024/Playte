@@ -8,8 +8,7 @@ import com.cmc.recipe.databinding.ItemRecipeBinding
 import com.cmc.recipe.presentation.ui.base.BaseAdapter
 import com.cmc.recipe.presentation.ui.base.BaseHolder
 import com.cmc.recipe.presentation.ui.base.OnClickListener
-import com.cmc.recipe.utils.Constant
-import com.cmc.recipe.utils.loadImagesWithGlide
+import com.cmc.recipe.utils.*
 
 class RecipeListAdapter(val clickListener: OnClickListener):
     BaseAdapter<RecipeItem, ItemRecipeBinding, RecipeItemHolder>() {
@@ -56,10 +55,12 @@ class RecipeItemHolder(viewBinding: ItemRecipeBinding, val type:String,val click
 
         binding.let {
             item?.let { recipe ->
-                it.ivRecipeMain.loadImagesWithGlide(recipe.recipe_thumbnail_img)
+                val create_date = recipe.created_date.parseDateTime()?.formatDateRelativeToNow()
+
+                it.ivRecipeMain.loadImagesWithGlideRound(recipe.recipe_thumbnail_img,10)
                 it.tvRecipeName.text = recipe.recipe_name
                 it.tvRecipeTime.text = "${recipe.cook_time}분"
-                it.tvTimeNickname.text = "${recipe.created_date} | ${recipe.nickname}"
+                it.tvTimeNickname.text = "${create_date} | ${recipe.nickname}"
                 it.tvStarCnt.text = "${recipe.rating}(${recipe.comment_count})"
                 if(!recipe.is_saved) it.btnStar.setBackgroundResource(R.drawable.ic_bookmark_deactive)
                 else it.btnStar.setBackgroundResource(R.drawable.ic_bookmark_activate)
