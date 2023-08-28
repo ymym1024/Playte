@@ -42,6 +42,14 @@ class ShortsDetailAdapter(private val context:Context,val videoPreparedListener:
     fun setShortsListener(onShortsListener:onShortsListener){
         this.onShortsListener = onShortsListener
     }
+
+    fun removeItem(id:Int){
+        val itemList = getData()
+        val itemToRemove = itemList.find { it.shortform_id == id }
+        itemList.remove(itemToRemove)
+        notifyDataSetChanged()
+    }
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ShortsDetailHolder {
         return ShortsDetailHolder(
             ItemShortsDetailBinding.inflate(LayoutInflater.from(parent.context), parent, false),

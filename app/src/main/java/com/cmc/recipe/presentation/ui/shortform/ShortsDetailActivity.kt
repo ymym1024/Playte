@@ -3,7 +3,6 @@ package com.cmc.recipe.presentation.ui.shortform
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
-import android.view.View
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
@@ -14,18 +13,12 @@ import androidx.viewpager2.widget.ViewPager2
 import com.cmc.recipe.R
 import com.cmc.recipe.data.model.ExoPlayerItem
 import com.cmc.recipe.data.model.response.ShortsContent
-import com.cmc.recipe.data.model.response.ShortsResponse
 import com.cmc.recipe.databinding.ActivityShortsDetailBinding
 import com.cmc.recipe.presentation.ui.MainActivity
 import com.cmc.recipe.presentation.ui.recipe.BottomSheetDetailDialog
 import com.cmc.recipe.presentation.viewmodel.ShortsViewModel
 import com.cmc.recipe.utils.NetworkState
-import com.google.android.exoplayer2.PlaybackException
-import com.google.android.exoplayer2.Player
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.onEach
-import kotlinx.coroutines.flow.take
 import kotlinx.coroutines.launch
 
 
@@ -43,6 +36,7 @@ class ShortsDetailActivity : AppCompatActivity() {
     private lateinit var adapter : ShortsDetailAdapter
     private var favoriteFlag : Boolean? = null
     private var saveFlag : Boolean? = null
+    private var itemSize = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -107,6 +101,8 @@ class ShortsDetailActivity : AppCompatActivity() {
                         is NetworkState.Success -> {
                             response.data?.let { data ->
                                 if (data.code == "SUCCESS") {
+                                    itemSize = response.data.data.content.size
+
                                     initVideo(response.data.data.content as ArrayList<ShortsContent>)
                                 }
                             }
@@ -154,11 +150,11 @@ class ShortsDetailActivity : AppCompatActivity() {
 
     private fun showBottomSheet(){
         val dialog = BottomSheetDetailDialog()
-        dialog.setNoshowListener {  // 관심없음
+        dialog.setReportListener {   //신고하기
             requestReport(currentId)
         }
-        dialog.setNoshowListener { //신고하기
-            requestReport(currentId)
+        dialog.setNoshowListener {// 관심없음
+            postReviewNoInterest(currentId)
         }
         dialog.show(supportFragmentManager,"RemoveBottomSheetFragment")
     }
@@ -194,7 +190,8 @@ class ShortsDetailActivity : AppCompatActivity() {
 
         binding.vpExoplayer.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
             override fun onPageSelected(position: Int) {
-                currentId = itemList[position].shortform_id
+                currentId = adapter.getData().get(position).shortform_id
+
                 val previousIndex = exoPlayerItems.indexOfFirst { it.exoPlayer.isPlaying }
 
                 if (previousIndex != -1) {
@@ -290,8 +287,10 @@ class ShortsDetailActivity : AppCompatActivity() {
                     when (it) {
                         is NetworkState.Success -> {
                             if (it.data.code == "SUCCESS") {
-                                Log.d("현재 position","${currentPosition}")
-                                binding.vpExoplayer.setCurrentItem(++currentPosition, true)
+                                val nextItem: Int = (currentPosition + 1) % itemSize
+                                binding.vpExoplayer.setCurrentItem(nextItem, true)
+                                itemSize--
+                                adapter.removeItem(currentId)
                                 Toast.makeText(applicationContext, "해당 숏폼은 신고 되었습니다", Toast.LENGTH_SHORT)
                                     .show()
                             }
@@ -312,6 +311,37 @@ class ShortsDetailActivity : AppCompatActivity() {
         }
     }
 
+    private fun postReviewNoInterest(id:Int) {
+        shortsViewModel.postReviewNoInterest(id)
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                shortsViewModel.noInterestResult.collect{
+                    when (it) {
+                        is NetworkState.Success -> {
+                            if (it.data.code == "SUCCESS") {
+                                val nextItem: Int = (currentPosition + 1) % itemSize
+                                binding.vpExoplayer.setCurrentItem(nextItem, true)
+                                itemSize--
+                                adapter.removeItem(currentId)
+                                Toast.makeText(applicationContext, "해당 숏폼은 관심없음 처리 되었습니다", Toast.LENGTH_SHORT)
+                                    .show()
+                            }
+                        }
+                        is NetworkState.Error -> {
+                            Toast.makeText(applicationContext, "${it.message}", Toast.LENGTH_SHORT)
+                                .show()
+                        }
+                        is NetworkState.Loading -> {
+                            // 프로그레스바 띄우기
+                        }
+                        else -> {
+
+                        }
+                    }
+                }
+            }
+        }
+    }
     fun requestShortsLikeOrUnLike(id: Int) {
         val item = findShortsItemById(id)
         if(favoriteFlag == null){

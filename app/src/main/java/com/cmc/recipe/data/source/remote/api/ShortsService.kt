@@ -29,4 +29,7 @@ interface ShortsService {
     @GET("/api/v1/recipes/shortform/{shortform-recipe-id}/report")
     suspend fun reportShortform(@Path("shortform-recipe-id")id:Int) : Response<BaseResponse>
 
+    @GET("/api/v1/recipes/shortform/not-interest/{shortform-recipe-id}")
+    suspend fun postReviewNoInterest(@Path("shortform-recipe-id")id:Int) : Response<BaseResponse>
+
 }

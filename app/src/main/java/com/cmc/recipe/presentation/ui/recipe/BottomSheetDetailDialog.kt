@@ -34,13 +34,13 @@ class BottomSheetDetailDialog : BottomSheetDialogFragment() {
 
         val noFavoriteButton: ConstraintLayout = view.findViewById(R.id.btn_no_favorite)
         noFavoriteButton.setOnClickListener {
-            reportListener?.invoke()
+            noshowListener?.invoke()
             dismiss()
         }
 
         val alertButton : ConstraintLayout = view.findViewById(R.id.btn_alert)
         alertButton.setOnClickListener {
-            noshowListener?.invoke()
+            reportListener?.invoke()
             dismiss()
         }
 

@@ -24,4 +24,6 @@ interface ShortsRepository {
 
     fun reportShortform(id:Int) : Flow<NetworkState<BaseResponse>>
 
+    fun postReviewNoInterest(id:Int) : Flow<NetworkState<BaseResponse>>
+
 }

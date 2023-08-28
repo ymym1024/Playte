@@ -28,4 +28,6 @@ class ShortsUseCase @Inject constructor(
 
     fun reportShortform(id:Int) = repository.reportShortform(id)
 
+    fun postReviewNoInterest(id:Int) = repository.postReviewNoInterest(id)
+
 }
