@@ -83,39 +83,9 @@ class RecipeRepositoryImpl @Inject constructor(
         }
     }
 
-    override fun getRecipesShortform(): Flow<NetworkState<ShortsResponse>> = flow {
-        val response = service.getRecipesShortform()
-        if(response.isSuccessful){
-            response.body()?.let {
-                emit(NetworkState.Success(it))
-            }
-        }else{
-            try {
-                emit(NetworkState.Error(response.code(),response.errorBody()!!.string()))
-            }catch (e: IOException) {
-                e.printStackTrace()
-            }
-        }
-    }
-
     override fun getRecipesReview(id: Int): Flow<NetworkState<ReviewResponse>> = flow{
         val response = service.getRecipesReview(id)
 
-        if(response.isSuccessful){
-            response.body()?.let {
-                emit(NetworkState.Success(it))
-            }
-        }else{
-            try {
-                emit(NetworkState.Error(response.code(),response.errorBody()!!.string()))
-            }catch (e: IOException) {
-                e.printStackTrace()
-            }
-        }
-    }
-
-    override fun getRecipesShortformDetail(id:Int): Flow<NetworkState<ShortsDetailResponse>> = flow{
-        val response = service.getRecipesShortformDetail(id)
         if(response.isSuccessful){
             response.body()?.let {
                 emit(NetworkState.Success(it))

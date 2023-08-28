@@ -17,9 +17,8 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.cmc.recipe.R
 import com.cmc.recipe.data.model.Comment
 import com.cmc.recipe.data.model.ExoPlayerItem
-import com.cmc.recipe.data.model.response.Product
-import com.cmc.recipe.data.model.response.ShortsContent
-import com.cmc.recipe.data.model.response.ShortsDetailData
+import com.cmc.recipe.data.model.Product
+import com.cmc.recipe.data.model.response.*
 import com.cmc.recipe.databinding.ItemShortsDetailBinding
 import com.cmc.recipe.presentation.ui.base.BaseAdapter
 import com.cmc.recipe.presentation.ui.base.BaseHolder
@@ -62,7 +61,7 @@ class ShortsDetailHolder(viewBinding: ItemShortsDetailBinding, val context: Cont
         bottomSheetBehavior = BottomSheetBehavior.from(binding.bottomSheetComment)
 
         // product recyclerview
-        //initProductAdapter(item!!.shortform_id)
+        initProductAdapter(binding,item!!.ingredients)
 
         //댓글 설정
         initCommentAdapter(binding)
@@ -151,16 +150,20 @@ class ShortsDetailHolder(viewBinding: ItemShortsDetailBinding, val context: Cont
         }
     }
 
-//    private fun initProductAdapter(binding:ItemShortsDetailBinding,itemList:List<Product>){
-//        val adapter = ShortsProductAdapter(object :ShortsProductItemHolder.OnClickListener{
-//            override fun onMoveSite(url: String) {
-//                // 쿠팡 화면으로 이동
-//            }
-//        })
-//        binding.rvProduct.adapter = adapter
-//        binding.rvProduct.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
-//        adapter.replaceData(itemList!!)
-//    }
+    private fun initProductAdapter(binding:ItemShortsDetailBinding,itemList:List<Ingredient>){
+        val itemList = itemList.map{
+            Product(it.coupang_product_image,it.coupang_product_name,it.coupang_product_price,it.coupang_product_url)
+        }
+
+        val adapter = ShortsProductAdapter(object :ShortsProductItemHolder.OnClickListener{
+            override fun onMoveSite(url: String) {
+                // 쿠팡 화면으로 이동
+            }
+        })
+        binding.rvProduct.adapter = adapter
+        binding.rvProduct.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+        adapter.replaceData(itemList!!)
+    }
 
     private fun initCommentAdapter(binding:ItemShortsDetailBinding){
         val adapter = CommentAdapter(object : OnCommentListener{

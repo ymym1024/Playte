@@ -15,6 +15,7 @@ import com.cmc.recipe.databinding.FragmentShortsBinding
 import com.cmc.recipe.presentation.ui.base.BaseFragment
 import com.cmc.recipe.presentation.ui.search.SearchActivity
 import com.cmc.recipe.presentation.viewmodel.RecipeViewModel
+import com.cmc.recipe.presentation.viewmodel.ShortsViewModel
 import com.cmc.recipe.utils.Constant
 import com.cmc.recipe.utils.NetworkState
 import dagger.hilt.android.AndroidEntryPoint
@@ -24,7 +25,7 @@ import kotlin.math.max
 @AndroidEntryPoint
 class ShortsFragment : BaseFragment<FragmentShortsBinding>(FragmentShortsBinding::inflate) {
 
-    private val recipeViewModel : RecipeViewModel by viewModels()
+    private val shortsViewModel : ShortsViewModel by viewModels()
     private val exoPlayerItems = ArrayList<ExoPlayerItem>()
 
     override fun initFragment() {
@@ -35,8 +36,8 @@ class ShortsFragment : BaseFragment<FragmentShortsBinding>(FragmentShortsBinding
 
     private fun requestRecipeList(){
         launchWithLifecycle(lifecycle) {
-            recipeViewModel.getRecipesShortform()
-            recipeViewModel.recipeShortsResult.collect{
+            shortsViewModel.getRecipesShortform()
+            shortsViewModel.recipeShortsResult.collect{
                 when(it){
                     is NetworkState.Success -> {
                         it.data?.let {data ->
@@ -47,11 +48,11 @@ class ShortsFragment : BaseFragment<FragmentShortsBinding>(FragmentShortsBinding
                                 Log.d("data","${data.data}")
                             }
                         }
-                        recipeViewModel._recipeResult.value = NetworkState.Loading
+                        shortsViewModel._recipeShortsResult.value = NetworkState.Loading
                     }
                     is NetworkState.Error ->{
                         showToastMessage(it.message.toString())
-                        recipeViewModel._recipeResult.value = NetworkState.Loading
+                        shortsViewModel._recipeShortsResult.value = NetworkState.Loading
                     }
                     else -> {}
                 }
@@ -112,10 +113,6 @@ class ShortsFragment : BaseFragment<FragmentShortsBinding>(FragmentShortsBinding
             override fun onComment(id:Int) {
                 val action = ShortsFragmentDirections.actionShortsFragmentToShortsDetailActivity(id)
                 findNavController().navigate(action)
-            }
-
-            override fun requestDetail(id: Int) {
-
             }
 
         })

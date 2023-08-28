@@ -13,12 +13,12 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.viewpager2.widget.ViewPager2
 import com.cmc.recipe.R
 import com.cmc.recipe.data.model.ExoPlayerItem
-import com.cmc.recipe.data.model.response.Product
 import com.cmc.recipe.data.model.response.ShortsContent
 import com.cmc.recipe.databinding.ActivityShortsDetailBinding
 import com.cmc.recipe.databinding.ItemShortsDetailBinding
 import com.cmc.recipe.presentation.ui.recipe.BottomSheetDetailDialog
 import com.cmc.recipe.presentation.viewmodel.RecipeViewModel
+import com.cmc.recipe.presentation.viewmodel.ShortsViewModel
 import com.cmc.recipe.utils.NetworkState
 import com.cmc.recipe.utils.navigationHeight
 import com.cmc.recipe.utils.setStatusBarTransparent
@@ -31,7 +31,7 @@ import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class ShortsDetailActivity : AppCompatActivity() {
-    private val recipeViewModel : RecipeViewModel by viewModels()
+    private val shortsViewModel : ShortsViewModel by viewModels()
 
     private lateinit var binding: ActivityShortsDetailBinding
     private val exoPlayerItems = ArrayList<ExoPlayerItem>()
@@ -53,10 +53,10 @@ class ShortsDetailActivity : AppCompatActivity() {
     }
 
     private fun requestRecipeList(){
+        shortsViewModel.getRecipesShortform()
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
-                recipeViewModel.getRecipesShortform()
-                recipeViewModel.recipeShortsResult.collect { response ->
+                shortsViewModel.recipeShortsResult.collect { response ->
                     when (response) {
                         is NetworkState.Success -> {
                             response.data?.let { data ->
@@ -68,37 +68,10 @@ class ShortsDetailActivity : AppCompatActivity() {
                                     Log.d("data", "${data.data}")
                                 }
                             }
-                            recipeViewModel._recipeResult.value = NetworkState.Loading
+                            shortsViewModel._recipeShortsResult.value = NetworkState.Loading
                         }
                         is NetworkState.Error -> {
-                            recipeViewModel._recipeResult.value = NetworkState.Loading
-                        }
-                        else -> {}
-                    }
-                }
-            }
-        }
-    }
-
-    private fun requestRecipeDetail(id:Int){
-        lifecycleScope.launch {
-            repeatOnLifecycle(Lifecycle.State.STARTED) {
-                recipeViewModel.getRecipesShortformDetail(id)
-                recipeViewModel.recipeShortsDetailResult.collect {
-                    when (it) {
-                        is NetworkState.Success -> {
-                            it.data?.let { data ->
-                                if (data.code == "SUCCESS") {
-                                    val productList = it.data.data.ingredients
-                                    //initProductAdapter(productList)
-                                } else {
-                                    Log.d("data", "${data.data}")
-                                }
-                            }
-                            recipeViewModel._recipeResult.value = NetworkState.Loading
-                        }
-                        is NetworkState.Error -> {
-                            recipeViewModel._recipeResult.value = NetworkState.Loading
+                            shortsViewModel._recipeShortsResult.value = NetworkState.Loading
                         }
                         else -> {}
                     }
@@ -154,9 +127,6 @@ class ShortsDetailActivity : AppCompatActivity() {
             override fun onSave() {}
 
             override fun onComment(id:Int) {}
-            override fun requestDetail(id: Int) {
-                requestRecipeDetail(id)
-            }
         })
 
         adapter.replaceData(itemList)

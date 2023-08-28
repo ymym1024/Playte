@@ -55,6 +55,12 @@ object RepositoryModule {
 
     @Provides
     @ViewModelScoped
+    fun providesShortsRepository(
+        service: ShortsService
+    ) : ShortsRepository = ShortsRepositoryImpl(service)
+
+    @Provides
+    @ViewModelScoped
     fun providesGoogleRepository(
         service: GoogleService
     ) : GoogleLoginRepository = GoogleLoginRepositoryImpl(service)

@@ -1,0 +1,50 @@
+package com.cmc.recipe.presentation.viewmodel
+
+import android.util.Log
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.cmc.recipe.data.model.RecipeItem
+import com.cmc.recipe.data.model.entity.RecipeEntity
+import com.cmc.recipe.data.model.response.*
+import com.cmc.recipe.data.source.remote.request.RequestNickname
+import com.cmc.recipe.data.source.remote.request.ReviewRequest
+import com.cmc.recipe.domain.usecase.AuthUseCase
+import com.cmc.recipe.domain.usecase.RecipeUseCase
+import com.cmc.recipe.domain.usecase.ShortsUseCase
+import com.cmc.recipe.utils.NetworkState
+import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.launch
+import javax.inject.Inject
+
+@HiltViewModel
+class ShortsViewModel @Inject constructor(private val shortsUseCase: ShortsUseCase) : ViewModel() {
+
+    var _recipeShortsResult : MutableStateFlow<NetworkState<ShortsResponse>> = MutableStateFlow(NetworkState.Loading)
+    var recipeShortsResult: StateFlow<NetworkState<ShortsResponse>> = _recipeShortsResult.asStateFlow()
+
+    var _recipeShortsDetailResult : MutableStateFlow<NetworkState<ShortsDetailResponse>> = MutableStateFlow(NetworkState.Loading)
+    var recipeShortsDetailResult: StateFlow<NetworkState<ShortsDetailResponse>> = _recipeShortsDetailResult
+
+
+    fun getRecipesShortform() = viewModelScope.launch {
+        _recipeShortsResult.value = NetworkState.Loading
+        shortsUseCase.getRecipesShortform()
+            .catch { error ->
+                _recipeShortsResult.value = NetworkState.Error(400,"${error.message}")
+            }.collect { values ->
+                _recipeShortsResult.value = values
+            }
+    }
+
+    fun getRecipesShortformDetail(id:Int) = viewModelScope.launch {
+        _recipeShortsDetailResult.value = NetworkState.Loading
+        shortsUseCase.getRecipesShortformDetail(id)
+            .catch { error ->
+                _recipeShortsDetailResult.value = NetworkState.Error(400,"${error.message}")
+            }.collect { values ->
+                _recipeShortsDetailResult.value = values
+            }
+    }
+}

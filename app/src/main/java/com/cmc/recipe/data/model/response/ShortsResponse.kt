@@ -24,6 +24,8 @@ data class ShortsData(
 
 data class ShortsContent(
     val comments_count: Int,
+    val created_date: String,
+    val ingredients: List<Ingredient>,
     val is_liked: Boolean,
     val is_saved: Boolean,
     val likes_count: Int,
@@ -31,6 +33,7 @@ data class ShortsContent(
     val shortform_description: String,
     val shortform_id: Int,
     val shortform_name: String,
+    val video_time: String,
     val video_url: String,
     val writtenBy: String
 )

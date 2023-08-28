@@ -103,7 +103,7 @@ class ShortsItemHolder(viewBinding: ItemShortsBinding, val context: Context,val 
         binding.tvCommentCnt.text = "${item.comments_count}"
         binding.tvBookmarkCnt.text = "${item.saved_count}"
 
-        var favoriteFlag = item.is_liked // TODO : 나중에 서버에서 받아오기
+        var favoriteFlag = item.is_liked
         // 좋아요
         binding.ibHeart.setOnClickListener {
             if(favoriteFlag){

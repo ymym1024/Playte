@@ -17,10 +17,6 @@ interface RecipeRepository {
 
     fun postRecipesNotSave(id:Int) : Flow<NetworkState<BaseResponse>>
 
-    fun getRecipesShortform() : Flow<NetworkState<ShortsResponse>>
-
-    fun getRecipesShortformDetail(id:Int) : Flow<NetworkState<ShortsDetailResponse>>
-
     //리뷰
     fun getRecipesReview(id:Int) : Flow<NetworkState<ReviewResponse>>
 
