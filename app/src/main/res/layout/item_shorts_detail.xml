@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.coordinatorlayout.widget.CoordinatorLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     app:layout_constraintBottom_toBottomOf="parent"
-    app:layout_constraintStart_toStartOf="parent"
-    app:layout_constraintEnd_toEndOf="parent">
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintStart_toStartOf="parent">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/short_detail_parent"
@@ -39,20 +38,20 @@
             android:id="@+id/exoplayer"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            app:ad_marker_color="@color/primary_color"
+            app:buffered_color="@color/gray_3"
             app:controller_layout_id="@layout/video_player_control_view"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:use_controller="true"
-            app:unplayed_color="@color/gray_3"
+            app:layout_constraintVertical_bias="0.0"
             app:played_color="@color/primary_color"
-            app:ad_marker_color="@color/primary_color"
             app:scrubber_color="@color/primary_color"
-            app:buffered_color="@color/gray_3"
             app:show_timeout="100000"
-            app:layout_constraintVertical_bias="0.0">
+            app:unplayed_color="@color/gray_3"
+            app:use_controller="true">
 
         </com.google.android.exoplayer2.ui.StyledPlayerView>
 
@@ -94,32 +93,32 @@
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="9dp"
                 android:background="@drawable/bg_ingredient_radius"
+                android:gravity="center"
                 android:minWidth="57dp"
                 android:minHeight="29dp"
-                android:paddingTop="8dp"
-                android:paddingBottom="8dp"
                 android:paddingStart="16dp"
+                android:paddingTop="8dp"
                 android:paddingEnd="16dp"
+                android:paddingBottom="8dp"
                 android:text="샤인머스캣"
-                android:gravity="center"
-                android:textSize="12sp"
-                android:textColor="@color/white" />
+                android:textColor="@color/white"
+                android:textSize="12sp" />
 
             <TextView
                 android:id="@+id/button7"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="@drawable/bg_ingredient_radius"
+                android:gravity="center"
                 android:minWidth="57dp"
                 android:minHeight="29dp"
-                android:paddingTop="8dp"
-                android:paddingBottom="8dp"
                 android:paddingStart="16dp"
+                android:paddingTop="8dp"
                 android:paddingEnd="16dp"
-                android:textSize="12sp"
-                android:gravity="center"
+                android:paddingBottom="8dp"
+                android:text="설탕"
                 android:textColor="@color/white"
-                android:text="설탕" />
+                android:textSize="12sp" />
 
         </LinearLayout>
 
@@ -135,15 +134,15 @@
 
             <ImageButton
                 android:id="@+id/btn_heart"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
                 android:layout_marginBottom="10dp"
-                android:background="@drawable/ic_shortsdetail_heart_deactivate" />
+                android:background="@color/transparent" />
 
             <TextView
                 android:id="@+id/textView23"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
                 android:layout_marginBottom="20dp"
                 android:gravity="center"
                 android:text="100"
@@ -152,15 +151,15 @@
 
             <ImageButton
                 android:id="@+id/btn_comment"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
                 android:layout_marginBottom="10dp"
-                android:background="@drawable/ic_shortsdetail_comment" />
+                android:background="@drawable/ic_shorts_comment" />
 
             <TextView
                 android:id="@+id/textView24"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
                 android:layout_marginBottom="20dp"
                 android:gravity="center"
                 android:text="100"
@@ -169,15 +168,15 @@
 
             <ImageButton
                 android:id="@+id/btn_bookmark"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
                 android:layout_marginBottom="10dp"
-                android:background="@drawable/ic_shortsdetail_book_deactivate" />
+                android:background="@color/transparent" />
 
             <TextView
                 android:id="@+id/textView25"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
                 android:gravity="center"
                 android:text="100"
                 android:textColor="@color/white"
@@ -211,8 +210,8 @@
                 android:id="@+id/tv_showMore"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="더보기"
                 android:layout_gravity="bottom"
+                android:text="더보기"
                 android:textColor="@color/white"
                 android:textSize="14sp" />
         </LinearLayout>
@@ -224,27 +223,27 @@
             android:layout_marginStart="23dp"
             android:layout_marginBottom="11dp"
             android:text="TextView"
-            android:textFontWeight="600"
             android:textColor="@color/white"
+            android:textFontWeight="600"
             app:layout_constraintBottom_toTopOf="@+id/textView20"
             app:layout_constraintStart_toStartOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
-<!--    <include layout="@layout/bottom_sheet_comment"/>-->
+    <!--    <include layout="@layout/bottom_sheet_comment"/>-->
     <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-        <LinearLayout
-            xmlns:android="http://schemas.android.com/apk/res/android"
+
+        <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
             xmlns:app="http://schemas.android.com/apk/res-auto"
             android:id="@+id/bottom_sheet_comment"
-            app:layout_behavior="@string/bottom_sheet_behavior"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/white"
+            android:orientation="vertical"
             app:behavior_hideable="true"
             app:behavior_peekHeight="0dp"
-            android:orientation="vertical"
-            android:background="@color/white"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" >
+            app:layout_behavior="@string/bottom_sheet_behavior">
 
             <TextView
                 android:id="@+id/textView44"
@@ -259,7 +258,7 @@
                 android:id="@+id/rv_comment"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@android:color/white"/>
+                android:background="@android:color/white" />
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/button_layout"
