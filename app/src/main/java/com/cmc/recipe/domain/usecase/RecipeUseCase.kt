@@ -20,6 +20,10 @@ class RecipeUseCase @Inject constructor(
 
     fun postRecipesNotSave(id:Int) = repository.postRecipesNotSave(id)
 
+    fun getRecipesShortform() = repository.getRecipesShortform()
+
+    fun getRecipesShortformDetail(id:Int) = repository.getRecipesShortformDetail(id)
+
     // 리뷰
     fun getRecipesReview(id:Int) = repository.getRecipesReview(id)
 
@@ -39,6 +43,5 @@ class RecipeUseCase @Inject constructor(
     suspend fun insertRecentRecipe(item:RecipeItem) = repository.insertRecentRecipe(item)
 
     fun loadRecentRecipes() = repository.loadRecentRecipes()
-
 
 }

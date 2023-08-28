@@ -3,7 +3,7 @@ package com.cmc.recipe.presentation.ui.shortform
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import com.cmc.recipe.data.model.Product
+import com.cmc.recipe.data.model.response.Product
 import com.cmc.recipe.databinding.ItemShortsProductBinding
 import com.cmc.recipe.presentation.ui.base.BaseAdapter
 import com.cmc.recipe.presentation.ui.base.BaseHolder
@@ -25,14 +25,12 @@ class ShortsProductItemHolder(viewBinding: ItemShortsProductBinding,val clickLis
     BaseHolder<Product, ItemShortsProductBinding>(viewBinding){
 
     override fun bind(binding: ItemShortsProductBinding, item: Product?) {
-        item?.let { it ->
-            binding.ivProductMain.loadImagesWithGlideRound(it.image,8)
-            binding.tvProductName.text = it.name
-            binding.tvProductPrice.text = it.price.toString()
+        binding.ivProductMain.loadImagesWithGlideRound(item?.coupang_product_image,8)
+        binding.tvProductName.text = item?.coupang_product_name
+        binding.tvProductPrice.text = item?.coupang_product_price.toString()
 
-            binding.product.setOnClickListener {
-                clickListener.onMoveSite("it")
-            }
+        binding.product.setOnClickListener {
+            clickListener.onMoveSite(item?.coupang_product_url.toString())
         }
     }
 

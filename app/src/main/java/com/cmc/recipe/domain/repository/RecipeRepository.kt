@@ -1,5 +1,6 @@
 package com.cmc.recipe.domain.repository
 
+import com.cmc.recipe.data.model.response.*
 import com.cmc.recipe.data.model.RecipeItem
 import com.cmc.recipe.data.model.entity.RecipeEntity
 import com.cmc.recipe.data.model.response.*
@@ -15,6 +16,10 @@ interface RecipeRepository {
     fun postRecipesSave(id:Int) : Flow<NetworkState<BaseResponse>>
 
     fun postRecipesNotSave(id:Int) : Flow<NetworkState<BaseResponse>>
+
+    fun getRecipesShortform() : Flow<NetworkState<ShortsResponse>>
+
+    fun getRecipesShortformDetail(id:Int) : Flow<NetworkState<ShortsDetailResponse>>
 
     //리뷰
     fun getRecipesReview(id:Int) : Flow<NetworkState<ReviewResponse>>
