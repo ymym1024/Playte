@@ -151,16 +151,16 @@ class ShortsDetailHolder(viewBinding: ItemShortsDetailBinding, val context: Cont
         }
     }
 
-    private fun initProductAdapter(binding:ItemShortsDetailBinding,itemList:List<Product>){
-        val adapter = ShortsProductAdapter(object :ShortsProductItemHolder.OnClickListener{
-            override fun onMoveSite(url: String) {
-                // 쿠팡 화면으로 이동
-            }
-        })
-        binding.rvProduct.adapter = adapter
-        binding.rvProduct.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
-        adapter.replaceData(itemList)
-    }
+//    private fun initProductAdapter(binding:ItemShortsDetailBinding,itemList:List<Product>){
+//        val adapter = ShortsProductAdapter(object :ShortsProductItemHolder.OnClickListener{
+//            override fun onMoveSite(url: String) {
+//                // 쿠팡 화면으로 이동
+//            }
+//        })
+//        binding.rvProduct.adapter = adapter
+//        binding.rvProduct.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+//        adapter.replaceData(itemList!!)
+//    }
 
     private fun initCommentAdapter(binding:ItemShortsDetailBinding){
         val adapter = CommentAdapter(object : OnCommentListener{
