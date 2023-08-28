@@ -27,6 +27,9 @@ class ShortsViewModel @Inject constructor(private val shortsUseCase: ShortsUseCa
     var _recipeShortsDetailResult : MutableStateFlow<NetworkState<ShortsDetailResponse>> = MutableStateFlow(NetworkState.Loading)
     var recipeShortsDetailResult: StateFlow<NetworkState<ShortsDetailResponse>> = _recipeShortsDetailResult
 
+    var _shortsLikeResult : MutableSharedFlow<NetworkState<BaseResponse>> = MutableSharedFlow()
+    var shortsLikeResult = _shortsLikeResult.asSharedFlow()
+
 
     fun getRecipesShortform() = viewModelScope.launch {
         _recipeShortsResult.value = NetworkState.Loading
@@ -45,6 +48,16 @@ class ShortsViewModel @Inject constructor(private val shortsUseCase: ShortsUseCa
                 _recipeShortsDetailResult.value = NetworkState.Error(400,"${error.message}")
             }.collect { values ->
                 _recipeShortsDetailResult.value = values
+            }
+    }
+
+    fun postShortformLike(id:Int) = viewModelScope.launch {
+        _shortsLikeResult.emit(NetworkState.Loading)
+        shortsUseCase.postShortformLike(id)
+            .catch { error ->
+                _shortsLikeResult.emit(NetworkState.Error(400,"${error.message}"))
+            }.collect { values ->
+                _shortsLikeResult.emit(values)
             }
     }
 }

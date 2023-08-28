@@ -14,13 +14,16 @@ import com.cmc.recipe.data.model.response.ShortsContent
 import com.cmc.recipe.databinding.FragmentShortsBinding
 import com.cmc.recipe.presentation.ui.base.BaseFragment
 import com.cmc.recipe.presentation.ui.search.SearchActivity
-import com.cmc.recipe.presentation.viewmodel.RecipeViewModel
 import com.cmc.recipe.presentation.viewmodel.ShortsViewModel
 import com.cmc.recipe.utils.Constant
 import com.cmc.recipe.utils.NetworkState
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.take
 import kotlin.math.abs
 import kotlin.math.max
+
 
 @AndroidEntryPoint
 class ShortsFragment : BaseFragment<FragmentShortsBinding>(FragmentShortsBinding::inflate) {
@@ -28,11 +31,15 @@ class ShortsFragment : BaseFragment<FragmentShortsBinding>(FragmentShortsBinding
     private val shortsViewModel : ShortsViewModel by viewModels()
     private val exoPlayerItems = ArrayList<ExoPlayerItem>()
 
+    private lateinit var adapter : ShortsAdapter
+    private lateinit var itemList : ArrayList<ShortsContent>
+
     override fun initFragment() {
 
-        requestRecipeList()
+      //  requestRecipeList()
         searchShorts()
     }
+
 
     private fun requestRecipeList(){
         launchWithLifecycle(lifecycle) {
@@ -42,13 +49,12 @@ class ShortsFragment : BaseFragment<FragmentShortsBinding>(FragmentShortsBinding
                     is NetworkState.Success -> {
                         it.data?.let {data ->
                             if(data.code == "SUCCESS"){
-                                val itemList = it.data.data.content
-                                initVideo(itemList as ArrayList<ShortsContent>)
+                                itemList = it.data.data.content as ArrayList<ShortsContent>
+                                initVideo()
                             }else{
                                 Log.d("data","${data.data}")
                             }
                         }
-                        shortsViewModel._recipeShortsResult.value = NetworkState.Loading
                     }
                     is NetworkState.Error ->{
                         showToastMessage(it.message.toString())
@@ -80,6 +86,7 @@ class ShortsFragment : BaseFragment<FragmentShortsBinding>(FragmentShortsBinding
 
     private fun movePage(current:String,destination:String,keyword:String?){
         binding.searchView.setText("")
+        requireActivity().finish()
         val intent = Intent(requireContext(), SearchActivity::class.java)
         intent.putExtra("startDestination", destination)
         intent.putExtra("currentDestination", current)
@@ -87,36 +94,43 @@ class ShortsFragment : BaseFragment<FragmentShortsBinding>(FragmentShortsBinding
         startActivity(intent)
     }
 
-    private fun initVideo(itemList:ArrayList<ShortsContent>){
+    private fun moveShortsPage(position:Int){
+        requireActivity().finish()
+        val intent = Intent(requireContext(), ShortsDetailActivity::class.java)
+        intent.putExtra("position",position)
+        startActivity(intent)
+    }
+
+    private fun initVideo(){
         val clickListener = object : ShortsItemHolder.OnClickListener{
             override fun onMoveDetailPage(id:Int) {
-                val action = ShortsFragmentDirections.actionShortsFragmentToShortsDetailActivity(id)
-                findNavController().navigate(action)
+                moveShortsPage(id)
             }
         }
+
+
+        adapter = ShortsAdapter(requireContext(),clickListener)
+        adapter.setShortsListener(object : onShortsListener{
+            override fun onFavorite(id:Int) {
+                requestFavorite(id)
+            }
+
+            override fun onSave(id:Int) {
+
+            }
+
+            override fun onComment(id:Int) {
+                moveShortsPage(id)
+            }
+
+        })
 
         val videoPreparedListener = object : ShortsItemHolder.OnVideoPreparedListener{
             override fun onVideoPrepared(exoPlayerItem: ExoPlayerItem) {
                 exoPlayerItems.add(exoPlayerItem)
             }
         }
-        val adapter = ShortsAdapter(requireContext(),videoPreparedListener,clickListener)
-        adapter.setShortsListener(object : onShortsListener{
-            override fun onFavorite() {
-
-            }
-
-            override fun onSave() {
-
-            }
-
-            override fun onComment(id:Int) {
-                val action = ShortsFragmentDirections.actionShortsFragmentToShortsDetailActivity(id)
-                findNavController().navigate(action)
-            }
-
-        })
-
+        adapter.setvideoPreparedListener(videoPreparedListener)
         adapter.replaceData(itemList)
         val pageMargin = resources.getDimensionPixelOffset(R.dimen.pageMargin).toFloat()
         val pageOffset = resources.getDimensionPixelOffset(R.dimen.offset).toFloat()
@@ -141,10 +155,8 @@ class ShortsFragment : BaseFragment<FragmentShortsBinding>(FragmentShortsBinding
 
         binding.vpExoplayer.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
             override fun onPageSelected(position: Int) {
-                Log.d("page","${position}")
-                Log.d("registerOnPageChangeCallback : ","${exoPlayerItems[position]}")
-                val previousIndex = exoPlayerItems.indexOfFirst { it.exoPlayer.isPlaying }
 
+                val previousIndex = exoPlayerItems.indexOfFirst { it.exoPlayer.isPlaying }
                 if (previousIndex != -1) {
                     val player = exoPlayerItems[previousIndex].exoPlayer
                     player.pause()
@@ -157,7 +169,6 @@ class ShortsFragment : BaseFragment<FragmentShortsBinding>(FragmentShortsBinding
                     player.playWhenReady = true
                     player.play()
                 }
-                Log.d("onPageSelected","${previousIndex} , ${newIndex}")
             }
         })
 
@@ -165,11 +176,10 @@ class ShortsFragment : BaseFragment<FragmentShortsBinding>(FragmentShortsBinding
 
     override fun onPause() {
         super.onPause()
-
         val index = exoPlayerItems.indexOfFirst { it.position == binding.vpExoplayer.currentItem }
         if (index != -1) {
             val player = exoPlayerItems[index].exoPlayer
-            player.pause()
+            player.stop()
             player.playWhenReady = false
         }
     }
@@ -177,7 +187,10 @@ class ShortsFragment : BaseFragment<FragmentShortsBinding>(FragmentShortsBinding
     override fun onResume() {
         super.onResume()
 
+        requestRecipeList()
+
         val index = exoPlayerItems.indexOfFirst { it.position == binding.vpExoplayer.currentItem }
+
         if (index != -1) {
             val player = exoPlayerItems[index].exoPlayer
             player.playWhenReady = true
@@ -190,8 +203,51 @@ class ShortsFragment : BaseFragment<FragmentShortsBinding>(FragmentShortsBinding
         if (exoPlayerItems.isNotEmpty()) {
             for (item in exoPlayerItems) {
                 val player = item.exoPlayer
+                player.clearMediaItems()
                 player.release()
             }
+            exoPlayerItems.clear()
+        }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        if (exoPlayerItems.isNotEmpty()) {
+            for (item in exoPlayerItems) {
+                val player = item.exoPlayer
+                player.clearMediaItems()
+                player.release()
+            }
+            exoPlayerItems.clear()
+        }
+    }
+
+    private fun findShortsItemById(shortsId: Int): ShortsContent? {
+        return itemList.find { it.shortform_id == shortsId }
+    }
+
+    private fun requestFavorite(id:Int){
+        shortsViewModel.postShortformLike(id)
+        launchWithLifecycle(lifecycle){
+            shortsViewModel.shortsLikeResult.take(1).onEach{
+                when(it) {
+                    is NetworkState.Success -> {
+                        if (it.data.code == "SUCCESS") {
+
+                        }
+                        showToastMessage("${it.data}")
+                    }
+                    is NetworkState.Error -> {
+                        showToastMessage("리뷰 삭제에 실패했습니다. ${it.message.toString()}")
+                    }
+                    is NetworkState.Loading -> {
+                        // 프로그레스바 띄우기
+                    }
+                    else -> {
+                        showToastMessage("${it}")
+                    }
+                }
+            }.launchIn(this)
         }
     }
 }

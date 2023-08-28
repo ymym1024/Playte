@@ -81,7 +81,7 @@ class ShortsDetailHolder(viewBinding: ItemShortsDetailBinding, val context: Cont
                     btn.setImageResource(R.drawable.ic_shorts_heart_activate)
                     favoriteFlag = true
                 }
-                shortsListener.onFavorite()
+                shortsListener.onFavorite(item.shortform_id)
             }
         }
         // 댓글
@@ -131,7 +131,7 @@ class ShortsDetailHolder(viewBinding: ItemShortsDetailBinding, val context: Cont
                     btn.setImageResource(R.drawable.ic_shorts_bookmark_activate)
                     bookMarkFlag = true
                 }
-                shortsListener.onSave()
+                shortsListener.onSave(item.shortform_id)
             }
         }
 
@@ -197,8 +197,8 @@ class ShortsDetailHolder(viewBinding: ItemShortsDetailBinding, val context: Cont
     }
 
     private fun initShorts(binding:ItemShortsDetailBinding){
-        val exoPlayer = ExoPlayer.Builder(context).build()
-        exoPlayer.addListener(object : Player.Listener {
+        var exoPlayer = ExoPlayer.Builder(context).build()
+        val listener = object : Player.Listener {
             override fun onPlayerError(error: PlaybackException) {
                 super.onPlayerError(error)
                 Toast.makeText(context, "네트워크 연결상태를 확인하세요", Toast.LENGTH_SHORT).show()
@@ -211,7 +211,8 @@ class ShortsDetailHolder(viewBinding: ItemShortsDetailBinding, val context: Cont
                     binding.pbLoad.visibility = View.INVISIBLE
                 }
             }
-        })
+        }
+        exoPlayer.addListener(listener)
 
         binding.exoplayer.player = exoPlayer
         binding.exoplayer.controllerShowTimeoutMs = 0
@@ -243,11 +244,6 @@ class ShortsDetailHolder(viewBinding: ItemShortsDetailBinding, val context: Cont
 
         exoPlayer.setMediaSource(mediaSource)
         exoPlayer.prepare()
-
-        if (absoluteAdapterPosition == 0) {
-            exoPlayer.playWhenReady = true
-            exoPlayer.play()
-        }
 
         videoPreparedListener.onVideoPrepared(ExoPlayerItem(exoPlayer, absoluteAdapterPosition))
     }

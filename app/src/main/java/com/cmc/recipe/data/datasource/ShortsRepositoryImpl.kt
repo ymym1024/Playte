@@ -53,4 +53,19 @@ class ShortsRepositoryImpl @Inject constructor(
         }
     }
 
+    override fun postShortformLike(id: Int): Flow<NetworkState<BaseResponse>> = flow{
+        val response = service.postShortformLike(id)
+        if(response.isSuccessful){
+            response.body()?.let {
+                emit(NetworkState.Success(it))
+            }
+        }else{
+            try {
+                emit(NetworkState.Error(response.code(),response.errorBody()!!.string()))
+            }catch (e: IOException) {
+                e.printStackTrace()
+            }
+        }
+    }
+
 }

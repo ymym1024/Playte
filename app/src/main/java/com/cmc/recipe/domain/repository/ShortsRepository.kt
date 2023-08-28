@@ -14,4 +14,6 @@ interface ShortsRepository {
 
     fun getRecipesShortformDetail(id:Int) : Flow<NetworkState<ShortsDetailResponse>>
 
+    fun postShortformLike(id:Int) : Flow<NetworkState<BaseResponse>>
+
 }

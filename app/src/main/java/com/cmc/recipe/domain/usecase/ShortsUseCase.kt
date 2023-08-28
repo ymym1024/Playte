@@ -18,4 +18,6 @@ class ShortsUseCase @Inject constructor(
 
     fun getRecipesShortformDetail(id:Int) = repository.getRecipesShortformDetail(id)
 
+    fun postShortformLike(id:Int) = repository.postShortformLike(id)
+
 }

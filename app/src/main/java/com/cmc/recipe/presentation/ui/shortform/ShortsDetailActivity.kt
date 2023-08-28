@@ -1,33 +1,30 @@
 package com.cmc.recipe.presentation.ui.shortform
 
-import androidx.appcompat.app.AppCompatActivity
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import android.widget.Toast
 import androidx.activity.viewModels
-import androidx.fragment.app.viewModels
+import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
-import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.viewpager2.widget.ViewPager2
 import com.cmc.recipe.R
 import com.cmc.recipe.data.model.ExoPlayerItem
 import com.cmc.recipe.data.model.response.ShortsContent
+import com.cmc.recipe.data.model.response.ShortsResponse
 import com.cmc.recipe.databinding.ActivityShortsDetailBinding
-import com.cmc.recipe.databinding.ItemShortsDetailBinding
+import com.cmc.recipe.presentation.ui.MainActivity
 import com.cmc.recipe.presentation.ui.recipe.BottomSheetDetailDialog
-import com.cmc.recipe.presentation.viewmodel.RecipeViewModel
 import com.cmc.recipe.presentation.viewmodel.ShortsViewModel
 import com.cmc.recipe.utils.NetworkState
-import com.cmc.recipe.utils.navigationHeight
-import com.cmc.recipe.utils.setStatusBarTransparent
-import com.cmc.recipe.utils.statusBarHeight
-import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.google.android.exoplayer2.PlaybackException
+import com.google.android.exoplayer2.Player
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
+
 
 @AndroidEntryPoint
 class ShortsDetailActivity : AppCompatActivity() {
@@ -45,11 +42,52 @@ class ShortsDetailActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         //position 전달 받음
-        val shortsPosition = ShortsDetailActivityArgs.fromBundle(intent.extras!!).id
-        currentPosition = shortsPosition
+        currentPosition = intent.getIntExtra("position",0)
 
         requestRecipeList()
         initMenu()
+    }
+
+    override fun onPause() {
+        super.onPause()
+
+        val index = exoPlayerItems.indexOfFirst { it.position == binding.vpExoplayer.currentItem }
+        if (index != -1) {
+            val player = exoPlayerItems[index].exoPlayer
+            player.pause()
+            player.playWhenReady = false
+        }
+    }
+
+    override fun onResume() {
+        super.onResume()
+
+        val index = exoPlayerItems.indexOfFirst { it.position == binding.vpExoplayer.currentItem }
+        Log.d("onResume ","${index}")
+        if (index != -1) {
+            val player = exoPlayerItems[index].exoPlayer
+            player.playWhenReady = true
+            player.play()
+        }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        if (exoPlayerItems.isNotEmpty()) {
+            for (item in exoPlayerItems) {
+                val player = item.exoPlayer
+                player.clearMediaItems()
+                player.release()
+            }
+            exoPlayerItems.clear()
+        }
+    }
+
+    override fun onBackPressed() {
+        super.onBackPressed()
+        val intent = Intent(this, MainActivity::class.java)
+        startActivity(intent)
+        finish()
     }
 
     private fun requestRecipeList(){
@@ -61,11 +99,7 @@ class ShortsDetailActivity : AppCompatActivity() {
                         is NetworkState.Success -> {
                             response.data?.let { data ->
                                 if (data.code == "SUCCESS") {
-                                    val itemList = response.data.data.content
-                                    Log.d("여기 호출되는지 확인",itemList[0].video_url)
-                                    initVideo(itemList as ArrayList<ShortsContent>)
-                                } else {
-                                    Log.d("data", "${data.data}")
+                                    initVideo(response.data.data.content as ArrayList<ShortsContent>)
                                 }
                             }
                             shortsViewModel._recipeShortsResult.value = NetworkState.Loading
@@ -118,19 +152,25 @@ class ShortsDetailActivity : AppCompatActivity() {
         val adapter = ShortsDetailAdapter(applicationContext,object : ShortsItemHolder.OnVideoPreparedListener {
             override fun onVideoPrepared(exoPlayerItem: ExoPlayerItem) {
                 exoPlayerItems.add(exoPlayerItem)
+
+                if (exoPlayerItems.size == 1) {
+                    exoPlayerItem.exoPlayer.playWhenReady = true
+                    exoPlayerItem.exoPlayer.play()
+                }
             }
         })
 
-        adapter.setShortsListener(object : onShortsListener{
-            override fun onFavorite() {}
 
-            override fun onSave() {}
+        adapter.setShortsListener(object : onShortsListener{
+            override fun onFavorite(id:Int) {}
+
+            override fun onSave(id:Int) {}
 
             override fun onComment(id:Int) {}
         })
 
-        adapter.replaceData(itemList)
         binding.vpExoplayer.adapter = adapter
+        adapter.replaceData(itemList)
 
         binding.vpExoplayer.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
             override fun onPageSelected(position: Int) {
@@ -147,45 +187,41 @@ class ShortsDetailActivity : AppCompatActivity() {
                     val player = exoPlayerItems[newIndex].exoPlayer
                     player.playWhenReady = true
                     player.play()
+                    currentPosition = newIndex
                 }
-                currentPosition = position
-
-              //  requestRecipeDetail(itemList[currentPosition].shortform_id)
             }
+
         })
 
-    }
+//        binding.vpExoplayer.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
+//            private var lastPosition = -1
+//
+//            override fun onPageSelected(position: Int) {
+//                if (lastPosition != position) {
+//                    // 현재 페이지와 이전 페이지가 다를 경우에만 동작
+//                    if (lastPosition != -1) {
+//                        val lastPlayerIndex = exoPlayerItems.indexOfFirst { it.position == lastPosition }
+//                        if (lastPlayerIndex != -1) {
+//                            val lastPlayer = exoPlayerItems[lastPlayerIndex].exoPlayer
+//                            lastPlayer.pause()
+//                            lastPlayer.playWhenReady = false
+//                            lastPlayer.seekTo(0)
+//                        }
+//                    }
+//
+//                    val playerIndex = exoPlayerItems.indexOfFirst { it.position == position }
+//                    if (playerIndex != -1) {
+//                        val player = exoPlayerItems[playerIndex].exoPlayer
+//                        player.playWhenReady = true
+//                        player.play()
+//                        currentPosition = position
+//                    }
+//                    lastPosition = position
+//                }
+//
+//            }
+//        })
 
-    override fun onPause() {
-        super.onPause()
-
-        val index = exoPlayerItems.indexOfFirst { it.position == binding.vpExoplayer.currentItem }
-        if (index != -1) {
-            val player = exoPlayerItems[index].exoPlayer
-            player.pause()
-            player.playWhenReady = false
-        }
-    }
-
-    override fun onResume() {
-        super.onResume()
-
-        val index = exoPlayerItems.indexOfFirst { it.position == binding.vpExoplayer.currentItem }
-        if (index != -1) {
-            val player = exoPlayerItems[index].exoPlayer
-            player.playWhenReady = true
-            player.play()
-        }
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        if (exoPlayerItems.isNotEmpty()) {
-            for (item in exoPlayerItems) {
-                val player = item.exoPlayer
-                player.clearMediaItems()
-                player.release()
-            }
-        }
+        binding.vpExoplayer.setCurrentItem(currentPosition, false)
     }
 }

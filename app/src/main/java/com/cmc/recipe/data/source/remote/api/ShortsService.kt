@@ -14,4 +14,7 @@ interface ShortsService {
     @GET("/api/v1/recipes/shortform/detail/{shortform-id}")
     suspend fun getRecipesShortformDetail(@Path("shortform-id")id:Int) : Response<ShortsDetailResponse>
 
+    @POST("/api/v1/recipes/shortform/{shortform-recipe-id}/like")
+    suspend fun postShortformLike(@Path("shortform-id")id:Int) : Response<BaseResponse>
+
 }
