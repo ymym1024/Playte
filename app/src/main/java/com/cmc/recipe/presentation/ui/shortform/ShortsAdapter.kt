@@ -6,6 +6,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.Toast
 import com.cmc.recipe.R
 import com.cmc.recipe.data.model.ExoPlayerItem
@@ -13,6 +14,7 @@ import com.cmc.recipe.data.model.response.ShortsContent
 import com.cmc.recipe.databinding.ItemShortsBinding
 import com.cmc.recipe.presentation.ui.base.BaseAdapter
 import com.cmc.recipe.presentation.ui.base.BaseHolder
+import com.cmc.recipe.utils.dpToPx
 import com.google.android.exoplayer2.*
 import com.google.android.exoplayer2.source.ProgressiveMediaSource
 import com.google.android.exoplayer2.ui.AspectRatioFrameLayout
@@ -106,29 +108,32 @@ class ShortsItemHolder(viewBinding: ItemShortsBinding, val context: Context,val 
         binding.tvCommentCnt.text = "${item.comments_count}"
         binding.tvBookmarkCnt.text = "${item.saved_count}"
 
+        if(!item.is_liked) binding.ibHeart.setImageResource(R.drawable.ic_shorts_heart_deactivate)
+        else binding.ibHeart.setImageResource(R.drawable.ic_shorts_heart_activate)
+        binding.ibHeart.scaleType = ImageView.ScaleType.CENTER_CROP
+
+        if(!item.is_saved) binding.ibBookmark.setImageResource(R.drawable.ic_shorts_bookmark_deactivate)
+        else binding.ibBookmark.setImageResource(R.drawable.ic_shorts_bookmark_activate)
+        binding.ibBookmark.scaleType = ImageView.ScaleType.CENTER_CROP
+
+        var favoriteFlag = item.is_liked
         // 좋아요
         binding.ibHeart.setOnClickListener {
-            if(item.is_liked){
+            shortsListener.onFavorite(item.shortform_id) //서버로 통신하는 로직 추가
+            if(!favoriteFlag){
                 binding.ibHeart.setImageResource(R.drawable.ic_shorts_heart_deactivate)
+                favoriteFlag = !favoriteFlag
             }else{
                 binding.ibHeart.setImageResource(R.drawable.ic_shorts_heart_activate)
+                favoriteFlag = !favoriteFlag
             }
-            shortsListener.onFavorite(item.shortform_id) //서버로 통신하는 로직 추가
         }
         // 댓글
         binding.ibComment.setOnClickListener {
             shortsListener.onComment(position)
         }
         // 북마크
-        var bookMarkFlag = item.is_saved
         binding.ibBookmark.setOnClickListener {
-            if(bookMarkFlag){
-                binding.ibBookmark.setImageResource(R.drawable.ic_shorts_bookmark_deactivate)
-                bookMarkFlag = false
-            }else{
-                binding.ibBookmark.setImageResource(R.drawable.ic_shorts_bookmark_activate)
-                bookMarkFlag = true
-            }
             shortsListener.onSave(item.shortform_id)
         }
     }

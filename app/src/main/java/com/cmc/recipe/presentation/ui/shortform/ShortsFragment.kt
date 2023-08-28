@@ -5,7 +5,11 @@ import android.content.Intent
 import android.util.Log
 import android.view.KeyEvent
 import android.view.inputmethod.EditorInfo
+import android.widget.Toast
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.viewpager2.widget.ViewPager2
 import com.cmc.recipe.R
@@ -21,6 +25,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.take
+import kotlinx.coroutines.launch
 import kotlin.math.abs
 import kotlin.math.max
 
@@ -33,6 +38,8 @@ class ShortsFragment : BaseFragment<FragmentShortsBinding>(FragmentShortsBinding
 
     private lateinit var adapter : ShortsAdapter
     private lateinit var itemList : ArrayList<ShortsContent>
+
+    private var favoriteFlag : Boolean? = null
 
     override fun initFragment() {
 
@@ -108,11 +115,10 @@ class ShortsFragment : BaseFragment<FragmentShortsBinding>(FragmentShortsBinding
             }
         }
 
-
         adapter = ShortsAdapter(requireContext(),clickListener)
         adapter.setShortsListener(object : onShortsListener{
             override fun onFavorite(id:Int) {
-                requestFavorite(id)
+                requestShortsLikeOrUnLike(id)
             }
 
             override fun onSave(id:Int) {
@@ -226,28 +232,79 @@ class ShortsFragment : BaseFragment<FragmentShortsBinding>(FragmentShortsBinding
         return itemList.find { it.shortform_id == shortsId }
     }
 
-    private fun requestFavorite(id:Int){
+    private fun requestShortsLikeOrUnLike(id: Int) {
+        val item = findShortsItemById(id)
+
+        if(favoriteFlag == null){
+            favoriteFlag = item!!.is_liked
+        }
+        if (item != null) {
+            if (!favoriteFlag!!) {
+                requestFavorite(id)
+                favoriteFlag = true
+            } else {
+                requestUnFavorite(id)
+                favoriteFlag = false
+            }
+        }
+    }
+
+    private fun requestFavorite(id:Int) {
         shortsViewModel.postShortformLike(id)
         launchWithLifecycle(lifecycle){
-            shortsViewModel.shortsLikeResult.take(1).onEach{
-                when(it) {
+            shortsViewModel.shortsLikeResult.collect{
+                when (it) {
                     is NetworkState.Success -> {
                         if (it.data.code == "SUCCESS") {
+                            val item = findShortsItemById(id)
+                            item?.is_liked = true
+                            item?.likes_count = item?.likes_count!! + 1
+                            favoriteFlag = true
 
+                            adapter.getData().add(id,item)
                         }
-                        showToastMessage("${it.data}")
                     }
                     is NetworkState.Error -> {
-                        showToastMessage("리뷰 삭제에 실패했습니다. ${it.message.toString()}")
+                        showToastMessage("${it}")
                     }
                     is NetworkState.Loading -> {
                         // 프로그레스바 띄우기
                     }
                     else -> {
-                        showToastMessage("${it}")
+
                     }
                 }
-            }.launchIn(this)
+            }
+        }
+    }
+
+    private fun requestUnFavorite(id:Int) {
+        shortsViewModel.postShortformUnLike(id)
+        launchWithLifecycle(lifecycle){
+            shortsViewModel.shortsUnLikeResult.collect {
+                when (it) {
+                    is NetworkState.Success -> {
+                        if (it.data.code == "SUCCESS") {
+                            val item = findShortsItemById(id)
+                            item?.is_liked = false
+                            item?.likes_count = item?.likes_count!! - 1
+                            favoriteFlag = false
+
+                            adapter.getData().add(id,item)
+                        }
+                        showToastMessage("${it.data}")
+                    }
+                    is NetworkState.Error -> {
+                        showToastMessage("${it}")
+                    }
+                    is NetworkState.Loading -> {
+                        // 프로그레스바 띄우기
+                    }
+                    else -> {
+
+                    }
+                }
+            }
         }
     }
 }

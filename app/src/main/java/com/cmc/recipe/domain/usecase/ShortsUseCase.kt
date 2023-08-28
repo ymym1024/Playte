@@ -20,4 +20,6 @@ class ShortsUseCase @Inject constructor(
 
     fun postShortformLike(id:Int) = repository.postShortformLike(id)
 
+    fun postShortformUnLike(id:Int) = repository.postShortformUnLike(id)
+
 }

@@ -22,7 +22,6 @@ class ShortsRepositoryImpl @Inject constructor(
     private val service: ShortsService,
 ) : ShortsRepository {
 
-
     override fun getRecipesShortform(): Flow<NetworkState<ShortsResponse>> = flow {
         val response = service.getRecipesShortform()
         if(response.isSuccessful){
@@ -55,6 +54,21 @@ class ShortsRepositoryImpl @Inject constructor(
 
     override fun postShortformLike(id: Int): Flow<NetworkState<BaseResponse>> = flow{
         val response = service.postShortformLike(id)
+        if(response.isSuccessful){
+            response.body()?.let {
+                emit(NetworkState.Success(it))
+            }
+        }else{
+            try {
+                emit(NetworkState.Error(response.code(),response.errorBody()!!.string()))
+            }catch (e: IOException) {
+                e.printStackTrace()
+            }
+        }
+    }
+
+    override fun postShortformUnLike(id: Int): Flow<NetworkState<BaseResponse>> =flow{
+        val response = service.postShortformUnLike(id)
         if(response.isSuccessful){
             response.body()?.let {
                 emit(NetworkState.Success(it))

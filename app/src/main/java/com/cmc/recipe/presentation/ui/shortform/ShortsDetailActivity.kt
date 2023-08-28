@@ -23,6 +23,9 @@ import com.cmc.recipe.utils.NetworkState
 import com.google.android.exoplayer2.PlaybackException
 import com.google.android.exoplayer2.Player
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.take
 import kotlinx.coroutines.launch
 
 
@@ -35,6 +38,9 @@ class ShortsDetailActivity : AppCompatActivity() {
     private var currentPosition = 0
 
     private var isMute = false
+
+    private lateinit var adapter : ShortsDetailAdapter
+    private var favoriteFlag : Boolean? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -149,7 +155,7 @@ class ShortsDetailActivity : AppCompatActivity() {
     }
 
     private fun initVideo(itemList:ArrayList<ShortsContent>){
-        val adapter = ShortsDetailAdapter(applicationContext,object : ShortsItemHolder.OnVideoPreparedListener {
+        adapter = ShortsDetailAdapter(applicationContext,object : ShortsItemHolder.OnVideoPreparedListener {
             override fun onVideoPrepared(exoPlayerItem: ExoPlayerItem) {
                 exoPlayerItems.add(exoPlayerItem)
 
@@ -162,7 +168,9 @@ class ShortsDetailActivity : AppCompatActivity() {
 
 
         adapter.setShortsListener(object : onShortsListener{
-            override fun onFavorite(id:Int) {}
+            override fun onFavorite(id:Int) {
+                requestShortsLikeOrUnLike(id)
+            }
 
             override fun onSave(id:Int) {}
 
@@ -192,36 +200,89 @@ class ShortsDetailActivity : AppCompatActivity() {
             }
 
         })
-
-//        binding.vpExoplayer.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
-//            private var lastPosition = -1
-//
-//            override fun onPageSelected(position: Int) {
-//                if (lastPosition != position) {
-//                    // 현재 페이지와 이전 페이지가 다를 경우에만 동작
-//                    if (lastPosition != -1) {
-//                        val lastPlayerIndex = exoPlayerItems.indexOfFirst { it.position == lastPosition }
-//                        if (lastPlayerIndex != -1) {
-//                            val lastPlayer = exoPlayerItems[lastPlayerIndex].exoPlayer
-//                            lastPlayer.pause()
-//                            lastPlayer.playWhenReady = false
-//                            lastPlayer.seekTo(0)
-//                        }
-//                    }
-//
-//                    val playerIndex = exoPlayerItems.indexOfFirst { it.position == position }
-//                    if (playerIndex != -1) {
-//                        val player = exoPlayerItems[playerIndex].exoPlayer
-//                        player.playWhenReady = true
-//                        player.play()
-//                        currentPosition = position
-//                    }
-//                    lastPosition = position
-//                }
-//
-//            }
-//        })
-
         binding.vpExoplayer.setCurrentItem(currentPosition, false)
     }
+
+    private fun findShortsItemById(shortsId: Int): ShortsContent? {
+        return adapter.getData().find { it.shortform_id == shortsId }
+    }
+
+    private fun requestFavorite(id:Int) {
+        shortsViewModel.postShortformLike(id)
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                shortsViewModel.shortsLikeResult.collect{
+                    when (it) {
+                        is NetworkState.Success -> {
+                            if (it.data.code == "SUCCESS") {
+                                val item = findShortsItemById(id)
+                                item?.is_liked = true
+                                item?.likes_count = item?.likes_count!! + 1
+
+                                adapter.getData().add(id,item)
+                            }
+                        }
+                        is NetworkState.Error -> {
+                            Toast.makeText(applicationContext, "${it.message}", Toast.LENGTH_SHORT)
+                                .show()
+                        }
+                        is NetworkState.Loading -> {
+                            // 프로그레스바 띄우기
+                        }
+                        else -> {
+
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    private fun requestUnFavorite(id:Int) {
+        shortsViewModel.postShortformUnLike(id)
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                shortsViewModel.shortsUnLikeResult.collect{
+                    when (it) {
+                        is NetworkState.Success -> {
+                            if (it.data.code == "SUCCESS") {
+                                val item = findShortsItemById(id)
+                                item?.is_liked = false
+                                item?.likes_count = item?.likes_count!! - 1
+
+                                adapter.getData().add(id,item)
+                            }
+                        }
+                        is NetworkState.Error -> {
+                            Toast.makeText(applicationContext, "${it.message}", Toast.LENGTH_SHORT)
+                                .show()
+                        }
+                        is NetworkState.Loading -> {
+                            // 프로그레스바 띄우기
+                        }
+                        else -> {
+
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    fun requestShortsLikeOrUnLike(id: Int) {
+        val item = findShortsItemById(id)
+        if(favoriteFlag == null){
+            favoriteFlag = item!!.is_liked
+        }
+        if (item != null) {
+            if (!favoriteFlag!!) {
+                requestFavorite(id)
+                favoriteFlag = true
+            } else {
+                requestUnFavorite(id)
+                favoriteFlag = false
+            }
+        }
+    }
 }
+

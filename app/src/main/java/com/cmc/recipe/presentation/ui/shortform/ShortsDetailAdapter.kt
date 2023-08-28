@@ -42,7 +42,6 @@ class ShortsDetailAdapter(private val context:Context,val videoPreparedListener:
     fun setShortsListener(onShortsListener:onShortsListener){
         this.onShortsListener = onShortsListener
     }
-
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ShortsDetailHolder {
         return ShortsDetailHolder(
             ItemShortsDetailBinding.inflate(LayoutInflater.from(parent.context), parent, false),
@@ -70,20 +69,28 @@ class ShortsDetailHolder(viewBinding: ItemShortsDetailBinding, val context: Cont
         initShorts(binding)
 
         // 댓글
-        var favoriteFlag = true // TODO : 나중에 서버에서 받아오기
         // 좋아요
+        var favoriteFlag = item.is_liked
+        if(!favoriteFlag){
+            binding.btnHeart.setImageResource(R.drawable.ic_shorts_heart_deactivate)
+        }else{
+            binding.btnHeart.setImageResource(R.drawable.ic_shorts_heart_activate)
+        }
+        binding.btnHeart.scaleType = ImageView.ScaleType.CENTER_CROP
+
         binding.btnHeart.let { btn->
             btn.setOnClickListener{
-                if(favoriteFlag){
-                    btn.setImageResource(R.drawable.ic_shorts_heart_deactivate)
-                    favoriteFlag = false
-                }else{
-                    btn.setImageResource(R.drawable.ic_shorts_heart_activate)
-                    favoriteFlag = true
-                }
                 shortsListener.onFavorite(item.shortform_id)
+                if(!favoriteFlag){
+                    binding.btnHeart.setImageResource(R.drawable.ic_shorts_heart_deactivate)
+                    favoriteFlag = !favoriteFlag
+                }else{
+                    binding.btnHeart.setImageResource(R.drawable.ic_shorts_heart_activate)
+                    favoriteFlag = !favoriteFlag
+                }
             }
         }
+
         // 댓글
         binding.bottomSheetComment.post {
             val bottomSheetVisibleHeight =  binding.bottomSheetComment.height -  binding.bottomSheetComment.top
@@ -95,11 +102,8 @@ class ShortsDetailHolder(viewBinding: ItemShortsDetailBinding, val context: Cont
                 Log.d("newState","${newState}")
                 if (newState == BottomSheetBehavior.STATE_EXPANDED) {
                     Log.d("newState","${newState}")
-                    //bottomSheet.layoutParams.height = BottomSheetBehavior.LayoutParams.MATCH_PARENT
                 } else if (newState == BottomSheetBehavior.STATE_COLLAPSED) {
                     Log.d("newState","${newState}")
-                    // Restore original BottomSheet height
-                    // bottomSheet.layoutParams.height = BottomSheetBehavior.LayoutParams.WRAP_CONTENT
                 }
             }
 
@@ -124,17 +128,17 @@ class ShortsDetailHolder(viewBinding: ItemShortsDetailBinding, val context: Cont
         var bookMarkFlag = true // TODO : 나중에 서버에서 받아오기
         binding.btnBookmark.let { btn ->
             btn.setOnClickListener {
-                if(bookMarkFlag){
-                    btn.setImageResource(R.drawable.ic_shorts_bookmark_deactivate)
-                    bookMarkFlag = false
-                }else{
-                    btn.setImageResource(R.drawable.ic_shorts_bookmark_activate)
-                    bookMarkFlag = true
-                }
                 shortsListener.onSave(item.shortform_id)
             }
         }
 
+        if(!bookMarkFlag){
+            binding.btnBookmark.setImageResource(R.drawable.ic_shorts_bookmark_deactivate)
+        }else{
+            binding.btnBookmark.setImageResource(R.drawable.ic_shorts_bookmark_activate)
+        }
+
+        binding.btnBookmark.scaleType = ImageView.ScaleType.CENTER_CROP
         // 텍스트 접기
         val originalMaxLines = binding.tvShortContent.maxLines
         val expandedMaxLines = Int.MAX_VALUE
