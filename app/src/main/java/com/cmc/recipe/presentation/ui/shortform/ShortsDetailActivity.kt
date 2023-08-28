@@ -36,6 +36,7 @@ class ShortsDetailActivity : AppCompatActivity() {
     private lateinit var binding: ActivityShortsDetailBinding
     private val exoPlayerItems = ArrayList<ExoPlayerItem>()
     private var currentPosition = 0
+    private var currentId = 0
 
     private var isMute = false
 
@@ -152,8 +153,16 @@ class ShortsDetailActivity : AppCompatActivity() {
     }
 
     private fun showBottomSheet(){
-        BottomSheetDetailDialog().show(supportFragmentManager,"RemoveBottomSheetFragment")
+        val dialog = BottomSheetDetailDialog()
+        dialog.setNoshowListener {  // 관심없음
+            requestReport(currentId)
+        }
+        dialog.setNoshowListener { //신고하기
+            requestReport(currentId)
+        }
+        dialog.show(supportFragmentManager,"RemoveBottomSheetFragment")
     }
+
 
     private fun initVideo(itemList:ArrayList<ShortsContent>){
         adapter = ShortsDetailAdapter(applicationContext,object : ShortsItemHolder.OnVideoPreparedListener {
@@ -185,6 +194,7 @@ class ShortsDetailActivity : AppCompatActivity() {
 
         binding.vpExoplayer.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
             override fun onPageSelected(position: Int) {
+                currentId = itemList[position].shortform_id
                 val previousIndex = exoPlayerItems.indexOfFirst { it.exoPlayer.isPlaying }
 
                 if (previousIndex != -1) {
@@ -254,6 +264,36 @@ class ShortsDetailActivity : AppCompatActivity() {
                                 item?.likes_count = item?.likes_count!! - 1
 
                                 adapter.getData().add(id,item)
+                            }
+                        }
+                        is NetworkState.Error -> {
+                            Toast.makeText(applicationContext, "${it.message}", Toast.LENGTH_SHORT)
+                                .show()
+                        }
+                        is NetworkState.Loading -> {
+                            // 프로그레스바 띄우기
+                        }
+                        else -> {
+
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    private fun requestReport(id:Int) {
+        shortsViewModel.reportShortform(id)
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                shortsViewModel.reportResult.collect{
+                    when (it) {
+                        is NetworkState.Success -> {
+                            if (it.data.code == "SUCCESS") {
+                                Log.d("현재 position","${currentPosition}")
+                                binding.vpExoplayer.setCurrentItem(++currentPosition, true)
+                                Toast.makeText(applicationContext, "해당 숏폼은 신고 되었습니다", Toast.LENGTH_SHORT)
+                                    .show()
                             }
                         }
                         is NetworkState.Error -> {

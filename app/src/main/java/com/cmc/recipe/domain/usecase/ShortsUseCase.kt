@@ -26,4 +26,6 @@ class ShortsUseCase @Inject constructor(
 
     fun postShortformUnSave(id:Int) = repository.postShortformUnSave(id)
 
+    fun reportShortform(id:Int) = repository.reportShortform(id)
+
 }

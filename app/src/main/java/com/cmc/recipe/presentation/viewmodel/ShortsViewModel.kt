@@ -45,6 +45,9 @@ class ShortsViewModel @Inject constructor(private val shortsUseCase: ShortsUseCa
     var _shortsUnSaveResult : MutableSharedFlow<NetworkState<BaseResponse>> = MutableSharedFlow()
     var shortsUnSaveResult = _shortsUnSaveResult.asSharedFlow()
 
+    var _reportResult : MutableSharedFlow<NetworkState<BaseResponse>> = MutableSharedFlow()
+    var reportResult = _reportResult.asSharedFlow()
+
     fun getRecipesShortform() = viewModelScope.launch {
         _recipeShortsResult.value = NetworkState.Loading
         shortsUseCase.getRecipesShortform()
@@ -102,6 +105,16 @@ class ShortsViewModel @Inject constructor(private val shortsUseCase: ShortsUseCa
                 _shortsUnSaveResult.emit(NetworkState.Error(400,"${error.message}"))
             }.collect { values ->
                 _shortsUnSaveResult.emit(values)
+            }
+    }
+
+    fun reportShortform(id:Int) = viewModelScope.launch {
+        _reportResult.emit(NetworkState.Loading)
+        shortsUseCase.reportShortform(id)
+            .catch { error ->
+                _reportResult.emit(NetworkState.Error(400,"${error.message}"))
+            }.collect { values ->
+                _reportResult.emit(values)
             }
     }
 }
