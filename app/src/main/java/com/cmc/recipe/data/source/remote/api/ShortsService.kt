@@ -20,4 +20,10 @@ interface ShortsService {
     @POST("/api/v1/recipes/shortform/{shortform-recipe-id}/unlike")
     suspend fun postShortformUnLike(@Path("shortform-recipe-id")id:Int) : Response<BaseResponse>
 
+    @POST("/api/v1/recipes/shortform/{shortform-recipe-id}/save")
+    suspend fun postShortformSave(@Path("shortform-recipe-id")id:Int) : Response<BaseResponse>
+
+    @POST("/api/v1/recipes/shortform/{shortform-recipe-id}/unsave")
+    suspend fun postShortformUnSave(@Path("shortform-recipe-id")id:Int) : Response<BaseResponse>
+
 }

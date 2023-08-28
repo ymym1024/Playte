@@ -82,4 +82,34 @@ class ShortsRepositoryImpl @Inject constructor(
         }
     }
 
+    override fun postShortformSave(id: Int): Flow<NetworkState<BaseResponse>> =flow{
+        val response = service.postShortformSave(id)
+        if(response.isSuccessful){
+            response.body()?.let {
+                emit(NetworkState.Success(it))
+            }
+        }else{
+            try {
+                emit(NetworkState.Error(response.code(),response.errorBody()!!.string()))
+            }catch (e: IOException) {
+                e.printStackTrace()
+            }
+        }
+    }
+
+    override fun postShortformUnSave(id: Int): Flow<NetworkState<BaseResponse>> =flow{
+        val response = service.postShortformUnSave(id)
+        if(response.isSuccessful){
+            response.body()?.let {
+                emit(NetworkState.Success(it))
+            }
+        }else{
+            try {
+                emit(NetworkState.Error(response.code(),response.errorBody()!!.string()))
+            }catch (e: IOException) {
+                e.printStackTrace()
+            }
+        }
+    }
+
 }

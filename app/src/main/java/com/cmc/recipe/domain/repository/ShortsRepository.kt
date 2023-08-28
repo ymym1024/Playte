@@ -18,4 +18,8 @@ interface ShortsRepository {
 
     fun postShortformUnLike(id:Int) : Flow<NetworkState<BaseResponse>>
 
+    fun postShortformSave(id:Int) : Flow<NetworkState<BaseResponse>>
+
+    fun postShortformUnSave(id:Int) : Flow<NetworkState<BaseResponse>>
+
 }

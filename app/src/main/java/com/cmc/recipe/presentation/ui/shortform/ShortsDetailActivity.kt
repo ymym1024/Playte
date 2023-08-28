@@ -41,6 +41,7 @@ class ShortsDetailActivity : AppCompatActivity() {
 
     private lateinit var adapter : ShortsDetailAdapter
     private var favoriteFlag : Boolean? = null
+    private var saveFlag : Boolean? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -172,7 +173,9 @@ class ShortsDetailActivity : AppCompatActivity() {
                 requestShortsLikeOrUnLike(id)
             }
 
-            override fun onSave(id:Int) {}
+            override fun onSave(id:Int) {
+                requestShortsSaveOrUnSave(id)
+            }
 
             override fun onComment(id:Int) {}
         })
@@ -281,6 +284,83 @@ class ShortsDetailActivity : AppCompatActivity() {
             } else {
                 requestUnFavorite(id)
                 favoriteFlag = false
+            }
+        }
+    }
+
+    private fun requestShortsSaveOrUnSave(id: Int) {
+        val item = findShortsItemById(id)
+
+        if(saveFlag == null){
+            saveFlag = item!!.is_saved
+        }
+        if (item != null) {
+            if (!saveFlag!!) {
+                requestSave(id)
+                saveFlag = true
+            } else {
+                requestUnSave(id)
+                saveFlag = false
+            }
+        }
+    }
+
+    private fun requestSave(id:Int) {
+        shortsViewModel.postShortformSave(id)
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                shortsViewModel.shortsSaveResult.collect {
+                    when (it) {
+                        is NetworkState.Success -> {
+                            if (it.data.code == "SUCCESS") {
+                                val item = findShortsItemById(id)
+                                item?.is_saved = true
+                                item?.saved_count = item?.saved_count!! + 1
+                                saveFlag = true
+
+                                adapter.getData().add(id, item)
+                            }
+                        }
+                        is NetworkState.Error -> {
+                            //showToastMessage("${it}")
+                        }
+                        is NetworkState.Loading -> {
+                            // 프로그레스바 띄우기
+                        }
+                        else -> {
+
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    private fun requestUnSave(id:Int) {
+        shortsViewModel.postShortformUnSave(id)
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                shortsViewModel.shortsUnSaveResult.collect {
+                    when (it) {
+                        is NetworkState.Success -> {
+                            if (it.data.code == "SUCCESS") {
+                                val item = findShortsItemById(id)
+                                item?.is_saved = false
+                                item?.saved_count = item?.saved_count!! - 1
+                                saveFlag = false
+
+                                adapter.getData().add(id, item)
+                            }
+                            //showToastMessage("${it.data}")
+                        }
+                        is NetworkState.Error -> {
+                           // showToastMessage("${it}")
+                        }
+                        else -> {
+
+                        }
+                    }
+                }
             }
         }
     }

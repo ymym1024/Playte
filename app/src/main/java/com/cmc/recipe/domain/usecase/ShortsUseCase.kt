@@ -22,4 +22,8 @@ class ShortsUseCase @Inject constructor(
 
     fun postShortformUnLike(id:Int) = repository.postShortformUnLike(id)
 
+    fun postShortformSave(id:Int) = repository.postShortformSave(id)
+
+    fun postShortformUnSave(id:Int) = repository.postShortformUnSave(id)
+
 }

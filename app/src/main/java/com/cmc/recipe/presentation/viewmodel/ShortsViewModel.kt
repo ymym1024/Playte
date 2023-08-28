@@ -39,6 +39,12 @@ class ShortsViewModel @Inject constructor(private val shortsUseCase: ShortsUseCa
     var _shortsUnLikeResult : MutableStateFlow<NetworkState<BaseResponse>> = MutableStateFlow(NetworkState.Loading)
     var shortsUnLikeResult : StateFlow<NetworkState<BaseResponse>> = _shortsUnLikeResult.asStateFlow()
 
+    var _shortsSaveResult : MutableSharedFlow<NetworkState<BaseResponse>> = MutableSharedFlow()
+    var shortsSaveResult = _shortsSaveResult.asSharedFlow()
+
+    var _shortsUnSaveResult : MutableSharedFlow<NetworkState<BaseResponse>> = MutableSharedFlow()
+    var shortsUnSaveResult = _shortsUnSaveResult.asSharedFlow()
+
     fun getRecipesShortform() = viewModelScope.launch {
         _recipeShortsResult.value = NetworkState.Loading
         shortsUseCase.getRecipesShortform()
@@ -70,12 +76,32 @@ class ShortsViewModel @Inject constructor(private val shortsUseCase: ShortsUseCa
     }
 
     fun postShortformUnLike(id:Int) = viewModelScope.launch {
-        _shortsLikeResult.emit(NetworkState.Loading)
+        _shortsUnLikeResult.emit(NetworkState.Loading)
         shortsUseCase.postShortformUnLike(id)
             .catch { error ->
-                _shortsLikeResult.emit(NetworkState.Error(400,"${error.message}"))
+                _shortsUnLikeResult.emit(NetworkState.Error(400,"${error.message}"))
             }.collect { values ->
-                _shortsLikeResult.emit(values)
+                _shortsUnLikeResult.emit(values)
+            }
+    }
+
+    fun postShortformSave(id:Int) = viewModelScope.launch {
+        _shortsSaveResult.emit(NetworkState.Loading)
+        shortsUseCase.postShortformSave(id)
+            .catch { error ->
+                _shortsSaveResult.emit(NetworkState.Error(400,"${error.message}"))
+            }.collect { values ->
+                _shortsSaveResult.emit(values)
+            }
+    }
+
+    fun postShortformUnSave(id:Int) = viewModelScope.launch {
+        _shortsUnSaveResult.emit(NetworkState.Loading)
+        shortsUseCase.postShortformUnSave(id)
+            .catch { error ->
+                _shortsUnSaveResult.emit(NetworkState.Error(400,"${error.message}"))
+            }.collect { values ->
+                _shortsUnSaveResult.emit(values)
             }
     }
 }

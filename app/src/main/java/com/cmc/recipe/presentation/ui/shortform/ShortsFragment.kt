@@ -40,6 +40,7 @@ class ShortsFragment : BaseFragment<FragmentShortsBinding>(FragmentShortsBinding
     private lateinit var itemList : ArrayList<ShortsContent>
 
     private var favoriteFlag : Boolean? = null
+    private var saveFlag : Boolean? = null
 
     override fun initFragment() {
 
@@ -122,7 +123,7 @@ class ShortsFragment : BaseFragment<FragmentShortsBinding>(FragmentShortsBinding
             }
 
             override fun onSave(id:Int) {
-
+                requestShortsSaveOrUnSave(id)
             }
 
             override fun onComment(id:Int) {
@@ -299,6 +300,79 @@ class ShortsFragment : BaseFragment<FragmentShortsBinding>(FragmentShortsBinding
                     }
                     is NetworkState.Loading -> {
                         // 프로그레스바 띄우기
+                    }
+                    else -> {
+
+                    }
+                }
+            }
+        }
+    }
+
+    private fun requestShortsSaveOrUnSave(id: Int) {
+        val item = findShortsItemById(id)
+
+        if(saveFlag == null){
+            saveFlag = item!!.is_saved
+        }
+        if (item != null) {
+            if (!saveFlag!!) {
+                requestSave(id)
+                saveFlag = true
+            } else {
+                requestUnSave(id)
+                saveFlag = false
+            }
+        }
+    }
+
+    private fun requestSave(id:Int) {
+        shortsViewModel.postShortformSave(id)
+        launchWithLifecycle(lifecycle){
+            shortsViewModel.shortsSaveResult.collect{
+                when (it) {
+                    is NetworkState.Success -> {
+                        if (it.data.code == "SUCCESS") {
+                            val item = findShortsItemById(id)
+                            item?.is_saved = true
+                            item?.saved_count = item?.saved_count!! + 1
+                            saveFlag = true
+
+                            adapter.getData().add(id,item)
+                        }
+                    }
+                    is NetworkState.Error -> {
+                        showToastMessage("${it}")
+                    }
+                    is NetworkState.Loading -> {
+                        // 프로그레스바 띄우기
+                    }
+                    else -> {
+
+                    }
+                }
+            }
+        }
+    }
+
+    private fun requestUnSave(id:Int) {
+        shortsViewModel.postShortformUnSave(id)
+        launchWithLifecycle(lifecycle){
+            shortsViewModel.shortsUnSaveResult.collect {
+                when (it) {
+                    is NetworkState.Success -> {
+                        if (it.data.code == "SUCCESS") {
+                            val item = findShortsItemById(id)
+                            item?.is_saved = false
+                            item?.saved_count = item?.saved_count!! - 1
+                            saveFlag = false
+
+                            adapter.getData().add(id,item)
+                        }
+                        showToastMessage("${it.data}")
+                    }
+                    is NetworkState.Error -> {
+                        showToastMessage("${it}")
                     }
                     else -> {
 

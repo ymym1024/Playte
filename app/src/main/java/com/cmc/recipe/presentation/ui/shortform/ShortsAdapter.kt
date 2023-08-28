@@ -120,11 +120,11 @@ class ShortsItemHolder(viewBinding: ItemShortsBinding, val context: Context,val 
         // 좋아요
         binding.ibHeart.setOnClickListener {
             shortsListener.onFavorite(item.shortform_id) //서버로 통신하는 로직 추가
-            if(!favoriteFlag){
-                binding.ibHeart.setImageResource(R.drawable.ic_shorts_heart_deactivate)
-                favoriteFlag = !favoriteFlag
-            }else{
+            if(!favoriteFlag){ // false
                 binding.ibHeart.setImageResource(R.drawable.ic_shorts_heart_activate)
+                favoriteFlag = !favoriteFlag
+            }else{ // true
+                binding.ibHeart.setImageResource(R.drawable.ic_shorts_heart_deactivate)
                 favoriteFlag = !favoriteFlag
             }
         }
@@ -133,8 +133,16 @@ class ShortsItemHolder(viewBinding: ItemShortsBinding, val context: Context,val 
             shortsListener.onComment(position)
         }
         // 북마크
+        var saveFlag = item.is_liked
         binding.ibBookmark.setOnClickListener {
             shortsListener.onSave(item.shortform_id)
+            if(!saveFlag){  // false
+                binding.ibBookmark.setImageResource(R.drawable.ic_shorts_bookmark_activate)
+                saveFlag = !saveFlag
+            }else{  // true
+                binding.ibBookmark.setImageResource(R.drawable.ic_shorts_bookmark_deactivate)
+                saveFlag = !saveFlag
+            }
         }
     }
 

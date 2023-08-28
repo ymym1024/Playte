@@ -91,6 +91,26 @@ class ShortsDetailHolder(viewBinding: ItemShortsDetailBinding, val context: Cont
             }
         }
 
+        // 북마크
+        var saveFlag = item.is_liked
+        if(!saveFlag){
+            binding.btnBookmark.setImageResource(R.drawable.ic_shorts_bookmark_deactivate)
+        }else{
+            binding.btnBookmark.setImageResource(R.drawable.ic_shorts_bookmark_activate)
+        }
+        binding.btnBookmark.scaleType = ImageView.ScaleType.CENTER_CROP
+        binding.btnBookmark.let { btn ->
+            btn.setOnClickListener {
+                shortsListener.onSave(item.shortform_id)
+                if(!saveFlag){  // false
+                    btn.setImageResource(R.drawable.ic_shorts_bookmark_activate)
+                    saveFlag = !saveFlag
+                }else{  // true
+                    btn.setImageResource(R.drawable.ic_shorts_bookmark_deactivate)
+                    saveFlag = !saveFlag
+                }
+            }
+        }
         // 댓글
         binding.bottomSheetComment.post {
             val bottomSheetVisibleHeight =  binding.bottomSheetComment.height -  binding.bottomSheetComment.top
@@ -124,19 +144,7 @@ class ShortsDetailHolder(viewBinding: ItemShortsDetailBinding, val context: Cont
                 bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
             }
         }
-        // 북마크
-        var bookMarkFlag = true // TODO : 나중에 서버에서 받아오기
-        binding.btnBookmark.let { btn ->
-            btn.setOnClickListener {
-                shortsListener.onSave(item.shortform_id)
-            }
-        }
 
-        if(!bookMarkFlag){
-            binding.btnBookmark.setImageResource(R.drawable.ic_shorts_bookmark_deactivate)
-        }else{
-            binding.btnBookmark.setImageResource(R.drawable.ic_shorts_bookmark_activate)
-        }
 
         binding.btnBookmark.scaleType = ImageView.ScaleType.CENTER_CROP
         // 텍스트 접기
