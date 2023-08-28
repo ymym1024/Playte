@@ -1,7 +1,11 @@
 package com.cmc.recipe.presentation.viewmodel
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.cmc.recipe.data.model.RecipeItem
+import com.cmc.recipe.data.model.entity.RecipeEntity
+import com.cmc.recipe.data.model.entity.SearchEntity
 import com.cmc.recipe.data.model.response.*
 import com.cmc.recipe.data.source.remote.request.RequestNickname
 import com.cmc.recipe.domain.usecase.AuthUseCase
@@ -9,6 +13,7 @@ import com.cmc.recipe.domain.usecase.RecipeUseCase
 import com.cmc.recipe.domain.usecase.SearchUseCase
 import com.cmc.recipe.utils.NetworkState
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -24,6 +29,10 @@ class SearchViewModel @Inject constructor(private val searchUseCase: SearchUseCa
 
     var _keywordResult: MutableStateFlow<NetworkState<SearchKeywordResponse>> = MutableStateFlow(NetworkState.Loading)
     var keywordResult: StateFlow<NetworkState<SearchKeywordResponse>> = _keywordResult
+
+    private val _recentKeywordResult = MutableSharedFlow<List<SearchEntity>>()
+    val recentKeywordResult: Flow<List<SearchEntity>>
+        get() = _recentKeywordResult
 
     fun getSearchRecipe(keyword:String) = viewModelScope.launch {
         _recipeResult.value = NetworkState.Loading
@@ -52,6 +61,21 @@ class SearchViewModel @Inject constructor(private val searchUseCase: SearchUseCa
                 _keywordResult.value = NetworkState.Error(400,"${error.message}")
             }.collect { values ->
                 _keywordResult.value = values
+            }
+    }
+
+    //최근 검색어
+    fun insertRecentRecipe(keyword: String){
+        viewModelScope.launch (Dispatchers.IO){
+            searchUseCase.insertRecentSearch(keyword)
+        }
+    }
+
+    fun loadRecentSearch() = viewModelScope.launch {
+        searchUseCase.loadRecentSearch()
+            .collect{ values ->
+                _recentKeywordResult.emit(values)
+                Log.d("ddd","${values}")
             }
     }
 

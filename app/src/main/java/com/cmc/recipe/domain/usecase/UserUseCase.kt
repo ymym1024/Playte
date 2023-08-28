@@ -10,4 +10,6 @@ class UserUseCase @Inject constructor(
     fun verifyNickname(nickname: RequestNickname) = repository.getVerifyNickname(nickname)
 
     fun getMyInfo() = repository.getMyInfo()
+
+    fun changeNickname(nickname: RequestNickname) = repository.changeNickname(nickname)
 }

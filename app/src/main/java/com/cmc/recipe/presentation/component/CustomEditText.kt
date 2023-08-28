@@ -20,7 +20,7 @@ class CustomEditText @JvmOverloads constructor(
     defStyleAttr: Int = 0
 ) : ConstraintLayout(context, attrs, defStyleAttr) {
 
-    private lateinit var editText: EditText
+    lateinit var editText: EditText
     private lateinit var textLength: TextView
 
     private var count : Int = 0

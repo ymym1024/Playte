@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView
+<androidx.core.widget.NestedScrollView
     android:id="@+id/scrollView"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -15,15 +15,20 @@
         <ImageView
             android:id="@+id/iv_thumbnail"
             android:layout_width="202dp"
-            android:layout_height="300dp"
+            android:layout_height="340dp"
             android:layout_marginStart="90dp"
             android:layout_marginTop="15dp"
             android:layout_marginEnd="90dp"
+            android:background="@drawable/bg_radius_10"
+            android:paddingStart="86dp"
+            android:paddingTop="153dp"
+            android:paddingEnd="86dp"
+            android:paddingBottom="153dp"
+            android:scaleType="centerCrop"
+            android:src="@drawable/ic_youtube"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            android:scaleType="centerCrop"
-            android:background="@drawable/img_food_example"/>
+            app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
             android:id="@+id/textView17"
@@ -45,6 +50,7 @@
             android:layout_marginTop="20dp"
             android:layout_marginEnd="20dp"
             android:minHeight="92dp"
+            android:paddingStart="5dp"
             app:hint="@string/recipe_register_description_hint"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="1.0"
@@ -72,6 +78,7 @@
             android:layout_marginTop="10dp"
             android:layout_marginEnd="20dp"
             android:minHeight="46dp"
+            android:paddingStart="5dp"
             app:hint="@string/recipe_register_title_hint"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
@@ -98,11 +105,12 @@
             android:layout_marginStart="19dp"
             android:layout_marginTop="8dp"
             android:layout_marginEnd="19dp"
+            android:background="@drawable/bg_gray_radius"
             android:completionThreshold="1"
+            android:hint="@string/recipe_register_ingredient_info"
             android:padding="14dp"
             android:textSize="14sp"
-            android:background="@drawable/bg_gray_radius"
-            android:hint="@string/recipe_register_ingredient_info"
+            app:layout_constraintBottom_toTopOf="@+id/tv_empty"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
@@ -110,14 +118,35 @@
             app:maxLength="20" />
 
         <TextView
+            android:id="@+id/tv_empty"
+            android:layout_width="wrap_content"
+            android:layout_height="50dp"
+            android:text=""
+            android:visibility="gone"
+            app:layout_constraintBottom_toTopOf="@+id/rv_complete_ingredient"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/et_recipe_ingredient" />
+        <TextView
             android:id="@+id/tv_ingredient_cnt"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:layout_marginTop="20dp"
-            android:text="0/4"
+            android:text="0"
+            android:textColor="@color/primary_color"
             android:textFontWeight="500"
             app:layout_constraintStart_toEndOf="@+id/textView19"
+            app:layout_constraintTop_toBottomOf="@+id/et_recipe_desc" />
+
+        <TextView
+            android:id="@+id/tv_ingredient_total"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:text="/4"
+            android:textFontWeight="500"
+            app:layout_constraintStart_toEndOf="@+id/tv_ingredient_cnt"
             app:layout_constraintTop_toBottomOf="@+id/et_recipe_desc" />
 
         <androidx.recyclerview.widget.RecyclerView
@@ -129,20 +158,21 @@
             android:layout_marginEnd="19dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/et_recipe_ingredient" />
+            app:layout_constraintTop_toBottomOf="@+id/tv_empty" />
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/btn_upload_shorts"
-            android:layout_width="64dp"
+            android:layout_width="41dp"
             android:layout_height="24dp"
             android:layout_marginEnd="15dp"
             android:layout_marginBottom="15dp"
-            android:textSize="12sp"
-            android:textColor="@color/white"
             android:background="@drawable/bg_custom_button2"
-            android:text="@string/shorts_upload"
+            android:text="수정"
+            android:visibility="invisible"
+            android:textColor="@color/white"
+            android:textSize="12sp"
             app:layout_constraintBottom_toBottomOf="@+id/iv_thumbnail"
             app:layout_constraintEnd_toEndOf="@+id/iv_thumbnail" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
-</ScrollView>
+</androidx.core.widget.NestedScrollView>

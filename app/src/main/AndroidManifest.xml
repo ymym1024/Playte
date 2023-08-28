@@ -30,13 +30,20 @@
         android:theme="@style/Theme.Recipe_Android"
         tools:targetApi="31">
         <activity
+            android:name=".presentation.ui.mypage.MypageActivity"
+            android:exported="false" />
+        <activity
+            android:name=".presentation.ui.recipe.ReviewRegisterActivity"
+            android:exported="false" />
+        <activity
             android:name=".presentation.ui.search.SearchActivity"
             android:exported="false" />
         <activity
             android:name=".presentation.ui.upload.UploadActivity"
-            android:exported="true">
-
-        </activity>
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize" />
+      
         <activity
             android:name=".presentation.ui.auth.AuthActivity"
             android:exported="true" />
@@ -51,7 +58,7 @@
         <activity
             android:name=".presentation.ui.shortform.ShortsDetailActivity"
             android:exported="true"
-            android:windowSoftInputMode="adjustUnspecified|adjustPan"/>
+            android:windowSoftInputMode="adjustUnspecified|adjustPan" />
         <activity
             android:name=".presentation.ui.recipe.ImageReviewActivity"
             android:exported="true" />
@@ -60,6 +67,7 @@
             android:exported="true"
             android:windowSoftInputMode="adjustNothing">
         </activity>
+  
         <activity
             android:name=".presentation.ui.recipe.RecipeActivity"
             android:exported="true" >

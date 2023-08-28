@@ -4,35 +4,58 @@ import android.app.Activity
 import android.content.Intent
 import android.provider.MediaStore
 import android.util.Log
+import android.view.View
+import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.bumptech.glide.Glide
+import com.cmc.recipe.data.source.remote.request.ReviewRequest
 import com.cmc.recipe.databinding.FragmentRecipeReviewBinding
 import com.cmc.recipe.presentation.ui.base.BaseFragment
-import com.cmc.recipe.presentation.ui.common.ImageAdapter
-import com.cmc.recipe.utils.Constant
-import com.cmc.recipe.utils.dpToPx
-import com.cmc.recipe.utils.getRealPathFromURI
-import com.cmc.recipe.utils.loadImagesWithGlideRound
+import com.cmc.recipe.presentation.viewmodel.RecipeViewModel
+import com.cmc.recipe.presentation.viewmodel.UploadViewModel
+import com.cmc.recipe.utils.*
+import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
+import okhttp3.MediaType.Companion.toMediaType
+import okhttp3.MultipartBody
+import okhttp3.RequestBody.Companion.asRequestBody
+import java.io.File
 
+@AndroidEntryPoint
 class RecipeReviewFragment : BaseFragment<FragmentRecipeReviewBinding>(FragmentRecipeReviewBinding::inflate) {
+
+    private val recipeViewModel : RecipeViewModel by viewModels()
+    private val uploadViewModel : UploadViewModel by viewModels()
 
     private lateinit var adapter: ReviewImageAdapter
     private var imageCount:Int = 0
 
+    private var imageUploadList :MutableList<String> = emptyList<String>().toMutableList()
+    private var recipeId: Int = 0
+
     override fun initFragment() {
-        initView()
-        initRV()
+        var recipeImg = ""
+
+        arguments?.let {
+            recipeId = it.getInt("recipeId", -1)
+            recipeImg = it.getString("recipeImg", "")
+        }
+
+        initView(recipeImg)
         getRatingScore()
+        initRV()
+
         addImageButton()
+        saveRegisterButton()
     }
 
-    private fun initView(){
-        val url = "https://recipe1.ezmember.co.kr/cache/recipe/2022/02/02/dbb3f34bfe348a4bb4d142ff353815651.jpg";
+    private fun initView(thumb: String) {
         val pixel = dpToPx(requireContext(),100.toFloat())
         binding.ivRecipeThumbnail.layoutParams.width = pixel
         binding.ivRecipeThumbnail.layoutParams.height = pixel
-        binding.ivRecipeThumbnail.loadImagesWithGlideRound(url,10)
+        binding.ivRecipeThumbnail.loadImagesWithGlideRound(thumb,10)
     }
 
     private fun getRatingScore(){
@@ -69,10 +92,86 @@ class RecipeReviewFragment : BaseFragment<FragmentRecipeReviewBinding>(FragmentR
     }
 
     private fun addImageButton(){
+        binding.btnRegister.isEnabled = false
+        binding.etReview.editText.addTextChangedListener(CommonTextWatcher(
+            onChanged = { text,_,_,_ ->
+                text?.let {
+                    binding.btnRegister.isEnabled = !text.isEmpty()
+                }
+            }
+        ))
         binding.btnImageAdd.setOnClickListener {
             var intent = Intent(Intent.ACTION_PICK)
             intent.setDataAndType(MediaStore.Images.Media.EXTERNAL_CONTENT_URI,"image/*")
             imageResultSingle.launch(intent)
+        }
+    }
+
+    private fun saveRegisterButton(){
+        binding.btnRegister.setOnClickListener {
+            if(adapter.getData().size >= 1) uploadImages(adapter.getData())
+            else requestReviewRegister(recipeId)
+        }
+    }
+
+    private fun uploadImages(imageFileList: List<String>) {
+        val imageFileIterator = imageFileList.iterator()
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            while (imageFileIterator.hasNext()) {
+                val imageFile = imageFileIterator.next()
+                val imgfile = File(imageFile)
+                val file = MultipartBody.Part.createFormData(name = "multipartFile", filename = imgfile.name, body = imgfile.asRequestBody("image/jpg".toMediaType()))
+
+                uploadViewModel.uploadImage(file)
+                uploadViewModel.uploadImageResult.collect {
+                    when (it) {
+                        is NetworkState.Success -> {
+                            if (it.data.code == "SUCCESS") {
+                                imageUploadList.add(it.data.data.toString())
+                                if(!imageFileIterator.hasNext()){
+                                    requestReviewRegister(recipeId)
+                                }
+                            }
+                        }
+                        is NetworkState.Error -> {
+                            showToastMessage(it.message.toString())
+                        }
+                        else -> {}
+                    }
+                }
+            }
+        }
+    }
+
+
+    private fun requestReviewRegister(id:Int){
+        val request = ReviewRequest(review_content = binding.etReview.getText().toString(), review_imgs = imageUploadList, review_rating = binding.ratingBar.rating.toInt())
+        recipeViewModel.postRecipesReview(id,request)
+        lifecycleScope.launch {
+            recipeViewModel.reviewAddResult.collect{
+                when(it){
+                    is NetworkState.Success -> {
+                        it.data.let { data ->
+                            if(data.code == "SUCCESS"){
+                                Toast.makeText(requireContext(),"리뷰가 등록되었습니다!",Toast.LENGTH_SHORT).show()
+                                requireActivity().finish()
+                            }else{
+                                Log.d("data","${data.data}")
+                            }
+                        }
+                    }
+                    is NetworkState.Error ->{
+                        Toast.makeText(requireContext(), "${it.message}", Toast.LENGTH_SHORT).show()
+                      //  recipeViewModel._recipeResult.value = NetworkState.Loading
+                    }
+                    is NetworkState.Loading ->{
+                        Toast.makeText(requireContext(), "${it}", Toast.LENGTH_SHORT).show()
+                        //  recipeViewModel._recipeResult.value = NetworkState.Loading
+                    }
+                    else -> {}
+                }
+            }
         }
     }
 

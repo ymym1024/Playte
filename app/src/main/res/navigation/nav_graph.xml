@@ -8,7 +8,7 @@
     <fragment
         android:id="@+id/uploadFragment"
         android:name="com.cmc.recipe.presentation.ui.upload.UploadFragment"
-        android:label="UploadFragment"
+        android:label=""
         tools:layout="@layout/fragment_upload"/>
 
     <fragment
@@ -65,17 +65,8 @@
         android:name="com.cmc.recipe.presentation.ui.mypage.MypageFragment"
         android:label="MypageFragment" >
         <action
-            android:id="@+id/action_mypageFragment_to_settingFragment"
-            app:destination="@id/settingFragment" />
-        <action
-            android:id="@+id/action_mypageFragment_to_saveRecipeFragment"
-            app:destination="@id/saveRecipeFragment" />
-        <action
-            android:id="@+id/action_mypageFragment_to_writeRecipeFragment"
-            app:destination="@id/writeRecipeFragment" />
-        <action
-            android:id="@+id/action_mypageFragment_to_myReviewFragment"
-            app:destination="@id/myReviewFragment" />
+            android:id="@+id/action_mypageFragment_to_mypageActivity"
+            app:destination="@id/mypageActivity" />
     </fragment>
 
     <fragment
@@ -88,52 +79,14 @@
         android:name="com.cmc.recipe.presentation.ui.search.SearchShortsFragment"
         android:label="fragment_search_shorts"
         tools:layout="@layout/fragment_search_shorts" />
-    <fragment
-        android:id="@+id/mypageNicknameFragment"
-        android:name="com.cmc.recipe.presentation.ui.mypage.MypageNicknameFragment"
-        android:label="@string/mypage_setting_nick"
-        tools:layout="@layout/fragment_mypage_nickname" />
-    <fragment
-        android:id="@+id/settingFragment"
-        android:name="com.cmc.recipe.presentation.ui.mypage.SettingFragment"
-        android:label="@string/setting"
-        tools:layout="@layout/fragment_setting" >
-        <action
-            android:id="@+id/action_settingFragment_to_mypageNicknameFragment"
-            app:destination="@id/mypageNicknameFragment" />
-        <action
-            android:id="@+id/action_settingFragment_to_mypageQnaFragment"
-            app:destination="@id/mypageQnaFragment" />
-        <action
-            android:id="@+id/action_settingFragment_to_mypageTermsFragment"
-            app:destination="@id/mypageTermsFragment" />
-        <action
-            android:id="@+id/action_settingFragment_to_loginFragment"
-            app:destination="@id/loginFragment"/>
-    </fragment>
-    <fragment
-        android:id="@+id/mypageQnaFragment"
-        android:name="com.cmc.recipe.presentation.ui.mypage.MypageQnaFragment"
-        android:label="fragment_mypage_qna"
-        tools:layout="@layout/fragment_mypage_qna" />
-    <fragment
-        android:id="@+id/mypageTermsFragment"
-        android:name="com.cmc.recipe.presentation.ui.mypage.MypageTermsFragment"
-        android:label="fragment_mypage_terms"
-        tools:layout="@layout/fragment_mypage_terms" />
-    <fragment
-        android:id="@+id/saveRecipeFragment"
-        android:name="com.cmc.recipe.presentation.ui.mypage.SaveRecipeFragment"
-        android:label="@string/mypage_save_recipe"
-        tools:layout="@layout/fragment_save_recipe" />
-    <fragment
-        android:id="@+id/writeRecipeFragment"
-        android:name="com.cmc.recipe.presentation.ui.mypage.WriteRecipeFragment"
-        android:label="@string/mypage_write_recipe"
-        tools:layout="@layout/fragment_write_recipe" />
-    <fragment
-        android:id="@+id/myReviewFragment"
-        android:name="com.cmc.recipe.presentation.ui.mypage.MyReviewFragment"
-        android:label="@string/mypage_my_review"
-        tools:layout="@layout/fragment_my_review" />
+    <activity
+        android:id="@+id/mypageActivity"
+        android:name="com.cmc.recipe.presentation.ui.mypage.MypageActivity"
+        android:label="activity_mypage"
+        tools:layout="@layout/activity_mypage" >
+        <argument
+            android:name="destination"
+            app:argType="string"
+            android:defaultValue="writeRecipeFragment" />
+    </activity>
 </navigation>

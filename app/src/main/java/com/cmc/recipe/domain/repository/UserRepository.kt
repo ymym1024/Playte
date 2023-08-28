@@ -10,4 +10,6 @@ interface UserRepository {
     fun getVerifyNickname(nickname:RequestNickname) : Flow<NetworkState<BaseResponse>>
 
     fun getMyInfo() : Flow<NetworkState<MyInfoResponse>>
+
+    fun changeNickname(nickname:RequestNickname) : Flow<NetworkState<BaseResponse>>
 }

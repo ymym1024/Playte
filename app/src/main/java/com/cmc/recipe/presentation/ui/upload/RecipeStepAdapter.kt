@@ -29,6 +29,7 @@ class RecipeStepAdapter:
     ItemTouchCallback.ItemTouchHelperListener {
 
     private lateinit var listener:onChangeListener
+
     interface onChangeListener{
         fun change()
     }
@@ -45,7 +46,8 @@ class RecipeStepAdapter:
 
     fun addItem(item: RecipeStep) {
         getData().add(item)
-        notifyItemInserted(getData().size - 1)
+        notifyItemInserted(itemCount-1)
+        //notifyDataSetChanged()
     }
 
     override fun onItemMove(from: Int, to: Int) {
@@ -71,9 +73,9 @@ class RecipeStepItemHolder(viewBinding: ItemRecipeStepBinding):
     BaseHolder<RecipeStep, ItemRecipeStepBinding>(viewBinding){
     override fun bind(binding: ItemRecipeStepBinding, item: RecipeStep?) {
         binding.let { view->
-            view.tvStepTitle.text = item?.recipeDesc
-            view.ibImage.loadImagesWithGlideRound(item?.recipeImage!!,10)
-            if(item?.recipeImage!!.isNotEmpty()){
+            view.tvStepTitle.text = item?.stage_description
+            view.ibImage.loadImagesWithGlideRound(item?.image_url!!,10)
+            if(item?.image_url!!.isNotEmpty()){
                 view.ibImage.resizeBitmapToSquare(40)
             }
 

@@ -47,8 +47,8 @@ class AuthRepositoryImpl @Inject constructor(
         }
     }
 
-    override fun logout(accessToken: String,refreshToken: String): Flow<NetworkState<BaseResponse>> = flow{
-        val response = service.logout(accessToken,refreshToken)
+    override fun logout(refreshToken: String): Flow<NetworkState<BaseResponse>> = flow{
+        val response = service.logout(refreshToken)
         if(response.isSuccessful){
             response.body()?.let {
                 emit(NetworkState.Success(it))
@@ -64,6 +64,24 @@ class AuthRepositoryImpl @Inject constructor(
 
     override fun refreshToken(refreshToken: String): Flow<NetworkState<SignupResponse>> = flow{
         val response = service.refreshToken(refreshToken)
+        if(response.isSuccessful){
+            response.body()?.let {
+                emit(NetworkState.Success(it))
+            }
+        }else{
+            try {
+                val error = response.errorBody()!!.string().trimIndent()
+                val result = Gson().fromJson(error, BaseResponse::class.java)
+
+                emit(NetworkState.Error(result.code.toInt(),result.message))
+            }catch (e: IOException) {
+                e.printStackTrace()
+            }
+        }
+    }
+
+    override fun withdrawal(): Flow<NetworkState<BaseResponse>> =flow{
+        val response = service.withdrawal()
         if(response.isSuccessful){
             response.body()?.let {
                 emit(NetworkState.Success(it))
