@@ -75,7 +75,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
 
-        <LinearLayout
+        <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/linearLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -87,40 +87,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent">
 
-            <TextView
-                android:id="@+id/button3"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="9dp"
-                android:background="@drawable/bg_ingredient_radius"
-                android:gravity="center"
-                android:minWidth="57dp"
-                android:minHeight="29dp"
-                android:paddingStart="16dp"
-                android:paddingTop="8dp"
-                android:paddingEnd="16dp"
-                android:paddingBottom="8dp"
-                android:text="샤인머스캣"
-                android:textColor="@color/white"
-                android:textSize="12sp" />
-
-            <TextView
-                android:id="@+id/button7"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@drawable/bg_ingredient_radius"
-                android:gravity="center"
-                android:minWidth="57dp"
-                android:minHeight="29dp"
-                android:paddingStart="16dp"
-                android:paddingTop="8dp"
-                android:paddingEnd="16dp"
-                android:paddingBottom="8dp"
-                android:text="설탕"
-                android:textColor="@color/white"
-                android:textSize="12sp" />
-
-        </LinearLayout>
+        </androidx.recyclerview.widget.RecyclerView>
 
         <LinearLayout
             android:id="@+id/linearLayout10"
@@ -140,7 +107,7 @@
                 android:background="@color/transparent" />
 
             <TextView
-                android:id="@+id/textView23"
+                android:id="@+id/tv_heart_cnt"
                 android:layout_width="30dp"
                 android:layout_height="30dp"
                 android:layout_marginBottom="20dp"
@@ -157,7 +124,7 @@
                 android:background="@drawable/ic_shorts_comment" />
 
             <TextView
-                android:id="@+id/textView24"
+                android:id="@+id/tv_comment_cnt"
                 android:layout_width="30dp"
                 android:layout_height="30dp"
                 android:layout_marginBottom="20dp"
@@ -174,7 +141,7 @@
                 android:background="@color/transparent" />
 
             <TextView
-                android:id="@+id/textView25"
+                android:id="@+id/tv_bookmark_cnt"
                 android:layout_width="30dp"
                 android:layout_height="30dp"
                 android:gravity="center"
@@ -211,13 +178,13 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="bottom"
-                android:text="더보기"
+                android:text=""
                 android:textColor="@color/white"
                 android:textSize="14sp" />
         </LinearLayout>
 
         <TextView
-            android:id="@+id/textView22"
+            android:id="@+id/tv_nick"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="23dp"

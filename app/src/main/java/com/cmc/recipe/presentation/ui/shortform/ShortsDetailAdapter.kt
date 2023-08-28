@@ -67,6 +67,15 @@ class ShortsDetailHolder(viewBinding: ItemShortsDetailBinding, val context: Cont
     override fun bind(binding: ItemShortsDetailBinding, item: ShortsContent?) {
         bottomSheetBehavior = BottomSheetBehavior.from(binding.bottomSheetComment)
 
+        binding.tvNick.text = item?.writtenBy
+        binding.tvShortContent.text = item?.shortform_description
+        binding.tvHeartCnt.text = item?.likes_count.toString()
+        binding.tvCommentCnt.text = item?.comments_count.toString()
+        binding.tvBookmarkCnt.text = item?.saved_count.toString()
+
+        // product recyclerview
+        initIngredientAdapter(binding,item!!.ingredients)
+
         // product recyclerview
         initProductAdapter(binding,item!!.ingredients)
 
@@ -159,14 +168,19 @@ class ShortsDetailHolder(viewBinding: ItemShortsDetailBinding, val context: Cont
         val originalMaxLines = binding.tvShortContent.maxLines
         val expandedMaxLines = Int.MAX_VALUE
 
+        Log.d("maxLine","${binding.tvShortContent.maxLines}")
         binding.tvShowMore.setOnClickListener {
-            if (binding.tvShortContent.maxLines == originalMaxLines) {
-                binding.tvShortContent.maxLines = expandedMaxLines
-                binding.tvShowMore.text = "접기"
-            } else {
-                binding.tvShortContent.maxLines = originalMaxLines
-                binding.tvShowMore.text = "더보기"
+            if(binding.tvShortContent.maxLines > 1){
+                if (binding.tvShortContent.maxLines == originalMaxLines) {
+                    binding.tvShortContent.maxLines = expandedMaxLines
+                    binding.tvShowMore.text = ""
+                } else {
+                    binding.tvShortContent.maxLines = originalMaxLines
+                    binding.tvShowMore.text = "더보기"
+                }
             }
+
+
         }
     }
 
@@ -183,6 +197,17 @@ class ShortsDetailHolder(viewBinding: ItemShortsDetailBinding, val context: Cont
         binding.rvProduct.adapter = adapter
         binding.rvProduct.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
         adapter.replaceData(itemList!!)
+    }
+
+    private fun initIngredientAdapter(binding:ItemShortsDetailBinding,itemList:List<Ingredient>){
+        val itemList = itemList.map{
+            it.ingredient_name
+        }
+
+        val adapter = ShortsIngredientAdapter()
+        binding.linearLayout.adapter = adapter
+        binding.linearLayout.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+        adapter.replaceData(itemList)
     }
 
     private fun initCommentAdapter(binding:ItemShortsDetailBinding){

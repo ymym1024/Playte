@@ -102,7 +102,6 @@ class ShortsDetailActivity : AppCompatActivity() {
                             response.data?.let { data ->
                                 if (data.code == "SUCCESS") {
                                     itemSize = response.data.data.content.size
-
                                     initVideo(response.data.data.content as ArrayList<ShortsContent>)
                                 }
                             }
@@ -117,7 +116,6 @@ class ShortsDetailActivity : AppCompatActivity() {
             }
         }
     }
-
     private fun initMenu(){
 
         binding.let {
