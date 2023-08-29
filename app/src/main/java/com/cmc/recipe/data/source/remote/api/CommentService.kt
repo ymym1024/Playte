@@ -11,7 +11,7 @@ import retrofit2.http.*
 interface CommentService {
 
     @GET("/api/v1/comments/shortform/{shortform-id}")
-    suspend fun getShortfromComment(@Path("shortform-id")id:Int) : Response<CommentResponse>
+    suspend fun getShortfromComment(@Path("shortform-id")id:Int,@Query("pageSize") pageSize: Int=100) : Response<CommentResponse>
 
     @POST("/api/v1/comments/shortform/{shortform-comment-id}/report")
     suspend fun reportShortfromComment(@Path("shortform-comment-id")id:Int) : Response<BaseResponse>

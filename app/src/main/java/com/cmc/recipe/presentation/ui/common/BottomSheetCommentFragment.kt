@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.cmc.recipe.R
 import com.cmc.recipe.data.model.response.CommentContent
 import com.cmc.recipe.presentation.ui.common.CommentAdapter
+import com.cmc.recipe.presentation.ui.mypage.RecipeReviewItemHolder
 import com.cmc.recipe.utils.highlightText
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
@@ -21,6 +22,18 @@ class BottomSheetCommentFragment(context: Context, private val layoutResourceId:
 
     private lateinit var rvComment: RecyclerView
     private lateinit var bottomLayout: ConstraintLayout
+
+    private lateinit var listener : onInputEventListener
+
+    fun setCommentCount(size: Int){
+        val text = "댓글 ${size}개"
+        val tvCommentSheetCnt: TextView? = findViewById(R.id.tv_comment_sheet_cnt)
+        tvCommentSheetCnt?.text = context.highlightText(text,"${adapter.getData().size}")
+    }
+
+    fun setListener(listener: onInputEventListener){
+        this.listener = listener
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -49,10 +62,12 @@ class BottomSheetCommentFragment(context: Context, private val layoutResourceId:
         val ibSend = findViewById<ImageButton>(R.id.ib_send)
 
         ibSend?.setOnClickListener {
-
+            val data = etComment?.text.toString()
+            listener.onEdit(data)
+            etComment?.setText("")
+            rvComment.scrollToPosition(adapter.getData().size-1);
         }
 
-        var isInitialState = true
         this.behavior.addBottomSheetCallback(object : BottomSheetBehavior.BottomSheetCallback() {
             override fun onStateChanged(bottomSheet: View, newState: Int) {
                 if (newState == BottomSheetBehavior.STATE_COLLAPSED) {
@@ -81,6 +96,10 @@ class BottomSheetCommentFragment(context: Context, private val layoutResourceId:
         }
 
         this.behavior.state = BottomSheetBehavior.STATE_EXPANDED
+    }
+
+    interface onInputEventListener{
+        fun onEdit(data:String)
     }
 }
 

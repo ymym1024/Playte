@@ -15,6 +15,7 @@ import com.cmc.recipe.R
 import com.cmc.recipe.data.model.ExoPlayerItem
 import com.cmc.recipe.data.model.response.CommentContent
 import com.cmc.recipe.data.model.response.ShortsContent
+import com.cmc.recipe.data.source.remote.request.CommentRequest
 import com.cmc.recipe.databinding.ActivityShortsDetailBinding
 import com.cmc.recipe.presentation.ui.MainActivity
 import com.cmc.recipe.presentation.ui.common.CommentAdapter
@@ -40,6 +41,10 @@ class ShortsDetailActivity : AppCompatActivity() {
     private var isMute = false
 
     private lateinit var adapter : ShortsDetailAdapter
+    private lateinit var commnetAdapter : CommentAdapter
+    private lateinit var dialog : BottomSheetCommentFragment
+
+    private var isCommentInitialized : Boolean? = null
     private var favoriteFlag : Boolean? = null
     private var saveFlag : Boolean? = null
     private var itemSize = 0
@@ -188,6 +193,7 @@ class ShortsDetailActivity : AppCompatActivity() {
 
             override fun onComment(id:Int) {
                 requestCommentList(id)
+                isCommentInitialized = true
             }
         })
 
@@ -264,7 +270,15 @@ class ShortsDetailActivity : AppCompatActivity() {
                             if (it.data.code == "SUCCESS") {
                                 val newList = it.data.data.content
 
-                                showComment(newList)
+                                if(isCommentInitialized == true){
+                                    showComment(newList)
+                                    isCommentInitialized = false
+                                }else{
+                                    dialog.setCommentCount(newList.size)
+                                    commnetAdapter.replaceData(newList)
+
+                                }
+
                             }
                             commentViewModel._commentResult.value = NetworkState.Loading
                         }
@@ -287,8 +301,8 @@ class ShortsDetailActivity : AppCompatActivity() {
     }
 
     private fun showComment(newList:List<CommentContent>){
-        val adapter = CommentAdapter()
-        adapter.setCommentListener(object : OnCommentListener {
+        commnetAdapter = CommentAdapter()
+        commnetAdapter.setCommentListener(object : OnCommentListener {
             override fun onFavorite(id: Int) {
             }
 
@@ -299,10 +313,44 @@ class ShortsDetailActivity : AppCompatActivity() {
             }
 
         })
-        adapter.replaceData(newList)
+        commnetAdapter.replaceData(newList)
 
-        val dialog = BottomSheetCommentFragment(this,R.layout.bottom_sheet_comment,adapter,newList)
+        dialog = BottomSheetCommentFragment(this,R.layout.bottom_sheet_comment,commnetAdapter,newList)
+        dialog.setListener(object : BottomSheetCommentFragment.onInputEventListener{
+            override fun onEdit(data: String) {
+               // 댓글 요청
+                requestSaveComment(data)
+            }
+        })
         dialog.show()
+    }
+
+    private fun requestSaveComment(data:String) {
+        commentViewModel.postShortfromCommentSave(currentId,CommentRequest(data))
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                commentViewModel.commentSaveResult.collect{
+                    when (it) {
+                        is NetworkState.Success -> {
+                            if (it.data.code == "SUCCESS") {
+                                requestCommentList(currentId)
+                                commnetAdapter.notifyDataSetChanged()
+                            }
+                        }
+                        is NetworkState.Error -> {
+                            Toast.makeText(applicationContext, "${it.message}", Toast.LENGTH_SHORT)
+                                .show()
+                        }
+                        is NetworkState.Loading -> {
+                            // 프로그레스바 띄우기
+                        }
+                        else -> {
+
+                        }
+                    }
+                }
+            }
+        }
     }
 
     private fun requestUnFavorite(id:Int) {
