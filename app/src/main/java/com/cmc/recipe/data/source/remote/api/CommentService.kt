@@ -19,10 +19,10 @@ interface CommentService {
     @POST("/api/v1/comments/shortform/{shortform-id}")
     suspend fun postShortfromCommentSave(@Path("shortform-id")id:Int,@Body comment: CommentRequest) : Response<BaseResponse>
 
-    @POST("/api/v1/comments/shortform/like/{shortform-comment-id}")
+    @GET("/api/v1/comments/shortform/like/{shortform-comment-id}")
     suspend fun postShortfromCommentLike(@Path("shortform-comment-id")id:Int) : Response<BaseResponse>
 
-    @POST("/api/v1/comments/shortform/unlike/{shortform-comment-id}")
+    @GET("/api/v1/comments/shortform/unlike/{shortform-comment-id}")
     suspend fun postShortfromCommentUnLike(@Path("shortform-comment-id")id:Int) : Response<BaseResponse>
 
 

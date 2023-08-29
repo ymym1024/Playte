@@ -1,10 +1,12 @@
 package com.cmc.recipe.presentation.ui.common
 
+import android.annotation.SuppressLint
 import com.cmc.recipe.R
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.cmc.recipe.data.model.Comment
 import com.cmc.recipe.data.model.response.CommentContent
@@ -36,12 +38,20 @@ class CommentAdapter:
 
 class CommentItemHolder(viewBinding: ItemCommentBinding,val eventListener: OnCommentListener):
     BaseHolder<CommentContent, ItemCommentBinding>(viewBinding){
+    @SuppressLint("ResourceAsColor")
     override fun bind(binding: ItemCommentBinding, item: CommentContent?) {
         binding.let { view ->
             view.tvNick.text = item?.comment_writtenby
             view.tvComment.text = item?.comment_content
             view.tvTime.text = item?.created_at?.parseDateTime()?.formatDateRelativeToNow()
+            view.tvThumbCnt.text = "${item?.comment_likes}"
         }
+        val textColor = ContextCompat.getColor(binding.root.context, R.color.primary_color)
+        if(item?.is_liked!!) {
+            binding.ibThumbUp.setImageResource(R.drawable.ic_heart_full)
+            binding.tvThumbCnt.setTextColor(textColor)
+        }
+        else binding.ibThumbUp.setImageResource(R.drawable.ic_heart_gray)
 
         binding.ibThumbUp.setOnClickListener {
             eventListener.onFavorite(item?.comment_id!!)

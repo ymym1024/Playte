@@ -21,9 +21,9 @@ data class CommentData(
 data class CommentContent(
     val comment_content: String,
     val comment_id: Int,
-    val comment_likes: Int,
+    var comment_likes: Int,
     val comment_writtenby: String,
     val created_at: String,
-    val is_liked: Boolean,
+    var is_liked: Boolean,
     val replyList: List<Any>
 )

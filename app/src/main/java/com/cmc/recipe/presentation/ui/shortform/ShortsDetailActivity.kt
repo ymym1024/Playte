@@ -14,6 +14,7 @@ import androidx.viewpager2.widget.ViewPager2
 import com.cmc.recipe.R
 import com.cmc.recipe.data.model.ExoPlayerItem
 import com.cmc.recipe.data.model.response.CommentContent
+import com.cmc.recipe.data.model.response.ReviewContent
 import com.cmc.recipe.data.model.response.ShortsContent
 import com.cmc.recipe.data.source.remote.request.CommentRequest
 import com.cmc.recipe.databinding.ActivityShortsDetailBinding
@@ -43,6 +44,7 @@ class ShortsDetailActivity : AppCompatActivity() {
     private lateinit var adapter : ShortsDetailAdapter
     private lateinit var commnetAdapter : CommentAdapter
     private lateinit var dialog : BottomSheetCommentFragment
+    private lateinit var commentItemList : ArrayList<CommentContent>
 
     private var isCommentInitialized : Boolean? = null
     private var favoriteFlag : Boolean? = null
@@ -268,17 +270,15 @@ class ShortsDetailActivity : AppCompatActivity() {
                     when (it) {
                         is NetworkState.Success -> {
                             if (it.data.code == "SUCCESS") {
-                                val newList = it.data.data.content
+                                commentItemList = it.data.data.content as ArrayList<CommentContent>
 
                                 if(isCommentInitialized == true){
-                                    showComment(newList)
+                                    showComment()
                                     isCommentInitialized = false
                                 }else{
-                                    dialog.setCommentCount(newList.size)
-                                    commnetAdapter.replaceData(newList)
-
+                                    dialog.setCommentCount(commentItemList.size)
+                                    commnetAdapter.replaceData(commentItemList)
                                 }
-
                             }
                             commentViewModel._commentResult.value = NetworkState.Loading
                         }
@@ -300,22 +300,106 @@ class ShortsDetailActivity : AppCompatActivity() {
         }
     }
 
-    private fun showComment(newList:List<CommentContent>){
+    private fun findCommentItemById(reviewId: Int): CommentContent? {
+        return commnetAdapter.getData().find { it.comment_id == reviewId }
+    }
+
+
+    private fun requestCommentLikeOrUnLike(id: Int) {
+        val review = findCommentItemById(id)
+        if (review != null) {
+            if (review.is_liked) {
+                requestCommentUnLike(id)
+            } else {
+                requestCommentLike(id)
+            }
+        }
+    }
+
+    private fun requestCommentLike(id:Int){
+        commentViewModel.postShortfromCommentLike(id)
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                commentViewModel.commentLikeResult.collect {
+                    when (it) {
+                        is NetworkState.Success -> {
+                            it.data?.let { data ->
+                                if (data.code == "SUCCESS") {
+                                    Log.d("data", "${data}")
+                                    val review = findCommentItemById(id)
+                                    Log.d("review data", "${review}")
+                                    review?.is_liked = true
+                                    review?.comment_likes = review?.comment_likes!! + 1
+                                    commnetAdapter.notifyDataSetChanged()
+
+                                } else {
+                                    Log.d("data", "${data.data}")
+                                }
+                            }
+                        }
+                        is NetworkState.Error -> {
+                            Log.d("data", "${it.message}")
+
+                            commentViewModel._commentLikeResult.emit(NetworkState.Loading)
+                        }
+                        else -> {}
+                    }
+                }
+            }
+        }
+    }
+
+    private fun requestCommentUnLike(id:Int){
+        commentViewModel.postShortfromCommentUnLike(id)
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                commentViewModel.commentUnLikeResult.collect {
+                    when (it) {
+                        is NetworkState.Success -> {
+                            it.data?.let { data ->
+                                if (data.code == "SUCCESS") {
+                                    Log.d("data-unlike", "${data}")
+                                    val review = findCommentItemById(id)
+                                    review?.is_liked = false
+                                    review?.comment_likes = review?.comment_likes!! - 1
+                                    commnetAdapter.notifyDataSetChanged()
+                                } else {
+                                    Log.d("data", "${data.data}")
+                                }
+                            }
+                            commentViewModel._commentUnLikeResult.emit(NetworkState.Loading)
+                        }
+                        is NetworkState.Error -> {
+                            Log.d("data", "${it.message}")
+
+                            commentViewModel._commentUnLikeResult.emit(NetworkState.Loading)
+                        }
+                        else -> {}
+                    }
+                }
+            }
+        }
+    }
+
+    private fun showComment(){
         commnetAdapter = CommentAdapter()
         commnetAdapter.setCommentListener(object : OnCommentListener {
             override fun onFavorite(id: Int) {
+                //좋아요 기능
+                requestCommentLikeOrUnLike(id)
             }
 
             override fun onReport(id: Int) {
+                //신고기능
             }
 
             override fun writeReply(id: Int) {
             }
 
         })
-        commnetAdapter.replaceData(newList)
+        commnetAdapter.replaceData(commentItemList)
 
-        dialog = BottomSheetCommentFragment(this,R.layout.bottom_sheet_comment,commnetAdapter,newList)
+        dialog = BottomSheetCommentFragment(this,R.layout.bottom_sheet_comment,commnetAdapter,commentItemList)
         dialog.setListener(object : BottomSheetCommentFragment.onInputEventListener{
             override fun onEdit(data: String) {
                // 댓글 요청
