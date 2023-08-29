@@ -30,6 +30,8 @@ class RecipeUseCase @Inject constructor(
 
     fun getRecipesTheme(themeName:String)  = repository.getRecipesTheme(themeName)
 
+    fun postRecipeReport(id:Int)  = repository.postRecipeReport(id)
+
     // 리뷰
     fun getRecipesReview(id:Int) = repository.getRecipesReview(id)
 
