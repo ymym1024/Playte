@@ -83,6 +83,51 @@ class RecipeRepositoryImpl @Inject constructor(
         }
     }
 
+    override fun postRecipesLike(id: Int): Flow<NetworkState<BaseResponse>> =flow{
+        val response = service.postRecipesLike(id)
+        if(response.isSuccessful){
+            response.body()?.let {
+                emit(NetworkState.Success(it))
+            }
+        }else{
+            try {
+                emit(NetworkState.Error(response.code(),response.errorBody()!!.string()))
+            }catch (e: IOException) {
+                e.printStackTrace()
+            }
+        }
+    }
+
+    override fun postRecipesUnLike(id: Int): Flow<NetworkState<BaseResponse>> =flow{
+        val response = service.postRecipesUnLike(id)
+        if(response.isSuccessful){
+            response.body()?.let {
+                emit(NetworkState.Success(it))
+            }
+        }else{
+            try {
+                emit(NetworkState.Error(response.code(),response.errorBody()!!.string()))
+            }catch (e: IOException) {
+                e.printStackTrace()
+            }
+        }
+    }
+
+    override fun getRecipesTheme(themeName: String): Flow<NetworkState<RecipesResponse>> =flow{
+        val response = service.getRecipesTheme(themeName)
+        if(response.isSuccessful){
+            response.body()?.let {
+                emit(NetworkState.Success(it))
+            }
+        }else{
+            try {
+                emit(NetworkState.Error(response.code(),response.errorBody()!!.string()))
+            }catch (e: IOException) {
+                e.printStackTrace()
+            }
+        }
+    }
+
     override fun getRecipesReview(id: Int): Flow<NetworkState<ReviewResponse>> = flow{
         val response = service.getRecipesReview(id)
 
