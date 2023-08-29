@@ -192,23 +192,4 @@ class RecipeViewModel @Inject constructor(private val recipeUseCase: RecipeUseCa
             }
     }
 
-    fun getRecipesShortform() = viewModelScope.launch {
-        _recipeShortsResult.value = NetworkState.Loading
-        recipeUseCase.getRecipesShortform()
-            .catch { error ->
-                _recipeShortsResult.value = NetworkState.Error(400,"${error.message}")
-            }.collect { values ->
-                _recipeShortsResult.value = values
-            }
-    }
-
-    fun getRecipesShortformDetail(id:Int) = viewModelScope.launch {
-        _recipeShortsDetailResult.value = NetworkState.Loading
-        recipeUseCase.getRecipesShortformDetail(id)
-            .catch { error ->
-                _recipeShortsDetailResult.value = NetworkState.Error(400,"${error.message}")
-            }.collect { values ->
-                _recipeShortsDetailResult.value = values
-            }
-    }
 }

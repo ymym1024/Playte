@@ -1,5 +1,6 @@
 package com.cmc.recipe.presentation.ui.shortform
 
+import BottomSheetCommentFragment
 import android.content.Context
 import android.net.Uri
 import android.os.Handler
@@ -10,22 +11,16 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.Toast
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.lifecycleScope
-import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.cmc.recipe.R
-import com.cmc.recipe.data.model.Comment
 import com.cmc.recipe.data.model.ExoPlayerItem
-import com.cmc.recipe.data.model.response.Product
-import com.cmc.recipe.data.model.response.ShortsContent
-import com.cmc.recipe.data.model.response.ShortsDetailData
+import com.cmc.recipe.data.model.Product
+import com.cmc.recipe.data.model.response.*
 import com.cmc.recipe.databinding.ItemShortsDetailBinding
 import com.cmc.recipe.presentation.ui.base.BaseAdapter
 import com.cmc.recipe.presentation.ui.base.BaseHolder
 import com.cmc.recipe.presentation.ui.common.CommentAdapter
 import com.cmc.recipe.presentation.ui.common.OnCommentListener
-import com.cmc.recipe.utils.NetworkState
 import com.google.android.exoplayer2.ExoPlayer
 import com.google.android.exoplayer2.MediaItem
 import com.google.android.exoplayer2.PlaybackException
@@ -33,15 +28,31 @@ import com.google.android.exoplayer2.Player
 import com.google.android.exoplayer2.source.ProgressiveMediaSource
 import com.google.android.exoplayer2.upstream.DefaultDataSource
 import com.google.android.material.bottomsheet.BottomSheetBehavior
-import kotlinx.coroutines.launch
 
 class ShortsDetailAdapter(private val context:Context,val videoPreparedListener: ShortsItemHolder.OnVideoPreparedListener):
     BaseAdapter<ShortsContent, ItemShortsDetailBinding, ShortsDetailHolder>() {
 
     private lateinit var onShortsListener : onShortsListener
 
+
+    private lateinit var commentList : MutableList<CommentContent>
+    private var commentAdapter : CommentAdapter = CommentAdapter()
+
     fun setShortsListener(onShortsListener:onShortsListener){
         this.onShortsListener = onShortsListener
+    }
+
+    fun removeItem(id:Int){
+        val itemList = getData()
+        val itemToRemove = itemList.find { it.shortform_id == id }
+        itemList.remove(itemToRemove)
+        notifyDataSetChanged()
+    }
+
+    fun initCommentList(newCommentList: List<CommentContent>) {
+        commentList = newCommentList.toMutableList()
+        commentAdapter.replaceData(commentList)
+
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ShortsDetailHolder {
@@ -49,109 +60,156 @@ class ShortsDetailAdapter(private val context:Context,val videoPreparedListener:
             ItemShortsDetailBinding.inflate(LayoutInflater.from(parent.context), parent, false),
             context,
             videoPreparedListener,
-            onShortsListener
+            onShortsListener,
+            commentAdapter
         )
     }
 }
 
-class ShortsDetailHolder(viewBinding: ItemShortsDetailBinding, val context: Context,val videoPreparedListener: ShortsItemHolder.OnVideoPreparedListener,val shortsListener: onShortsListener)
+class ShortsDetailHolder(
+    viewBinding: ItemShortsDetailBinding,
+    val context: Context,
+    val videoPreparedListener: ShortsItemHolder.OnVideoPreparedListener,
+    val shortsListener: onShortsListener,
+    var commentAdapter: CommentAdapter
+)
     :BaseHolder<ShortsContent, ItemShortsDetailBinding>(viewBinding){
-    private lateinit var bottomSheetBehavior: BottomSheetBehavior<View>
+  //  private lateinit var bottomSheetBehavior: BottomSheetBehavior<View>
 
     override fun bind(binding: ItemShortsDetailBinding, item: ShortsContent?) {
-        bottomSheetBehavior = BottomSheetBehavior.from(binding.bottomSheetComment)
+     //   bottomSheetBehavior = BottomSheetBehavior.from(binding.bottomSheetComment)
+
+        binding.tvNick.text = item?.writtenBy
+        binding.tvShortContent.text = item?.shortform_description
+        binding.tvHeartCnt.text = item?.likes_count.toString()
+        binding.tvCommentCnt.text = item?.comments_count.toString()
+        binding.tvBookmarkCnt.text = item?.saved_count.toString()
 
         // product recyclerview
-        //initProductAdapter(item!!.shortform_id)
+        initIngredientAdapter(binding,item!!.ingredients)
+
+        // product recyclerview
+        initProductAdapter(binding,item!!.ingredients)
 
         //댓글 설정
-        initCommentAdapter(binding)
+        initCommentAdapter(binding,item!!.shortform_id)
 
         //exoplayer 설정
         initShorts(binding)
 
         // 댓글
-        var favoriteFlag = true // TODO : 나중에 서버에서 받아오기
         // 좋아요
+        var favoriteFlag = item.is_liked
+        if(!favoriteFlag){
+            binding.btnHeart.setImageResource(R.drawable.ic_shorts_heart_deactivate)
+        }else{
+            binding.btnHeart.setImageResource(R.drawable.ic_shorts_heart_activate)
+        }
+        binding.btnHeart.scaleType = ImageView.ScaleType.CENTER_CROP
+
         binding.btnHeart.let { btn->
             btn.setOnClickListener{
-                if(favoriteFlag){
-                    btn.setImageResource(R.drawable.ic_shorts_heart_deactivate)
-                    favoriteFlag = false
+                shortsListener.onFavorite(item.shortform_id)
+                if(!favoriteFlag){
+                    binding.btnHeart.setImageResource(R.drawable.ic_shorts_heart_deactivate)
+                    favoriteFlag = !favoriteFlag
                 }else{
-                    btn.setImageResource(R.drawable.ic_shorts_heart_activate)
-                    favoriteFlag = true
+                    binding.btnHeart.setImageResource(R.drawable.ic_shorts_heart_activate)
+                    favoriteFlag = !favoriteFlag
                 }
-                shortsListener.onFavorite()
+            }
+        }
+
+        // 북마크
+        var saveFlag = item.is_liked
+        if(!saveFlag){
+            binding.btnBookmark.setImageResource(R.drawable.ic_shorts_bookmark_deactivate)
+        }else{
+            binding.btnBookmark.setImageResource(R.drawable.ic_shorts_bookmark_activate)
+        }
+        binding.btnBookmark.scaleType = ImageView.ScaleType.CENTER_CROP
+        binding.btnBookmark.let { btn ->
+            btn.setOnClickListener {
+                shortsListener.onSave(item.shortform_id)
+                if(!saveFlag){  // false
+                    btn.setImageResource(R.drawable.ic_shorts_bookmark_activate)
+                    saveFlag = !saveFlag
+                }else{  // true
+                    btn.setImageResource(R.drawable.ic_shorts_bookmark_deactivate)
+                    saveFlag = !saveFlag
+                }
             }
         }
         // 댓글
-        binding.bottomSheetComment.post {
-            val bottomSheetVisibleHeight =  binding.bottomSheetComment.height -  binding.bottomSheetComment.top
-            binding.buttonLayout.y =
-                (bottomSheetVisibleHeight -  binding.bottomSheetComment.height).toFloat()
-        }
-        bottomSheetBehavior.addBottomSheetCallback(object :BottomSheetBehavior.BottomSheetCallback(){
-            override fun onStateChanged(bottomSheet: View, newState: Int) {
-                Log.d("newState","${newState}")
-                if (newState == BottomSheetBehavior.STATE_EXPANDED) {
-                    Log.d("newState","${newState}")
-                    //bottomSheet.layoutParams.height = BottomSheetBehavior.LayoutParams.MATCH_PARENT
-                } else if (newState == BottomSheetBehavior.STATE_COLLAPSED) {
-                    Log.d("newState","${newState}")
-                    // Restore original BottomSheet height
-                    // bottomSheet.layoutParams.height = BottomSheetBehavior.LayoutParams.WRAP_CONTENT
-                }
-            }
+//        binding.bottomSheetComment.post {
+//            val bottomSheetVisibleHeight =  binding.bottomSheetComment.height -  binding.bottomSheetComment.top
+//            binding.buttonLayout.y =
+//                (bottomSheetVisibleHeight -  binding.bottomSheetComment.height).toFloat()
+//        }
+//        bottomSheetBehavior.addBottomSheetCallback(object :BottomSheetBehavior.BottomSheetCallback(){
+//            override fun onStateChanged(bottomSheet: View, newState: Int) {
+//                Log.d("newState","${newState}")
+//                if (newState == BottomSheetBehavior.STATE_EXPANDED) {
+//                    Log.d("newState","${newState}")
+//                } else if (newState == BottomSheetBehavior.STATE_COLLAPSED) {
+//                    Log.d("newState","${newState}")
+//                }
+//            }
+//
+//            override fun onSlide(bottomSheet: View, slideOffset: Float) {
+//                val bottomSheetVisibleHeight = bottomSheet.height - bottomSheet.top
+//                binding.buttonLayout.translationY =
+//                    (bottomSheetVisibleHeight - binding.buttonLayout.height).toFloat()
+//            }
+//        })
 
-            override fun onSlide(bottomSheet: View, slideOffset: Float) {
-                val bottomSheetVisibleHeight = bottomSheet.height - bottomSheet.top
-                binding.buttonLayout.translationY =
-                    (bottomSheetVisibleHeight - binding.buttonLayout.height).toFloat()
-            }
-        })
+//        binding.bottomSheetComment.setOnTouchListener { _, event ->
+//            binding.bottomSheetComment.parent.requestDisallowInterceptTouchEvent(true)
+//            false
+//        }
 
         binding.btnComment.setOnClickListener {
-            // shortsListener.onComment()
-            if (bottomSheetBehavior.state == BottomSheetBehavior.STATE_HIDDEN) {
-                val itemHeight = itemView.height /3
-                bottomSheetBehavior.peekHeight = itemHeight * 2 +100
-                bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
-            } else {
-                bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
-            }
-        }
-        // 북마크
-        var bookMarkFlag = true // TODO : 나중에 서버에서 받아오기
-        binding.btnBookmark.let { btn ->
-            btn.setOnClickListener {
-                if(bookMarkFlag){
-                    btn.setImageResource(R.drawable.ic_shorts_bookmark_deactivate)
-                    bookMarkFlag = false
-                }else{
-                    btn.setImageResource(R.drawable.ic_shorts_bookmark_activate)
-                    bookMarkFlag = true
-                }
-                shortsListener.onSave()
-            }
+             shortsListener.onComment(item.shortform_id)
+
+//            BottomSheetCommentFragment(commentAdapter).show(this,"bottomsheet")
+
+//             binding.tvCommentSheetCnt.text = "댓글 ${commentAdapter.itemCount}개"
+//            if (bottomSheetBehavior.state == BottomSheetBehavior.STATE_HIDDEN) {
+//                val itemHeight = itemView.height /3
+//                bottomSheetBehavior.peekHeight = itemHeight * 2 +100
+//                bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
+//            } else {
+//                bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
+//            }
         }
 
+
+        binding.btnBookmark.scaleType = ImageView.ScaleType.CENTER_CROP
         // 텍스트 접기
         val originalMaxLines = binding.tvShortContent.maxLines
         val expandedMaxLines = Int.MAX_VALUE
 
+        Log.d("maxLine","${binding.tvShortContent.maxLines}")
         binding.tvShowMore.setOnClickListener {
-            if (binding.tvShortContent.maxLines == originalMaxLines) {
-                binding.tvShortContent.maxLines = expandedMaxLines
-                binding.tvShowMore.text = "접기"
-            } else {
-                binding.tvShortContent.maxLines = originalMaxLines
-                binding.tvShowMore.text = "더보기"
+            if(binding.tvShortContent.maxLines > 1){
+                if (binding.tvShortContent.maxLines == originalMaxLines) {
+                    binding.tvShortContent.maxLines = expandedMaxLines
+                    binding.tvShowMore.text = ""
+                } else {
+                    binding.tvShortContent.maxLines = originalMaxLines
+                    binding.tvShowMore.text = "더보기"
+                }
             }
+
+
         }
     }
 
-    private fun initProductAdapter(binding:ItemShortsDetailBinding,itemList:List<Product>){
+    private fun initProductAdapter(binding:ItemShortsDetailBinding,itemList:List<Ingredient>){
+        val itemList = itemList.map{
+            Product(it.coupang_product_image,it.coupang_product_name,it.coupang_product_price,it.coupang_product_url)
+        }
+
         val adapter = ShortsProductAdapter(object :ShortsProductItemHolder.OnClickListener{
             override fun onMoveSite(url: String) {
                 // 쿠팡 화면으로 이동
@@ -159,43 +217,42 @@ class ShortsDetailHolder(viewBinding: ItemShortsDetailBinding, val context: Cont
         })
         binding.rvProduct.adapter = adapter
         binding.rvProduct.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+        adapter.replaceData(itemList!!)
+    }
+
+    private fun initIngredientAdapter(binding:ItemShortsDetailBinding,itemList:List<Ingredient>){
+        val itemList = itemList.map{
+            it.ingredient_name
+        }
+
+        val adapter = ShortsIngredientAdapter()
+        binding.linearLayout.adapter = adapter
+        binding.linearLayout.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
         adapter.replaceData(itemList)
     }
 
-    private fun initCommentAdapter(binding:ItemShortsDetailBinding){
-        val adapter = CommentAdapter(object : OnCommentListener{
-            override fun onFavorite(id: Int) {
-
-            }
-
-            override fun onReport(id: Int) {
-
-            }
-
-            override fun writeReply(id: Int) {
-
-            }
-
-        })
-        binding.rvComment.adapter = adapter
-        binding.rvComment.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
-        //mock data
-        val itemList = arrayListOf(
-            Comment(comment = "좋은레시피입니다", nickname = "자칭 얼리어답터", comment_time = "2022.03.04", is_like = false, is_reply = false),
-            Comment(comment = "좋은레시피입니다", nickname = "자칭 얼리어답터", comment_time = "2022.03.04", is_like = false, is_reply = false),
-            Comment(comment = "좋은레시피입니다", nickname = "자칭 얼리어답터", comment_time = "2022.03.04", is_like = false, is_reply = false),
-            Comment(comment = "좋은레시피입니다", nickname = "자칭 얼리어답터", comment_time = "2022.03.04", is_like = false, is_reply = false),
-            Comment(comment = "좋은레시피입니다", nickname = "자칭 얼리어답터", comment_time = "2022.03.04", is_like = false, is_reply = false),
-            Comment(comment = "좋은레시피입니다", nickname = "자칭 얼리어답터", comment_time = "2022.03.04", is_like = false, is_reply = false),
-            Comment(comment = "좋은레시피입니다", nickname = "자칭 얼리어답터", comment_time = "2022.03.04", is_like = false, is_reply = false),
-            Comment(comment = "좋은레시피입니다", nickname = "자칭 얼리어답터", comment_time = "2022.03.04", is_like = false, is_reply = false),
-        )
-        adapter.replaceData(itemList)
+    private fun initCommentAdapter(binding:ItemShortsDetailBinding,shortformId: Int){
+//        commentAdapter.setCommentListener(object : OnCommentListener{
+//            override fun onFavorite(id: Int) {
+//
+//            }
+//
+//            override fun onReport(id: Int) {
+//
+//            }
+//
+//            override fun writeReply(id: Int) {
+//
+//            }
+//
+//        })
+//        binding.rvComment.adapter = commentAdapter
+//        binding.rvComment.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
     }
 
     private fun initShorts(binding:ItemShortsDetailBinding){
-        val exoPlayer = ExoPlayer.Builder(context).build()
-        exoPlayer.addListener(object : Player.Listener {
+        var exoPlayer = ExoPlayer.Builder(context).build()
+        val listener = object : Player.Listener {
             override fun onPlayerError(error: PlaybackException) {
                 super.onPlayerError(error)
                 Toast.makeText(context, "네트워크 연결상태를 확인하세요", Toast.LENGTH_SHORT).show()
@@ -208,7 +265,8 @@ class ShortsDetailHolder(viewBinding: ItemShortsDetailBinding, val context: Cont
                     binding.pbLoad.visibility = View.INVISIBLE
                 }
             }
-        })
+        }
+        exoPlayer.addListener(listener)
 
         binding.exoplayer.player = exoPlayer
         binding.exoplayer.controllerShowTimeoutMs = 0
@@ -241,11 +299,6 @@ class ShortsDetailHolder(viewBinding: ItemShortsDetailBinding, val context: Cont
         exoPlayer.setMediaSource(mediaSource)
         exoPlayer.prepare()
 
-        if (absoluteAdapterPosition == 0) {
-            exoPlayer.playWhenReady = true
-            exoPlayer.play()
-        }
-
         videoPreparedListener.onVideoPrepared(ExoPlayerItem(exoPlayer, absoluteAdapterPosition))
     }
 
@@ -258,4 +311,5 @@ class ShortsDetailHolder(viewBinding: ItemShortsDetailBinding, val context: Cont
             imageView.visibility = View.GONE
         }, 1000)
     }
+
 }

@@ -24,13 +24,16 @@ data class ShortsData(
 
 data class ShortsContent(
     val comments_count: Int,
-    val is_liked: Boolean,
-    val is_saved: Boolean,
-    val likes_count: Int,
-    val saved_count: Int,
+    val created_date: String,
+    val ingredients: List<Ingredient>,
+    var is_liked: Boolean,
+    var is_saved: Boolean,
+    var likes_count: Int,
+    var saved_count: Int,
     val shortform_description: String,
     val shortform_id: Int,
     val shortform_name: String,
+    val video_time: String,
     val video_url: String,
     val writtenBy: String
-)
+):java.io.Serializable

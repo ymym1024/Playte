@@ -7,8 +7,10 @@ import com.cmc.recipe.data.model.entity.RecipeEntity
 import com.cmc.recipe.data.model.response.*
 import com.cmc.recipe.data.source.local.dao.RecipeDao
 import com.cmc.recipe.data.source.remote.api.RecipeService
+import com.cmc.recipe.data.source.remote.api.ShortsService
 import com.cmc.recipe.data.source.remote.request.ReviewRequest
 import com.cmc.recipe.domain.repository.RecipeRepository
+import com.cmc.recipe.domain.repository.ShortsRepository
 import com.cmc.recipe.utils.NetworkState
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
@@ -16,13 +18,12 @@ import java.io.IOException
 import javax.inject.Inject
 import kotlin.math.ceil
 
-class RecipeRepositoryImpl @Inject constructor(
-    private val service: RecipeService,
-    private val dao : RecipeDao
-) :RecipeRepository{
+class ShortsRepositoryImpl @Inject constructor(
+    private val service: ShortsService,
+) : ShortsRepository {
 
-    override fun getRecipes(): Flow<NetworkState<RecipesResponse>> = flow {
-        val response = service.getRecipes()
+    override fun getRecipesShortform(): Flow<NetworkState<ShortsResponse>> = flow {
+        val response = service.getRecipesShortform()
         if(response.isSuccessful){
             response.body()?.let {
                 emit(NetworkState.Success(it))
@@ -36,10 +37,8 @@ class RecipeRepositoryImpl @Inject constructor(
         }
     }
 
-    override fun getRecipesDetail(
-        id: Int
-    ): Flow<NetworkState<RecipeDetailResponse>> = flow{
-        val response = service.getRecipesDetail(id)
+    override fun getRecipesShortformDetail(id:Int): Flow<NetworkState<ShortsDetailResponse>> = flow{
+        val response = service.getRecipesShortformDetail(id)
         if(response.isSuccessful){
             response.body()?.let {
                 emit(NetworkState.Success(it))
@@ -53,8 +52,8 @@ class RecipeRepositoryImpl @Inject constructor(
         }
     }
 
-    override fun postRecipesSave(id: Int): Flow<NetworkState<BaseResponse>> =flow{
-        val response = service.postRecipesSave(id)
+    override fun postShortformLike(id: Int): Flow<NetworkState<BaseResponse>> = flow{
+        val response = service.postShortformLike(id)
         if(response.isSuccessful){
             response.body()?.let {
                 emit(NetworkState.Success(it))
@@ -68,8 +67,8 @@ class RecipeRepositoryImpl @Inject constructor(
         }
     }
 
-    override fun postRecipesNotSave(id: Int): Flow<NetworkState<BaseResponse>> = flow{
-        val response = service.postRecipesNotSave(id)
+    override fun postShortformUnLike(id: Int): Flow<NetworkState<BaseResponse>> =flow{
+        val response = service.postShortformUnLike(id)
         if(response.isSuccessful){
             response.body()?.let {
                 emit(NetworkState.Success(it))
@@ -83,9 +82,8 @@ class RecipeRepositoryImpl @Inject constructor(
         }
     }
 
-    override fun getRecipesReview(id: Int): Flow<NetworkState<ReviewResponse>> = flow{
-        val response = service.getRecipesReview(id)
-
+    override fun postShortformSave(id: Int): Flow<NetworkState<BaseResponse>> =flow{
+        val response = service.postShortformSave(id)
         if(response.isSuccessful){
             response.body()?.let {
                 emit(NetworkState.Success(it))
@@ -99,8 +97,8 @@ class RecipeRepositoryImpl @Inject constructor(
         }
     }
 
-    override fun getRecipesReviewPhotos(id: Int): Flow<NetworkState<PhotoResponse>> =flow{
-        val response = service.getRecipesReviewPhotos(id)
+    override fun postShortformUnSave(id: Int): Flow<NetworkState<BaseResponse>> =flow{
+        val response = service.postShortformUnSave(id)
         if(response.isSuccessful){
             response.body()?.let {
                 emit(NetworkState.Success(it))
@@ -114,10 +112,12 @@ class RecipeRepositoryImpl @Inject constructor(
         }
     }
 
-    override fun getRecipesReviewScores(id: Int): Flow<NetworkState<ReviewScoreResponse>> =flow{
-        val response = service.getRecipesReviewScores(id)
+    override fun reportShortform(id: Int): Flow<NetworkState<BaseResponse>> =flow{
+        val response = service.reportShortform(id)
         if(response.isSuccessful){
-            response.body()?.let { emit(NetworkState.Success(it)) }
+            response.body()?.let {
+                emit(NetworkState.Success(it))
+            }
         }else{
             try {
                 emit(NetworkState.Error(response.code(),response.errorBody()!!.string()))
@@ -127,10 +127,12 @@ class RecipeRepositoryImpl @Inject constructor(
         }
     }
 
-    override fun postRecipesReview(id:Int,request: ReviewRequest): Flow<NetworkState<BaseResponse>> =flow{
-        val response = service.postRecipesReview(id,request)
+    override fun postReviewNoInterest(id: Int): Flow<NetworkState<BaseResponse>> =flow{
+        val response = service.postReviewNoInterest(id)
         if(response.isSuccessful){
-            response.body()?.let { emit(NetworkState.Success(it)) }
+            response.body()?.let {
+                emit(NetworkState.Success(it))
+            }
         }else{
             try {
                 emit(NetworkState.Error(response.code(),response.errorBody()!!.string()))
@@ -140,59 +142,4 @@ class RecipeRepositoryImpl @Inject constructor(
         }
     }
 
-    override fun updateReviewLike(id: Int): Flow<NetworkState<BaseResponse>> = flow{
-        val response = service.updateReviewLike(id)
-        if(response.isSuccessful){
-            response.body()?.let { emit(NetworkState.Success(it)) }
-        }else{
-            try {
-                emit(NetworkState.Error(response.code(),response.errorBody()!!.string()))
-            }catch (e: IOException) {
-                e.printStackTrace()
-            }
-        }
-    }
-
-    override fun updateReviewUnLike(id: Int): Flow<NetworkState<BaseResponse>> = flow{
-        val response = service.updateReviewUnLike(id)
-        if(response.isSuccessful){
-            response.body()?.let { emit(NetworkState.Success(it)) }
-        }else{
-            try {
-                emit(NetworkState.Error(response.code(),response.errorBody()!!.string()))
-            }catch (e: IOException) {
-                e.printStackTrace()
-            }
-        }
-    }
-
-    override fun postReviewReport(id: Int): Flow<NetworkState<BaseResponse>> =flow{
-        val response = service.postReviewReport(id)
-        if(response.isSuccessful){
-            response.body()?.let { emit(NetworkState.Success(it)) }
-        }else{
-            try {
-                emit(NetworkState.Error(response.code(),response.errorBody()!!.string()))
-            }catch (e: IOException) {
-                e.printStackTrace()
-            }
-        }
-    }
-
-    override suspend fun insertRecentRecipe(item: RecipeItem): Boolean {
-        return try{
-            dao.insert(item.toEntity())
-            true
-        }catch (e: IOException) {
-            false
-        }
-    }
-
-    override fun loadRecentRecipes(): Flow<List<RecipeEntity>> {
-        return flow {
-            dao.selectAll().collect { list ->
-                emit(list)
-            }
-        }
-    }
 }

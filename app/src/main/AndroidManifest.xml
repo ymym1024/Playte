@@ -27,6 +27,7 @@
         android:icon="@mipmap/ic_main"
         android:label="@string/app_name"
         android:supportsRtl="true"
+        android:largeHeap="true"
         android:theme="@style/Theme.Recipe_Android"
         tools:targetApi="31">
         <activity
@@ -58,7 +59,7 @@
         <activity
             android:name=".presentation.ui.shortform.ShortsDetailActivity"
             android:exported="true"
-            android:windowSoftInputMode="adjustUnspecified|adjustPan" />
+            android:windowSoftInputMode="adjustResize" />
         <activity
             android:name=".presentation.ui.recipe.ImageReviewActivity"
             android:exported="true" />

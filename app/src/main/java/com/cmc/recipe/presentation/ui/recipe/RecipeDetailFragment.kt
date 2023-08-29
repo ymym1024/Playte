@@ -7,13 +7,9 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.cmc.recipe.R
 import com.cmc.recipe.data.model.Product
-import com.cmc.recipe.data.model.response.RecipeDetail
-import com.cmc.recipe.data.model.response.RecipeIngredient
-import com.cmc.recipe.data.model.response.RecommendationRecipe
-import com.cmc.recipe.data.model.response.Stage
+import com.cmc.recipe.data.model.response.*
 import com.cmc.recipe.databinding.FragmentRecipeDetailBinding
 import com.cmc.recipe.presentation.ui.base.BaseFragment
-import com.cmc.recipe.presentation.ui.search.SearchActivity
 import com.cmc.recipe.presentation.ui.shortform.ShortsProductAdapter
 import com.cmc.recipe.presentation.ui.shortform.ShortsProductItemHolder
 import com.cmc.recipe.presentation.viewmodel.RecipeViewModel

@@ -1,43 +1,55 @@
 package com.cmc.recipe.presentation.ui.shortform
 
-import androidx.appcompat.app.AppCompatActivity
+import BottomSheetCommentFragment
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
-import android.view.View
+import android.widget.Toast
 import androidx.activity.viewModels
-import androidx.fragment.app.viewModels
+import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
-import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.viewpager2.widget.ViewPager2
 import com.cmc.recipe.R
 import com.cmc.recipe.data.model.ExoPlayerItem
-import com.cmc.recipe.data.model.response.Product
+import com.cmc.recipe.data.model.response.CommentContent
+import com.cmc.recipe.data.model.response.ReviewContent
 import com.cmc.recipe.data.model.response.ShortsContent
+import com.cmc.recipe.data.source.remote.request.CommentRequest
 import com.cmc.recipe.databinding.ActivityShortsDetailBinding
-import com.cmc.recipe.databinding.ItemShortsDetailBinding
+import com.cmc.recipe.presentation.ui.MainActivity
+import com.cmc.recipe.presentation.ui.common.CommentAdapter
+import com.cmc.recipe.presentation.ui.common.OnCommentListener
 import com.cmc.recipe.presentation.ui.recipe.BottomSheetDetailDialog
-import com.cmc.recipe.presentation.viewmodel.RecipeViewModel
+import com.cmc.recipe.presentation.viewmodel.CommentViewModel
+import com.cmc.recipe.presentation.viewmodel.ShortsViewModel
 import com.cmc.recipe.utils.NetworkState
-import com.cmc.recipe.utils.navigationHeight
-import com.cmc.recipe.utils.setStatusBarTransparent
-import com.cmc.recipe.utils.statusBarHeight
-import com.google.android.material.bottomsheet.BottomSheetBehavior
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
+
 
 @AndroidEntryPoint
 class ShortsDetailActivity : AppCompatActivity() {
-    private val recipeViewModel : RecipeViewModel by viewModels()
+    private val shortsViewModel : ShortsViewModel by viewModels()
+    private val commentViewModel : CommentViewModel by viewModels()
 
     private lateinit var binding: ActivityShortsDetailBinding
     private val exoPlayerItems = ArrayList<ExoPlayerItem>()
     private var currentPosition = 0
+    private var currentId = 0
 
     private var isMute = false
+
+    private lateinit var adapter : ShortsDetailAdapter
+    private lateinit var commnetAdapter : CommentAdapter
+    private lateinit var dialog : BottomSheetCommentFragment
+    private lateinit var commentItemList : ArrayList<CommentContent>
+
+    private var isCommentInitialized : Boolean? = null
+    private var favoriteFlag : Boolean? = null
+    private var saveFlag : Boolean? = null
+    private var itemSize = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -45,33 +57,71 @@ class ShortsDetailActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         //position 전달 받음
-        val shortsPosition = ShortsDetailActivityArgs.fromBundle(intent.extras!!).id
-        currentPosition = shortsPosition
+        currentPosition = intent.getIntExtra("position",0)
 
         requestRecipeList()
         initMenu()
     }
 
+    override fun onPause() {
+        super.onPause()
+
+        val index = exoPlayerItems.indexOfFirst { it.position == binding.vpExoplayer.currentItem }
+        if (index != -1) {
+            val player = exoPlayerItems[index].exoPlayer
+            player.pause()
+            player.playWhenReady = false
+        }
+    }
+
+    override fun onResume() {
+        super.onResume()
+
+        val index = exoPlayerItems.indexOfFirst { it.position == binding.vpExoplayer.currentItem }
+        Log.d("onResume ","${index}")
+        if (index != -1) {
+            val player = exoPlayerItems[index].exoPlayer
+            player.playWhenReady = true
+            player.play()
+        }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        if (exoPlayerItems.isNotEmpty()) {
+            for (item in exoPlayerItems) {
+                val player = item.exoPlayer
+                player.clearMediaItems()
+                player.release()
+            }
+            exoPlayerItems.clear()
+        }
+    }
+
+    override fun onBackPressed() {
+        super.onBackPressed()
+        val intent = Intent(this, MainActivity::class.java)
+        startActivity(intent)
+        finish()
+    }
+
     private fun requestRecipeList(){
+        shortsViewModel.getRecipesShortform()
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
-                recipeViewModel.getRecipesShortform()
-                recipeViewModel.recipeShortsResult.collect { response ->
+                shortsViewModel.recipeShortsResult.collect { response ->
                     when (response) {
                         is NetworkState.Success -> {
                             response.data?.let { data ->
                                 if (data.code == "SUCCESS") {
-                                    val itemList = response.data.data.content
-                                    Log.d("여기 호출되는지 확인",itemList[0].video_url)
-                                    initVideo(itemList as ArrayList<ShortsContent>)
-                                } else {
-                                    Log.d("data", "${data.data}")
+                                    itemSize = response.data.data.content.size
+                                    initVideo(response.data.data.content as ArrayList<ShortsContent>)
                                 }
                             }
-                            recipeViewModel._recipeResult.value = NetworkState.Loading
+                            shortsViewModel._recipeShortsResult.value = NetworkState.Loading
                         }
                         is NetworkState.Error -> {
-                            recipeViewModel._recipeResult.value = NetworkState.Loading
+                            shortsViewModel._recipeShortsResult.value = NetworkState.Loading
                         }
                         else -> {}
                     }
@@ -79,34 +129,6 @@ class ShortsDetailActivity : AppCompatActivity() {
             }
         }
     }
-
-    private fun requestRecipeDetail(id:Int){
-        lifecycleScope.launch {
-            repeatOnLifecycle(Lifecycle.State.STARTED) {
-                recipeViewModel.getRecipesShortformDetail(id)
-                recipeViewModel.recipeShortsDetailResult.collect {
-                    when (it) {
-                        is NetworkState.Success -> {
-                            it.data?.let { data ->
-                                if (data.code == "SUCCESS") {
-                                    val productList = it.data.data.ingredients
-                                    //initProductAdapter(productList)
-                                } else {
-                                    Log.d("data", "${data.data}")
-                                }
-                            }
-                            recipeViewModel._recipeResult.value = NetworkState.Loading
-                        }
-                        is NetworkState.Error -> {
-                            recipeViewModel._recipeResult.value = NetworkState.Loading
-                        }
-                        else -> {}
-                    }
-                }
-            }
-        }
-    }
-
     private fun initMenu(){
 
         binding.let {
@@ -138,32 +160,52 @@ class ShortsDetailActivity : AppCompatActivity() {
     }
 
     private fun showBottomSheet(){
-        BottomSheetDetailDialog().show(supportFragmentManager,"RemoveBottomSheetFragment")
+        val dialog = BottomSheetDetailDialog()
+        dialog.setReportListener {   //신고하기
+            requestReport(currentId)
+        }
+        dialog.setNoshowListener {// 관심없음
+            postReviewNoInterest(currentId)
+        }
+        dialog.show(supportFragmentManager,"RemoveBottomSheetFragment")
     }
 
+
     private fun initVideo(itemList:ArrayList<ShortsContent>){
-        val adapter = ShortsDetailAdapter(applicationContext,object : ShortsItemHolder.OnVideoPreparedListener {
+        adapter = ShortsDetailAdapter(applicationContext,object : ShortsItemHolder.OnVideoPreparedListener {
             override fun onVideoPrepared(exoPlayerItem: ExoPlayerItem) {
                 exoPlayerItems.add(exoPlayerItem)
+
+                if (exoPlayerItems.size == 1) {
+                    exoPlayerItem.exoPlayer.playWhenReady = true
+                    exoPlayerItem.exoPlayer.play()
+                }
             }
         })
+
 
         adapter.setShortsListener(object : onShortsListener{
-            override fun onFavorite() {}
+            override fun onFavorite(id:Int) {
+                requestShortsLikeOrUnLike(id)
+            }
 
-            override fun onSave() {}
+            override fun onSave(id:Int) {
+                requestShortsSaveOrUnSave(id)
+            }
 
-            override fun onComment(id:Int) {}
-            override fun requestDetail(id: Int) {
-                requestRecipeDetail(id)
+            override fun onComment(id:Int) {
+                requestCommentList(id)
+                isCommentInitialized = true
             }
         })
 
-        adapter.replaceData(itemList)
         binding.vpExoplayer.adapter = adapter
+        adapter.replaceData(itemList)
 
         binding.vpExoplayer.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
             override fun onPageSelected(position: Int) {
+                currentId = adapter.getData().get(position).shortform_id
+
                 val previousIndex = exoPlayerItems.indexOfFirst { it.exoPlayer.isPlaying }
 
                 if (previousIndex != -1) {
@@ -177,45 +219,409 @@ class ShortsDetailActivity : AppCompatActivity() {
                     val player = exoPlayerItems[newIndex].exoPlayer
                     player.playWhenReady = true
                     player.play()
+                    currentPosition = newIndex
                 }
-                currentPosition = position
+            }
 
-              //  requestRecipeDetail(itemList[currentPosition].shortform_id)
+        })
+        binding.vpExoplayer.setCurrentItem(currentPosition, false)
+    }
+
+    private fun findShortsItemById(shortsId: Int): ShortsContent? {
+        return adapter.getData().find { it.shortform_id == shortsId }
+    }
+
+    private fun requestFavorite(id:Int) {
+        shortsViewModel.postShortformLike(id)
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                shortsViewModel.shortsLikeResult.collect{
+                    when (it) {
+                        is NetworkState.Success -> {
+                            if (it.data.code == "SUCCESS") {
+                                val item = findShortsItemById(id)
+                                item?.is_liked = true
+                                item?.likes_count = item?.likes_count!! + 1
+
+                                adapter.getData().add(id,item)
+                            }
+                        }
+                        is NetworkState.Error -> {
+                            Toast.makeText(applicationContext, "${it.message}", Toast.LENGTH_SHORT)
+                                .show()
+                        }
+                        is NetworkState.Loading -> {
+                            // 프로그레스바 띄우기
+                        }
+                        else -> {
+
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    private fun requestCommentList(id:Int) {
+        commentViewModel.getShortfromComment(id)
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                commentViewModel.commentResult.collect{
+                    when (it) {
+                        is NetworkState.Success -> {
+                            if (it.data.code == "SUCCESS") {
+                                commentItemList = it.data.data.content as ArrayList<CommentContent>
+
+                                if(isCommentInitialized == true){
+                                    showComment()
+                                    isCommentInitialized = false
+                                }else{
+                                    dialog.setCommentCount(commentItemList.size)
+                                    commnetAdapter.replaceData(commentItemList)
+                                }
+                            }
+                            commentViewModel._commentResult.value = NetworkState.Loading
+                        }
+
+                        is NetworkState.Error -> {
+                            Toast.makeText(applicationContext, "${it.message}", Toast.LENGTH_SHORT)
+                                .show()
+                            commentViewModel._commentResult.value = NetworkState.Loading
+                        }
+                        is NetworkState.Loading -> {
+                            // 프로그레스바 띄우기
+                        }
+                        else -> {
+
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    private fun findCommentItemById(reviewId: Int): CommentContent? {
+        return commnetAdapter.getData().find { it.comment_id == reviewId }
+    }
+
+
+    private fun requestCommentLikeOrUnLike(id: Int) {
+        val review = findCommentItemById(id)
+        if (review != null) {
+            if (review.is_liked) {
+                requestCommentUnLike(id)
+            } else {
+                requestCommentLike(id)
+            }
+        }
+    }
+
+    private fun requestCommentLike(id:Int){
+        commentViewModel.postShortfromCommentLike(id)
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                commentViewModel.commentLikeResult.collect {
+                    when (it) {
+                        is NetworkState.Success -> {
+                            it.data?.let { data ->
+                                if (data.code == "SUCCESS") {
+                                    Log.d("data", "${data}")
+                                    val review = findCommentItemById(id)
+                                    Log.d("review data", "${review}")
+                                    review?.is_liked = true
+                                    review?.comment_likes = review?.comment_likes!! + 1
+                                    commnetAdapter.notifyDataSetChanged()
+
+                                } else {
+                                    Log.d("data", "${data.data}")
+                                }
+                            }
+                        }
+                        is NetworkState.Error -> {
+                            Log.d("data", "${it.message}")
+
+                            commentViewModel._commentLikeResult.emit(NetworkState.Loading)
+                        }
+                        else -> {}
+                    }
+                }
+            }
+        }
+    }
+
+    private fun requestCommentUnLike(id:Int){
+        commentViewModel.postShortfromCommentUnLike(id)
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                commentViewModel.commentUnLikeResult.collect {
+                    when (it) {
+                        is NetworkState.Success -> {
+                            it.data?.let { data ->
+                                if (data.code == "SUCCESS") {
+                                    Log.d("data-unlike", "${data}")
+                                    val review = findCommentItemById(id)
+                                    review?.is_liked = false
+                                    review?.comment_likes = review?.comment_likes!! - 1
+                                    commnetAdapter.notifyDataSetChanged()
+                                } else {
+                                    Log.d("data", "${data.data}")
+                                }
+                            }
+                            commentViewModel._commentUnLikeResult.emit(NetworkState.Loading)
+                        }
+                        is NetworkState.Error -> {
+                            Log.d("data", "${it.message}")
+
+                            commentViewModel._commentUnLikeResult.emit(NetworkState.Loading)
+                        }
+                        else -> {}
+                    }
+                }
+            }
+        }
+    }
+
+    private fun showComment(){
+        commnetAdapter = CommentAdapter()
+        commnetAdapter.setCommentListener(object : OnCommentListener {
+            override fun onFavorite(id: Int) {
+                //좋아요 기능
+                requestCommentLikeOrUnLike(id)
+            }
+
+            override fun onReport(id: Int) {
+                //신고기능
+            }
+
+            override fun writeReply(id: Int) {
+            }
+
+        })
+        commnetAdapter.replaceData(commentItemList)
+
+        dialog = BottomSheetCommentFragment(this,R.layout.bottom_sheet_comment,commnetAdapter,commentItemList)
+        dialog.setListener(object : BottomSheetCommentFragment.onInputEventListener{
+            override fun onEdit(data: String) {
+               // 댓글 요청
+                requestSaveComment(data)
             }
         })
-
+        dialog.show()
     }
 
-    override fun onPause() {
-        super.onPause()
+    private fun requestSaveComment(data:String) {
+        commentViewModel.postShortfromCommentSave(currentId,CommentRequest(data))
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                commentViewModel.commentSaveResult.collect{
+                    when (it) {
+                        is NetworkState.Success -> {
+                            if (it.data.code == "SUCCESS") {
+                                requestCommentList(currentId)
+                                commnetAdapter.notifyDataSetChanged()
+                            }
+                        }
+                        is NetworkState.Error -> {
+                            Toast.makeText(applicationContext, "${it.message}", Toast.LENGTH_SHORT)
+                                .show()
+                        }
+                        is NetworkState.Loading -> {
+                            // 프로그레스바 띄우기
+                        }
+                        else -> {
 
-        val index = exoPlayerItems.indexOfFirst { it.position == binding.vpExoplayer.currentItem }
-        if (index != -1) {
-            val player = exoPlayerItems[index].exoPlayer
-            player.pause()
-            player.playWhenReady = false
+                        }
+                    }
+                }
+            }
         }
     }
 
-    override fun onResume() {
-        super.onResume()
+    private fun requestUnFavorite(id:Int) {
+        shortsViewModel.postShortformUnLike(id)
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                shortsViewModel.shortsUnLikeResult.collect{
+                    when (it) {
+                        is NetworkState.Success -> {
+                            if (it.data.code == "SUCCESS") {
+                                val item = findShortsItemById(id)
+                                item?.is_liked = false
+                                item?.likes_count = item?.likes_count!! - 1
 
-        val index = exoPlayerItems.indexOfFirst { it.position == binding.vpExoplayer.currentItem }
-        if (index != -1) {
-            val player = exoPlayerItems[index].exoPlayer
-            player.playWhenReady = true
-            player.play()
+                                adapter.getData().add(id,item)
+                            }
+                        }
+                        is NetworkState.Error -> {
+                            Toast.makeText(applicationContext, "${it.message}", Toast.LENGTH_SHORT)
+                                .show()
+                        }
+                        is NetworkState.Loading -> {
+                            // 프로그레스바 띄우기
+                        }
+                        else -> {
+
+                        }
+                    }
+                }
+            }
         }
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-        if (exoPlayerItems.isNotEmpty()) {
-            for (item in exoPlayerItems) {
-                val player = item.exoPlayer
-                player.clearMediaItems()
-                player.release()
+    private fun requestReport(id:Int) {
+        shortsViewModel.reportShortform(id)
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                shortsViewModel.reportResult.collect{
+                    when (it) {
+                        is NetworkState.Success -> {
+                            if (it.data.code == "SUCCESS") {
+                                val nextItem: Int = (currentPosition + 1) % itemSize
+                                binding.vpExoplayer.setCurrentItem(nextItem, true)
+                                itemSize--
+                                adapter.removeItem(currentId)
+                                Toast.makeText(applicationContext, "해당 숏폼은 신고 되었습니다", Toast.LENGTH_SHORT)
+                                    .show()
+                            }
+                        }
+                        is NetworkState.Error -> {
+                            Toast.makeText(applicationContext, "${it.message}", Toast.LENGTH_SHORT)
+                                .show()
+                        }
+                        is NetworkState.Loading -> {
+                            // 프로그레스바 띄우기
+                        }
+                        else -> {
+
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    private fun postReviewNoInterest(id:Int) {
+        shortsViewModel.postReviewNoInterest(id)
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                shortsViewModel.noInterestResult.collect{
+                    when (it) {
+                        is NetworkState.Success -> {
+                            if (it.data.code == "SUCCESS") {
+                                val nextItem: Int = (currentPosition + 1) % itemSize
+                                binding.vpExoplayer.setCurrentItem(nextItem, true)
+                                itemSize--
+                                adapter.removeItem(currentId)
+                                Toast.makeText(applicationContext, "해당 숏폼은 관심없음 처리 되었습니다", Toast.LENGTH_SHORT)
+                                    .show()
+                            }
+                        }
+                        is NetworkState.Error -> {
+                            Toast.makeText(applicationContext, "${it.message}", Toast.LENGTH_SHORT)
+                                .show()
+                        }
+                        is NetworkState.Loading -> {
+                            // 프로그레스바 띄우기
+                        }
+                        else -> {
+
+                        }
+                    }
+                }
+            }
+        }
+    }
+    fun requestShortsLikeOrUnLike(id: Int) {
+        val item = findShortsItemById(id)
+        if(favoriteFlag == null){
+            favoriteFlag = item!!.is_liked
+        }
+        if (item != null) {
+            if (!favoriteFlag!!) {
+                requestFavorite(id)
+                favoriteFlag = true
+            } else {
+                requestUnFavorite(id)
+                favoriteFlag = false
+            }
+        }
+    }
+
+    private fun requestShortsSaveOrUnSave(id: Int) {
+        val item = findShortsItemById(id)
+
+        if(saveFlag == null){
+            saveFlag = item!!.is_saved
+        }
+        if (item != null) {
+            if (!saveFlag!!) {
+                requestSave(id)
+                saveFlag = true
+            } else {
+                requestUnSave(id)
+                saveFlag = false
+            }
+        }
+    }
+
+    private fun requestSave(id:Int) {
+        shortsViewModel.postShortformSave(id)
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                shortsViewModel.shortsSaveResult.collect {
+                    when (it) {
+                        is NetworkState.Success -> {
+                            if (it.data.code == "SUCCESS") {
+                                val item = findShortsItemById(id)
+                                item?.is_saved = true
+                                item?.saved_count = item?.saved_count!! + 1
+                                saveFlag = true
+
+                                adapter.getData().add(id, item)
+                            }
+                        }
+                        is NetworkState.Error -> {
+                            //showToastMessage("${it}")
+                        }
+                        is NetworkState.Loading -> {
+                            // 프로그레스바 띄우기
+                        }
+                        else -> {
+
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    private fun requestUnSave(id:Int) {
+        shortsViewModel.postShortformUnSave(id)
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                shortsViewModel.shortsUnSaveResult.collect {
+                    when (it) {
+                        is NetworkState.Success -> {
+                            if (it.data.code == "SUCCESS") {
+                                val item = findShortsItemById(id)
+                                item?.is_saved = false
+                                item?.saved_count = item?.saved_count!! - 1
+                                saveFlag = false
+
+                                adapter.getData().add(id, item)
+                            }
+                            //showToastMessage("${it.data}")
+                        }
+                        is NetworkState.Error -> {
+                           // showToastMessage("${it}")
+                        }
+                        else -> {
+
+                        }
+                    }
+                }
             }
         }
     }
 }
+

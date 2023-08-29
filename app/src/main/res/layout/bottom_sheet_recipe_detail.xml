@@ -74,7 +74,8 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/btn_send_reply"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:visibility="gone">
 
         <ImageView
             android:id="@+id/imageView15"

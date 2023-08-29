@@ -20,12 +20,6 @@ interface RecipeService {
     @POST("/api/v1/recipes/{recipe-id}/unsave")
     suspend fun postRecipesNotSave(@Path("recipe-id")id:Int) : Response<BaseResponse>
 
-    @GET("/api/v1/recipes/shortform")
-    suspend fun getRecipesShortform() : Response<ShortsResponse>
-
-    @GET("/api/v1/recipes/shortform/detail/{shortform-id}")
-    suspend fun getRecipesShortformDetail(@Path("shortform-id")id:Int) : Response<ShortsDetailResponse>
-
     //레시피 리뷰
     @GET("/api/v1/reviews/recipe/{recipe-id}")
     suspend fun getRecipesReview(@Path("recipe-id")id:Int) : Response<ReviewResponse>
