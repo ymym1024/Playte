@@ -5,6 +5,7 @@ import android.util.Log
 import android.view.View
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.cmc.recipe.data.model.Comment
+import com.cmc.recipe.data.model.response.CommentContent
 import com.cmc.recipe.databinding.FragmentRecipeMenuCommentBinding
 import com.cmc.recipe.presentation.ui.base.BaseFragment
 import com.cmc.recipe.presentation.ui.common.CommentAdapter
@@ -18,13 +19,13 @@ import kotlinx.coroutines.launch
 class RecipeMenuCommentFragment : BaseFragment<FragmentRecipeMenuCommentBinding>(FragmentRecipeMenuCommentBinding::inflate) {
 
     override fun initFragment() {
-        val itemList = arrayListOf(
-            Comment(comment = "좋은레시피입니다", nickname = "자칭 얼리어답터", comment_time = "2022.03.04", is_like = false, is_reply = false),
-            Comment(comment = "좋은레시피입니다", nickname = "자칭 얼리어답터", comment_time = "2022.03.04", is_like = false, is_reply = false),
-        )
-
-        binding.tvCommentCnt.text = itemList.size.toString()
-        initRV(itemList)
+//        val itemList = arrayListOf(
+//            Comment(comment = "좋은레시피입니다", nickname = "자칭 얼리어답터", comment_time = "2022.03.04", is_like = false, is_reply = false),
+//            Comment(comment = "좋은레시피입니다", nickname = "자칭 얼리어답터", comment_time = "2022.03.04", is_like = false, is_reply = false),
+//        )
+//
+//        binding.tvCommentCnt.text = itemList.size.toString()
+//        initRV(itemList)
 
         // 댓글 입력 시 이벤트 처리
         binding.etComment.addTextChangedListener(CommonTextWatcher(
@@ -41,9 +42,10 @@ class RecipeMenuCommentFragment : BaseFragment<FragmentRecipeMenuCommentBinding>
         ))
     }
 
-    private fun initRV(itemList:ArrayList<Comment>){
+    private fun initRV(itemList:ArrayList<CommentContent>){
 
-        val adapter = CommentAdapter(object :OnCommentListener{
+        val adapter = CommentAdapter()
+        adapter.setCommentListener(object :OnCommentListener{
             override fun onFavorite(id: Int) {
                 Log.d("onFavorite",id.toString())
             }
@@ -53,10 +55,9 @@ class RecipeMenuCommentFragment : BaseFragment<FragmentRecipeMenuCommentBinding>
             }
 
             override fun writeReply(id: Int) {
-                val nick = itemList.get(id).nickname
-                writeReply(nick)
+//                val nick = itemList.get(id).nickname
+//                writeReply(nick)
             }
-
         })
         binding.rvComment.adapter = adapter
         binding.rvComment.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)

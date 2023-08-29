@@ -1,5 +1,6 @@
 package com.cmc.recipe.presentation.ui.shortform
 
+import BottomSheetCommentFragment
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
@@ -12,10 +13,14 @@ import androidx.lifecycle.repeatOnLifecycle
 import androidx.viewpager2.widget.ViewPager2
 import com.cmc.recipe.R
 import com.cmc.recipe.data.model.ExoPlayerItem
+import com.cmc.recipe.data.model.response.CommentContent
 import com.cmc.recipe.data.model.response.ShortsContent
 import com.cmc.recipe.databinding.ActivityShortsDetailBinding
 import com.cmc.recipe.presentation.ui.MainActivity
+import com.cmc.recipe.presentation.ui.common.CommentAdapter
+import com.cmc.recipe.presentation.ui.common.OnCommentListener
 import com.cmc.recipe.presentation.ui.recipe.BottomSheetDetailDialog
+import com.cmc.recipe.presentation.viewmodel.CommentViewModel
 import com.cmc.recipe.presentation.viewmodel.ShortsViewModel
 import com.cmc.recipe.utils.NetworkState
 import dagger.hilt.android.AndroidEntryPoint
@@ -25,6 +30,7 @@ import kotlinx.coroutines.launch
 @AndroidEntryPoint
 class ShortsDetailActivity : AppCompatActivity() {
     private val shortsViewModel : ShortsViewModel by viewModels()
+    private val commentViewModel : CommentViewModel by viewModels()
 
     private lateinit var binding: ActivityShortsDetailBinding
     private val exoPlayerItems = ArrayList<ExoPlayerItem>()
@@ -180,7 +186,9 @@ class ShortsDetailActivity : AppCompatActivity() {
                 requestShortsSaveOrUnSave(id)
             }
 
-            override fun onComment(id:Int) {}
+            override fun onComment(id:Int) {
+                requestCommentList(id)
+            }
         })
 
         binding.vpExoplayer.adapter = adapter
@@ -244,6 +252,57 @@ class ShortsDetailActivity : AppCompatActivity() {
                 }
             }
         }
+    }
+
+    private fun requestCommentList(id:Int) {
+        commentViewModel.getShortfromComment(id)
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                commentViewModel.commentResult.collect{
+                    when (it) {
+                        is NetworkState.Success -> {
+                            if (it.data.code == "SUCCESS") {
+                                val newList = it.data.data.content
+
+                                showComment(newList)
+                            }
+                            commentViewModel._commentResult.value = NetworkState.Loading
+                        }
+
+                        is NetworkState.Error -> {
+                            Toast.makeText(applicationContext, "${it.message}", Toast.LENGTH_SHORT)
+                                .show()
+                            commentViewModel._commentResult.value = NetworkState.Loading
+                        }
+                        is NetworkState.Loading -> {
+                            // 프로그레스바 띄우기
+                        }
+                        else -> {
+
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    private fun showComment(newList:List<CommentContent>){
+        val adapter = CommentAdapter()
+        adapter.setCommentListener(object : OnCommentListener {
+            override fun onFavorite(id: Int) {
+            }
+
+            override fun onReport(id: Int) {
+            }
+
+            override fun writeReply(id: Int) {
+            }
+
+        })
+        adapter.replaceData(newList)
+
+        val dialog = BottomSheetCommentFragment(this,R.layout.bottom_sheet_comment,adapter,newList)
+        dialog.show()
     }
 
     private fun requestUnFavorite(id:Int) {

@@ -1,5 +1,6 @@
 package com.cmc.recipe.presentation.ui.shortform
 
+import BottomSheetCommentFragment
 import android.content.Context
 import android.net.Uri
 import android.os.Handler
@@ -10,12 +11,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.Toast
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.lifecycleScope
-import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.cmc.recipe.R
-import com.cmc.recipe.data.model.Comment
 import com.cmc.recipe.data.model.ExoPlayerItem
 import com.cmc.recipe.data.model.Product
 import com.cmc.recipe.data.model.response.*
@@ -24,7 +21,6 @@ import com.cmc.recipe.presentation.ui.base.BaseAdapter
 import com.cmc.recipe.presentation.ui.base.BaseHolder
 import com.cmc.recipe.presentation.ui.common.CommentAdapter
 import com.cmc.recipe.presentation.ui.common.OnCommentListener
-import com.cmc.recipe.utils.NetworkState
 import com.google.android.exoplayer2.ExoPlayer
 import com.google.android.exoplayer2.MediaItem
 import com.google.android.exoplayer2.PlaybackException
@@ -32,12 +28,15 @@ import com.google.android.exoplayer2.Player
 import com.google.android.exoplayer2.source.ProgressiveMediaSource
 import com.google.android.exoplayer2.upstream.DefaultDataSource
 import com.google.android.material.bottomsheet.BottomSheetBehavior
-import kotlinx.coroutines.launch
 
 class ShortsDetailAdapter(private val context:Context,val videoPreparedListener: ShortsItemHolder.OnVideoPreparedListener):
     BaseAdapter<ShortsContent, ItemShortsDetailBinding, ShortsDetailHolder>() {
 
     private lateinit var onShortsListener : onShortsListener
+
+
+    private lateinit var commentList : MutableList<CommentContent>
+    private var commentAdapter : CommentAdapter = CommentAdapter()
 
     fun setShortsListener(onShortsListener:onShortsListener){
         this.onShortsListener = onShortsListener
@@ -50,22 +49,35 @@ class ShortsDetailAdapter(private val context:Context,val videoPreparedListener:
         notifyDataSetChanged()
     }
 
+    fun initCommentList(newCommentList: List<CommentContent>) {
+        commentList = newCommentList.toMutableList()
+        commentAdapter.replaceData(commentList)
+
+    }
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ShortsDetailHolder {
         return ShortsDetailHolder(
             ItemShortsDetailBinding.inflate(LayoutInflater.from(parent.context), parent, false),
             context,
             videoPreparedListener,
-            onShortsListener
+            onShortsListener,
+            commentAdapter
         )
     }
 }
 
-class ShortsDetailHolder(viewBinding: ItemShortsDetailBinding, val context: Context,val videoPreparedListener: ShortsItemHolder.OnVideoPreparedListener,val shortsListener: onShortsListener)
+class ShortsDetailHolder(
+    viewBinding: ItemShortsDetailBinding,
+    val context: Context,
+    val videoPreparedListener: ShortsItemHolder.OnVideoPreparedListener,
+    val shortsListener: onShortsListener,
+    var commentAdapter: CommentAdapter
+)
     :BaseHolder<ShortsContent, ItemShortsDetailBinding>(viewBinding){
-    private lateinit var bottomSheetBehavior: BottomSheetBehavior<View>
+  //  private lateinit var bottomSheetBehavior: BottomSheetBehavior<View>
 
     override fun bind(binding: ItemShortsDetailBinding, item: ShortsContent?) {
-        bottomSheetBehavior = BottomSheetBehavior.from(binding.bottomSheetComment)
+     //   bottomSheetBehavior = BottomSheetBehavior.from(binding.bottomSheetComment)
 
         binding.tvNick.text = item?.writtenBy
         binding.tvShortContent.text = item?.shortform_description
@@ -80,7 +92,7 @@ class ShortsDetailHolder(viewBinding: ItemShortsDetailBinding, val context: Cont
         initProductAdapter(binding,item!!.ingredients)
 
         //댓글 설정
-        initCommentAdapter(binding)
+        initCommentAdapter(binding,item!!.shortform_id)
 
         //exoplayer 설정
         initShorts(binding)
@@ -129,37 +141,46 @@ class ShortsDetailHolder(viewBinding: ItemShortsDetailBinding, val context: Cont
             }
         }
         // 댓글
-        binding.bottomSheetComment.post {
-            val bottomSheetVisibleHeight =  binding.bottomSheetComment.height -  binding.bottomSheetComment.top
-            binding.buttonLayout.y =
-                (bottomSheetVisibleHeight -  binding.bottomSheetComment.height).toFloat()
-        }
-        bottomSheetBehavior.addBottomSheetCallback(object :BottomSheetBehavior.BottomSheetCallback(){
-            override fun onStateChanged(bottomSheet: View, newState: Int) {
-                Log.d("newState","${newState}")
-                if (newState == BottomSheetBehavior.STATE_EXPANDED) {
-                    Log.d("newState","${newState}")
-                } else if (newState == BottomSheetBehavior.STATE_COLLAPSED) {
-                    Log.d("newState","${newState}")
-                }
-            }
+//        binding.bottomSheetComment.post {
+//            val bottomSheetVisibleHeight =  binding.bottomSheetComment.height -  binding.bottomSheetComment.top
+//            binding.buttonLayout.y =
+//                (bottomSheetVisibleHeight -  binding.bottomSheetComment.height).toFloat()
+//        }
+//        bottomSheetBehavior.addBottomSheetCallback(object :BottomSheetBehavior.BottomSheetCallback(){
+//            override fun onStateChanged(bottomSheet: View, newState: Int) {
+//                Log.d("newState","${newState}")
+//                if (newState == BottomSheetBehavior.STATE_EXPANDED) {
+//                    Log.d("newState","${newState}")
+//                } else if (newState == BottomSheetBehavior.STATE_COLLAPSED) {
+//                    Log.d("newState","${newState}")
+//                }
+//            }
+//
+//            override fun onSlide(bottomSheet: View, slideOffset: Float) {
+//                val bottomSheetVisibleHeight = bottomSheet.height - bottomSheet.top
+//                binding.buttonLayout.translationY =
+//                    (bottomSheetVisibleHeight - binding.buttonLayout.height).toFloat()
+//            }
+//        })
 
-            override fun onSlide(bottomSheet: View, slideOffset: Float) {
-                val bottomSheetVisibleHeight = bottomSheet.height - bottomSheet.top
-                binding.buttonLayout.translationY =
-                    (bottomSheetVisibleHeight - binding.buttonLayout.height).toFloat()
-            }
-        })
+//        binding.bottomSheetComment.setOnTouchListener { _, event ->
+//            binding.bottomSheetComment.parent.requestDisallowInterceptTouchEvent(true)
+//            false
+//        }
 
         binding.btnComment.setOnClickListener {
-            // shortsListener.onComment()
-            if (bottomSheetBehavior.state == BottomSheetBehavior.STATE_HIDDEN) {
-                val itemHeight = itemView.height /3
-                bottomSheetBehavior.peekHeight = itemHeight * 2 +100
-                bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
-            } else {
-                bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
-            }
+             shortsListener.onComment(item.shortform_id)
+
+//            BottomSheetCommentFragment(commentAdapter).show(this,"bottomsheet")
+
+//             binding.tvCommentSheetCnt.text = "댓글 ${commentAdapter.itemCount}개"
+//            if (bottomSheetBehavior.state == BottomSheetBehavior.STATE_HIDDEN) {
+//                val itemHeight = itemView.height /3
+//                bottomSheetBehavior.peekHeight = itemHeight * 2 +100
+//                bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
+//            } else {
+//                bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
+//            }
         }
 
 
@@ -210,35 +231,23 @@ class ShortsDetailHolder(viewBinding: ItemShortsDetailBinding, val context: Cont
         adapter.replaceData(itemList)
     }
 
-    private fun initCommentAdapter(binding:ItemShortsDetailBinding){
-        val adapter = CommentAdapter(object : OnCommentListener{
-            override fun onFavorite(id: Int) {
-
-            }
-
-            override fun onReport(id: Int) {
-
-            }
-
-            override fun writeReply(id: Int) {
-
-            }
-
-        })
-        binding.rvComment.adapter = adapter
-        binding.rvComment.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
-        //mock data
-        val itemList = arrayListOf(
-            Comment(comment = "좋은레시피입니다", nickname = "자칭 얼리어답터", comment_time = "2022.03.04", is_like = false, is_reply = false),
-            Comment(comment = "좋은레시피입니다", nickname = "자칭 얼리어답터", comment_time = "2022.03.04", is_like = false, is_reply = false),
-            Comment(comment = "좋은레시피입니다", nickname = "자칭 얼리어답터", comment_time = "2022.03.04", is_like = false, is_reply = false),
-            Comment(comment = "좋은레시피입니다", nickname = "자칭 얼리어답터", comment_time = "2022.03.04", is_like = false, is_reply = false),
-            Comment(comment = "좋은레시피입니다", nickname = "자칭 얼리어답터", comment_time = "2022.03.04", is_like = false, is_reply = false),
-            Comment(comment = "좋은레시피입니다", nickname = "자칭 얼리어답터", comment_time = "2022.03.04", is_like = false, is_reply = false),
-            Comment(comment = "좋은레시피입니다", nickname = "자칭 얼리어답터", comment_time = "2022.03.04", is_like = false, is_reply = false),
-            Comment(comment = "좋은레시피입니다", nickname = "자칭 얼리어답터", comment_time = "2022.03.04", is_like = false, is_reply = false),
-        )
-        adapter.replaceData(itemList)
+    private fun initCommentAdapter(binding:ItemShortsDetailBinding,shortformId: Int){
+//        commentAdapter.setCommentListener(object : OnCommentListener{
+//            override fun onFavorite(id: Int) {
+//
+//            }
+//
+//            override fun onReport(id: Int) {
+//
+//            }
+//
+//            override fun writeReply(id: Int) {
+//
+//            }
+//
+//        })
+//        binding.rvComment.adapter = commentAdapter
+//        binding.rvComment.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
     }
 
     private fun initShorts(binding:ItemShortsDetailBinding){
@@ -302,4 +311,5 @@ class ShortsDetailHolder(viewBinding: ItemShortsDetailBinding, val context: Cont
             imageView.visibility = View.GONE
         }, 1000)
     }
+
 }

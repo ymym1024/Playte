@@ -50,6 +50,11 @@ object ServiceModule {
 
     @Singleton
     @Provides
+    fun providesCommentService(@Named("RecipeApi")retrofit: Retrofit): CommentService =
+        retrofit.create(CommentService::class.java)
+
+    @Singleton
+    @Provides
     fun providesGoogleService(@Named("GoogleLogin") retrofit: Retrofit): GoogleService =
         retrofit.create(GoogleService::class.java)
 }
