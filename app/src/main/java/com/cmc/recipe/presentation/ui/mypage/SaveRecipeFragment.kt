@@ -15,6 +15,9 @@ import com.cmc.recipe.presentation.viewmodel.MyPageViewModel
 import com.cmc.recipe.presentation.viewmodel.RecipeViewModel
 import com.cmc.recipe.utils.NetworkState
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.take
 
 @AndroidEntryPoint
 class SaveRecipeFragment : BaseFragment<FragmentSaveRecipeBinding>(FragmentSaveRecipeBinding::inflate) {
@@ -57,26 +60,27 @@ class SaveRecipeFragment : BaseFragment<FragmentSaveRecipeBinding>(FragmentSaveR
     private fun requestUnSave(item:RecipeItem){
         recipeViewModel.postRecipesNotSave(item.recipe_id)
         launchWithLifecycle(lifecycle) {
-            recipeViewModel.recipeSaveResult.collect{
+            recipeViewModel.recipeUnSaveResult.take(1).onEach{
                 when(it){
                     is NetworkState.Success -> {
                         it.data?.let {data ->
                             if(data.code == "SUCCESS"){
+                                Log.d("tc","${data}")
                                 adapter.removeItem(item)
                                 RecipeSnackBar(binding.rvRecipe,"저장이 해제됐습니다!").show()
                             }else{
                                 Log.d("data","${data.data}")
                             }
                         }
-                        recipeViewModel._recipeResult.value = NetworkState.Loading
+                        recipeViewModel._recipeUnSaveResult.emit(NetworkState.Loading)
                     }
                     is NetworkState.Error ->{
                         showToastMessage(it.message.toString())
-                        recipeViewModel._recipeResult.value = NetworkState.Loading
+                        recipeViewModel._recipeUnSaveResult.emit(NetworkState.Loading)
                     }
                     else -> {}
                 }
-            }
+            }.launchIn(this)
         }
     }
 
