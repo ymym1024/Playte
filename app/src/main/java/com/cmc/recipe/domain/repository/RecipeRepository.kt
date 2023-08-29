@@ -23,6 +23,9 @@ interface RecipeRepository {
 
     fun getRecipesTheme(themeName:String) : Flow<NetworkState<RecipesResponse>>
 
+    //신고
+    fun postRecipeReport(id:Int) : Flow<NetworkState<BaseResponse>>
+
     //리뷰
     fun getRecipesReview(id:Int) : Flow<NetworkState<ReviewResponse>>
 
