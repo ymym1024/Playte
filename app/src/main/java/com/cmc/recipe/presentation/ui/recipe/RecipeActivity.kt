@@ -77,8 +77,25 @@ class RecipeActivity : AppCompatActivity() {
     }
 
     override fun onSupportNavigateUp(): Boolean {
+        if (navController.currentDestination?.id == R.id.recipeThemeFragment ||
+            navController.currentDestination?.id == R.id.recipeDetailFragment) {
+            // 현재 프래그먼트가 recipeThemeFragment 또는 recipeDetailFragment 인 경우에만 처리
+            onBackPressed() // 시스템의 뒤로가기 버튼과 동일한 동작 수행
+            return true
+        }
         return navController.navigateUp() || super.onSupportNavigateUp()
     }
+
+    override fun onBackPressed() {
+        if (navController.currentDestination?.id == R.id.recipeThemeFragment ||
+            navController.currentDestination?.id == R.id.recipeDetailFragment) {
+            // 현재 프래그먼트가 recipeThemeFragment 또는 recipeDetailFragment 인 경우에만 처리
+            finish() // 액티비티 종료
+        } else {
+            super.onBackPressed()
+        }
+    }
+
 
     fun hideToolbar(state:Boolean){
         if(state){
