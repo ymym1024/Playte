@@ -18,6 +18,7 @@ class RecipeThemeFragment : BaseFragment<FragmentRecipeThemeBinding>(FragmentRec
     private val recipeViewModel : RecipeViewModel by viewModels()
     private lateinit var itemList:List<RecipeItem>
 
+
     override fun initFragment() {
         var theme = arguments?.getString("theme")
         var theme_name = ""
