@@ -180,37 +180,6 @@ class RecipeDetailFragment : BaseFragment<FragmentRecipeDetailBinding>(FragmentR
                 }
             }
         }
-        val dialog = BottomSheetDetailDialog("recipe")
-        dialog.setReportListener {   //신고하기
-            requestRecipeReport(recipeId)
-        }
-        dialog.show(fragmentManager!!, "RemoveBottomSheetFragment")
-    }
-
-    private fun requestRecipeReport(id:Int){
-        recipeViewModel.postRecipeReport(id)
-        launchWithLifecycle(lifecycle) {
-            recipeViewModel.recipeReportResult.collect{
-                when(it){
-                    is NetworkState.Success -> {
-                        it.data?.let {data ->
-                            if(data.code == "SUCCESS"){
-                                requireActivity().onBackPressed()
-                                RecipeSnackBar(binding.root,"신고가 접수되었습니다.").show()
-                            }else{
-                                Log.d("data","${data.data}")
-                            }
-                        }
-                        recipeViewModel._recipeResult.value = NetworkState.Loading
-                    }
-                    is NetworkState.Error ->{
-                        showToastMessage(it.message.toString())
-                        recipeViewModel._recipeResult.value = NetworkState.Loading
-                    }
-                    else -> {}
-                }
-            }
-        }
     }
 
 
