@@ -36,6 +36,12 @@ android {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            buildConfigField "String", "CLIENT_ID", localProperties['oauth.clientid']
+            buildConfigField "String", "CLIENT_SECRET_ID", localProperties['oauth.secret.clientid']
+            buildConfigField "String", "BASE_URL", localProperties['BASE_URL']
+            buildConfigField "String", "GOOGLE_BASE_URL", localProperties['GOOGLE_BASE_URL']
+            buildConfigField "String", "DOC_URL", localProperties['DOC_URL']
+            buildConfigField "String", "FILE_NAME", localProperties['FILE_NAME']
         }
     }
     compileOptions {
