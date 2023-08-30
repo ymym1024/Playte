@@ -169,11 +169,7 @@ class ShortsDetailHolder(
             Product(it.coupang_product_image,it.coupang_product_name,it.coupang_product_price,it.coupang_product_url)
         }
 
-        val adapter = ShortsProductAdapter(object :ShortsProductItemHolder.OnClickListener{
-            override fun onMoveSite(url: String) {
-                // 쿠팡 화면으로 이동
-            }
-        })
+        val adapter = ShortsProductAdapter()
         binding.rvProduct.adapter = adapter
         binding.rvProduct.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
         adapter.replaceData(itemList!!)

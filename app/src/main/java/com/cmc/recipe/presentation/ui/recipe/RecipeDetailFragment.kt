@@ -274,11 +274,7 @@ class RecipeDetailFragment : BaseFragment<FragmentRecipeDetailBinding>(FragmentR
             Product(it.coupang_product_image,it.coupang_product_name,it.coupang_product_price,it.coupang_product_url)
         }
 
-        val adapter = ShortsProductAdapter(object : ShortsProductItemHolder.OnClickListener{
-            override fun onMoveSite(url: String) {
-
-            }
-        })
+        val adapter = ShortsProductAdapter()
         binding.rvRecipeProduct.adapter = adapter
         binding.rvRecipeProduct.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
         adapter.replaceData(itemList)
