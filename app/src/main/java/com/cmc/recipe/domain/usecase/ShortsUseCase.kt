@@ -2,6 +2,7 @@ package com.cmc.recipe.domain.usecase
 
 import android.util.Log
 import com.cmc.recipe.data.model.RecipeItem
+import com.cmc.recipe.data.model.response.ShortsContent
 import com.cmc.recipe.data.source.remote.request.RequestNickname
 import com.cmc.recipe.data.source.remote.request.ReviewRequest
 import com.cmc.recipe.domain.repository.AuthRepository
@@ -30,4 +31,8 @@ class ShortsUseCase @Inject constructor(
 
     fun postReviewNoInterest(id:Int) = repository.postReviewNoInterest(id)
 
+    //최근 본 레시피
+    suspend fun insertRecentShorts(item: ShortsContent) = repository.insertRecentShorts(item)
+
+    fun loadRecentShorts() = repository.loadRecentShorts()
 }

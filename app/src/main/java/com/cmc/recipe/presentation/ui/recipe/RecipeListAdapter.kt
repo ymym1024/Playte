@@ -62,10 +62,10 @@ class RecipeItemHolder(viewBinding: ItemRecipeBinding, val type:String,val click
                 it.tvRecipeName.text = recipe.recipe_name
                 it.tvRecipeTime.text = "${recipe.cook_time}분"
                 it.tvTimeNickname.text = "${create_date} | ${recipe.nickname}"
-                it.tvStarCnt.text = "${recipe.rating}(${recipe.comment_count})"
+                it.tvStarCnt.text = "${String.format("%.2f",recipe.rating)}(${recipe.comment_count})"
                 if(type.isEmpty()){ // 작성레시피가 아닌 경우
-                    if(!recipe.is_saved) it.btnStar.setBackgroundResource(R.drawable.ic_bookmark_deactive)
-                    else it.btnStar.setBackgroundResource(R.drawable.ic_bookmark_activate)
+                    if(!recipe.is_saved) it.btnStar.setImageResource(R.drawable.ic_bookmark_deactive)
+                    else it.btnStar.setImageResource(R.drawable.ic_bookmark_activate)
                 }
             }
         }

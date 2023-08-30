@@ -3,6 +3,7 @@ package com.cmc.recipe.di
 import com.cmc.recipe.data.datasource.*
 import com.cmc.recipe.data.source.local.dao.RecipeDao
 import com.cmc.recipe.data.source.local.dao.SearchDao
+import com.cmc.recipe.data.source.local.dao.ShortsDao
 import com.cmc.recipe.data.source.remote.api.*
 import com.cmc.recipe.domain.repository.*
 import dagger.Module
@@ -56,8 +57,9 @@ object RepositoryModule {
     @Provides
     @ViewModelScoped
     fun providesShortsRepository(
-        service: ShortsService
-    ) : ShortsRepository = ShortsRepositoryImpl(service)
+        service: ShortsService,
+        dao:ShortsDao
+    ) : ShortsRepository = ShortsRepositoryImpl(service,dao)
 
     @Provides
     @ViewModelScoped

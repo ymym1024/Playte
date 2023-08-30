@@ -40,6 +40,7 @@ data class RecipeDetail(
 )
 
 data class RecommendationRecipe(
+    var recipe_id:Int = 0,
     val cooking_time: Int,
     val img_url: String,
     val recipe_name: String

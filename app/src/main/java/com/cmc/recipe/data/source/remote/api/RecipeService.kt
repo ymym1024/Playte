@@ -20,6 +20,20 @@ interface RecipeService {
     @POST("/api/v1/recipes/{recipe-id}/unsave")
     suspend fun postRecipesNotSave(@Path("recipe-id")id:Int) : Response<BaseResponse>
 
+    @POST("/api/v1/recipes/{recipe-id}/like")
+    suspend fun postRecipesLike(@Path("recipe-id")id:Int) : Response<BaseResponse>
+
+    @POST("/api/v1/recipes/{recipe-id}/unlike")
+    suspend fun postRecipesUnLike(@Path("recipe-id")id:Int) : Response<BaseResponse>
+
+    //테마별 레시피
+    @GET("/api/v1/recipes/recipe/theme")
+    suspend fun getRecipesTheme(@Query("themeName")themeName:String) : Response<RecipesResponse>
+
+    //신고
+    @GET("/api/v1/recipes/recipe/{recipe-id}/report")
+    suspend fun postRecipeReport(@Path("recipe-id")id:Int) : Response<BaseResponse>
+
     //레시피 리뷰
     @GET("/api/v1/reviews/recipe/{recipe-id}")
     suspend fun getRecipesReview(@Path("recipe-id")id:Int) : Response<ReviewResponse>

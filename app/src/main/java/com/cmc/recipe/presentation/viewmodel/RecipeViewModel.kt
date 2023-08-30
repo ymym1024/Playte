@@ -32,6 +32,9 @@ class RecipeViewModel @Inject constructor(private val recipeUseCase: RecipeUseCa
     var _recipeSaveResult : MutableSharedFlow<NetworkState<BaseResponse>> = MutableSharedFlow()
     var recipeSaveResult = _recipeSaveResult.asSharedFlow()
 
+    var _recipeUnSaveResult : MutableSharedFlow<NetworkState<BaseResponse>> = MutableSharedFlow()
+    var recipeUnSaveResult = _recipeUnSaveResult.asSharedFlow()
+
     var _reviewResult : MutableStateFlow<NetworkState<ReviewResponse>> = MutableStateFlow(NetworkState.Loading)
     var reviewResult: StateFlow<NetworkState<ReviewResponse>> = _reviewResult
 
@@ -50,9 +53,22 @@ class RecipeViewModel @Inject constructor(private val recipeUseCase: RecipeUseCa
     var _reviewUnLikeResult : MutableSharedFlow<NetworkState<BaseResponse>> = MutableSharedFlow()
     var reviewUnLikeResult = _reviewUnLikeResult.asSharedFlow()
 
+    var _recipeLikeesult : MutableSharedFlow<NetworkState<BaseResponse>> = MutableSharedFlow()
+    var recipeLikeesult = _recipeLikeesult.asSharedFlow()
+
+    var _recipeUnLikeResult : MutableSharedFlow<NetworkState<BaseResponse>> = MutableSharedFlow()
+    var recipeUnLikeResult = _recipeUnLikeResult.asSharedFlow()
+
+    var _recipeThemeResult: MutableStateFlow<NetworkState<RecipesResponse>> = MutableStateFlow(NetworkState.Loading)
+    var recipeThemeResult: StateFlow<NetworkState<RecipesResponse>> = _recipeThemeResult
+
     var _reviewReportResult : MutableSharedFlow<NetworkState<BaseResponse>> = MutableSharedFlow()
     var reviewReportResult = _reviewReportResult.asSharedFlow()
 
+    var _recipeReportResult : MutableSharedFlow<NetworkState<BaseResponse>> = MutableSharedFlow()
+    var recipeReportResult = _recipeReportResult.asSharedFlow()
+
+    //최근 본 레시피
     private val _recentRecipeResult = MutableSharedFlow<List<RecipeEntity>>()
     val recentRecipeResult: Flow<List<RecipeEntity>>
         get() = _recentRecipeResult
@@ -61,11 +77,9 @@ class RecipeViewModel @Inject constructor(private val recipeUseCase: RecipeUseCa
         _reciepeId.value = id
     }
 
-    var _recipeShortsResult : MutableStateFlow<NetworkState<ShortsResponse>> = MutableStateFlow(NetworkState.Loading)
-    var recipeShortsResult: StateFlow<NetworkState<ShortsResponse>> = _recipeShortsResult.asStateFlow()
-
     var _recipeShortsDetailResult : MutableStateFlow<NetworkState<ShortsDetailResponse>> = MutableStateFlow(NetworkState.Loading)
     var recipeShortsDetailResult: StateFlow<NetworkState<ShortsDetailResponse>> = _recipeShortsDetailResult
+
 
     fun getRecipes() = viewModelScope.launch {
         _recipeResult.value = NetworkState.Loading
@@ -98,12 +112,42 @@ class RecipeViewModel @Inject constructor(private val recipeUseCase: RecipeUseCa
     }
 
     fun postRecipesNotSave(id:Int) = viewModelScope.launch {
-        _recipeSaveResult.emit(NetworkState.Loading)
+        _recipeUnSaveResult.emit(NetworkState.Loading)
         recipeUseCase.postRecipesNotSave(id)
             .catch { error ->
-                _recipeSaveResult.emit(NetworkState.Error(400,"${error.message}"))
+                _recipeUnSaveResult.emit(NetworkState.Error(400,"${error.message}"))
             }.collect { values ->
-                _recipeSaveResult.emit(values)
+                _recipeUnSaveResult.emit(values)
+            }
+    }
+
+    fun postRecipesLike(id:Int) = viewModelScope.launch {
+        _recipeLikeesult.emit(NetworkState.Loading)
+        recipeUseCase.postRecipesLike(id)
+            .catch { error ->
+                _recipeLikeesult.emit(NetworkState.Error(400,"${error.message}"))
+            }.collect { values ->
+                _recipeLikeesult.emit(values)
+            }
+    }
+
+    fun postRecipesUnLike(id:Int) = viewModelScope.launch {
+        _recipeUnLikeResult.emit(NetworkState.Loading)
+        recipeUseCase.postRecipesNotSave(id)
+            .catch { error ->
+                _recipeUnLikeResult.emit(NetworkState.Error(400,"${error.message}"))
+            }.collect { values ->
+                _recipeUnLikeResult.emit(values)
+            }
+    }
+
+    fun getRecipeTheme(themeName:String) = viewModelScope.launch {
+        _recipeThemeResult.value = NetworkState.Loading
+        recipeUseCase.getRecipesTheme(themeName)
+            .catch { error ->
+                _recipeThemeResult.value = NetworkState.Error(400,"${error.message}")
+            }.collect { values ->
+                _recipeThemeResult.value = values
             }
     }
 
@@ -178,6 +222,16 @@ class RecipeViewModel @Inject constructor(private val recipeUseCase: RecipeUseCa
             }
     }
 
+    fun postRecipeReport(id:Int) = viewModelScope.launch {
+        _recipeReportResult.emit(NetworkState.Loading)
+        recipeUseCase.postRecipeReport(id)
+            .catch { error ->
+                _recipeReportResult.emit(NetworkState.Error(400,"${error.message}"))
+            }.collect { values ->
+                _recipeReportResult.emit(values)
+            }
+    }
+
     //최근 본 레시피
     fun insertRecentRecipe(item:RecipeItem){
         viewModelScope.launch (Dispatchers.IO){
@@ -191,5 +245,6 @@ class RecipeViewModel @Inject constructor(private val recipeUseCase: RecipeUseCa
                 _recentRecipeResult.emit(values)
             }
     }
+
 
 }

@@ -38,6 +38,8 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+
+
     override fun onResume() {
         super.onResume()
         // 재개됐을 때 숏폼 프래그먼트로 이동

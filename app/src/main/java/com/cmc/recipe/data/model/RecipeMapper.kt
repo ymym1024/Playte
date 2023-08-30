@@ -14,6 +14,7 @@ object RecipeMapper {
     )
 
     fun RecipeEntity.toRecipe() = RecommendationRecipe(
+        recipe_id = recipe_id,
         recipe_name = recipe_name,
         img_url = recipe_thumbnail_img,
         cooking_time = cook_time

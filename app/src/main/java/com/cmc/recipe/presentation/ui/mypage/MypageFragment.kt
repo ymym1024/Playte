@@ -1,6 +1,7 @@
 package com.cmc.recipe.presentation.ui.mypage
 
 
+import android.content.Intent
 import android.util.Log
 import android.view.Menu
 import android.view.MenuInflater
@@ -13,14 +14,14 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.cmc.recipe.R
 import com.cmc.recipe.data.model.RecipeMapper.toRecipe
+import com.cmc.recipe.data.model.entity.ShortsEntity
 import com.cmc.recipe.data.model.response.RecommendationRecipe
 import com.cmc.recipe.databinding.FragmentMypageBinding
 import com.cmc.recipe.presentation.ui.base.BaseFragment
+import com.cmc.recipe.presentation.ui.base.OnClickListener
+import com.cmc.recipe.presentation.ui.recipe.RecipeActivity
 import com.cmc.recipe.presentation.ui.recipe.RecipeRecommendAdapter
-import com.cmc.recipe.presentation.viewmodel.AuthViewModel
-import com.cmc.recipe.presentation.viewmodel.MyPageViewModel
-import com.cmc.recipe.presentation.viewmodel.RecipeViewModel
-import com.cmc.recipe.presentation.viewmodel.UserViewModel
+import com.cmc.recipe.presentation.viewmodel.*
 import com.cmc.recipe.utils.NetworkState
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -29,6 +30,7 @@ class MypageFragment : BaseFragment<FragmentMypageBinding>(FragmentMypageBinding
 
     private val userViewModel : UserViewModel by viewModels()
     private val recipeViewModel : RecipeViewModel by viewModels()
+    private val shortsViewModel : ShortsViewModel by viewModels()
 
     override fun initFragment() {
 
@@ -85,6 +87,12 @@ class MypageFragment : BaseFragment<FragmentMypageBinding>(FragmentMypageBinding
         findNavController().navigate(action)
     }
 
+    private fun moveDetailPage(id:Int){
+        val intent = Intent(requireContext(), RecipeActivity::class.java)
+        intent.putExtra("id", id)
+        startActivity(intent)
+    }
+
     private fun initMenu(){
         val menuHost: MenuHost = requireActivity()
         menuHost.addMenuProvider(object : MenuProvider {
@@ -107,18 +115,20 @@ class MypageFragment : BaseFragment<FragmentMypageBinding>(FragmentMypageBinding
 
     private fun recipeRecyclerview(){
         val adapter = RecipeRecommendAdapter()
+        adapter.setListener(object : OnClickListener{
+            override fun onMovePage(id: Int) {
+             //   moveDetailPage(id)
+            }
+        })
 
         launchWithLifecycle(lifecycle){
             recipeViewModel.loadRecentRecipes()
             var itemList : MutableList<RecommendationRecipe> = arrayListOf()
 
             recipeViewModel.recentRecipeResult.collect{ list ->
-                Log.d("recentRecipeResult","${list}")
                 for (item in list){
-                    Log.d("recentRecipeResult--1","${item.toRecipe()}")
                     itemList.add(item.toRecipe())
                 }
-                Log.d("recentRecipeResult--2","${itemList}")
                 binding.rvViewRecipe.adapter = adapter
                 binding.rvViewRecipe.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL,false)
                 adapter.replaceData(itemList)
@@ -127,23 +137,28 @@ class MypageFragment : BaseFragment<FragmentMypageBinding>(FragmentMypageBinding
     }
 
     private fun shortsRecyclerview(){
-//        val itemList = arrayListOf(
-//            SearchShorts(shorts_thumb = "https://recipe1.ezmember.co.kr/cache/recipe/2022/02/02/dbb3f34bfe348a4bb4d142ff353815651.jpg", shorts_nick = "codud01", shorts_title = "토마토 계란볶음밥 쉽게...", shorts_time = "dd:dd"),
-//            SearchShorts(shorts_thumb = "https://recipe1.ezmember.co.kr/cache/recipe/2022/02/02/dbb3f34bfe348a4bb4d142ff353815651.jpg",shorts_nick = "codud01", shorts_title = "토마토 계란볶음밥 쉽게...", shorts_time = "dd:dd"),
-//            SearchShorts(shorts_thumb = "https://recipe1.ezmember.co.kr/cache/recipe/2022/02/02/dbb3f34bfe348a4bb4d142ff353815651.jpg",shorts_nick = "codud01", shorts_title = "토마토 계란볶음밥 쉽게...", shorts_time = "dd:dd"),
-//            SearchShorts(shorts_thumb = "https://recipe1.ezmember.co.kr/cache/recipe/2022/02/02/dbb3f34bfe348a4bb4d142ff353815651.jpg",shorts_nick = "codud01", shorts_title = "토마토 계란볶음밥 쉽게...", shorts_time = "dd:dd"),
-//        )
-//
-//        val clickListener = object : OnClickListener {
-//            override fun onMovePage(id: Int) {
-//
-//            }
-//        }
-//
-//        val adapter = SearchShortsAdapter(clickListener)
-//        binding.rvViewShorts.adapter = adapter
-//        binding.rvViewShorts.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
-//        adapter.replaceData(itemList)
+        val adapter = MypageShortsAdapter()
+        adapter.setListener(object : OnClickListener{
+            override fun onMovePage(id: Int) {
+
+            }
+
+        })
+
+        launchWithLifecycle(lifecycle){
+            shortsViewModel.loadRecentRecipes()
+            var itemList : MutableList<ShortsEntity> = arrayListOf()
+
+            shortsViewModel.recentShortsResult.collect{ list ->
+                Log.d("recentRecipeResult","${list}")
+                for (item in list){
+                    itemList.add(item)
+                }
+                binding.rvViewShorts.adapter = adapter
+                binding.rvViewShorts.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL,false)
+                adapter.replaceData(itemList)
+            }
+        }
     }
 
 }

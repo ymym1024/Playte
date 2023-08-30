@@ -14,19 +14,26 @@ import com.cmc.recipe.databinding.ItemRecipeOrderBinding
 import com.cmc.recipe.databinding.ItemRecipeRecommendBinding
 import com.cmc.recipe.presentation.ui.base.BaseAdapter
 import com.cmc.recipe.presentation.ui.base.BaseHolder
+import com.cmc.recipe.presentation.ui.base.OnClickListener
 import com.cmc.recipe.utils.loadImagesWithGlide
 import com.cmc.recipe.utils.loadImagesWithGlideRound
 
 class RecipeRecommendAdapter:
     BaseAdapter<RecommendationRecipe, ItemRecipeRecommendBinding, RecipeRecommendItemHolder>() {
+
+    private lateinit var clickListener: OnClickListener
+    fun setListener(clickListener: OnClickListener){
+        this.clickListener = clickListener
+    }
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecipeRecommendItemHolder {
         return RecipeRecommendItemHolder(
-            ItemRecipeRecommendBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+            ItemRecipeRecommendBinding.inflate(LayoutInflater.from(parent.context), parent, false),
+            clickListener
         )
     }
 }
 
-class RecipeRecommendItemHolder(viewBinding: ItemRecipeRecommendBinding):
+class RecipeRecommendItemHolder(viewBinding: ItemRecipeRecommendBinding, val clickListener: OnClickListener):
     BaseHolder<RecommendationRecipe, ItemRecipeRecommendBinding>(viewBinding){
     override fun bind(binding: ItemRecipeRecommendBinding, item: RecommendationRecipe?) {
         binding.let { view ->
@@ -43,7 +50,12 @@ class RecipeRecommendItemHolder(viewBinding: ItemRecipeRecommendBinding):
                 view.ivThumbnail.clipToOutline = true
                 view.tvRecommendTitle.text = recipe.recipe_name
                 view.tvRecommendTime.text = "조리시간 ${recipe.cooking_time}분"
+
+                view.root.setOnClickListener {
+                    clickListener.onMovePage(recipe.recipe_id)
+                }
             }
+
         }
 
     }

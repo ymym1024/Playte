@@ -1,12 +1,8 @@
 package com.cmc.recipe.presentation.ui.recipe
 
-import android.os.Bundle
 import android.util.Log
-import android.widget.CompoundButton
-import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.cmc.recipe.MainApplication
 import com.cmc.recipe.R
 import com.cmc.recipe.data.model.RecipeItem
 import com.cmc.recipe.databinding.FragmentRecipeThemeBinding
@@ -14,7 +10,6 @@ import com.cmc.recipe.presentation.ui.base.BaseFragment
 import com.cmc.recipe.presentation.ui.base.OnClickListener
 import com.cmc.recipe.presentation.viewmodel.RecipeViewModel
 import com.cmc.recipe.utils.NetworkState
-import com.google.android.material.chip.ChipGroup
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -23,23 +18,34 @@ class RecipeThemeFragment : BaseFragment<FragmentRecipeThemeBinding>(FragmentRec
     private val recipeViewModel : RecipeViewModel by viewModels()
     private lateinit var itemList:List<RecipeItem>
 
-    override fun initFragment() {
-        initTitle()
-        requestRecipeList()
 
+    override fun initFragment() {
+        var theme = arguments?.getString("theme")
+        var theme_name = ""
+
+        if(theme!!.equals(R.string.recipe_theme_1)){
+            theme_name = "BudgetHappiness"
+        }else if(theme!!.equals(R.string.recipe_theme_2)){
+            theme_name = "ForDieting"
+        }else if(theme!!.equals(R.string.recipe_theme_3)){
+            theme_name = "Housewarming"
+        }else{
+            theme_name = "LivingAlone"
+        }
+
+        initTitle(theme)
+        requestRecipeList(theme_name)
     }
 
-    private fun initTitle(){
-        val theme = arguments?.getString("theme")
-
+    private fun initTitle(theme: String?) {
         val activity = activity as RecipeActivity
         activity.setToolbarTitle("$theme")
     }
 
-    private fun requestRecipeList(){
+    private fun requestRecipeList(theme: String?) {
         launchWithLifecycle(lifecycle) {
-            recipeViewModel.getRecipes()
-            recipeViewModel.recipeResult.collect{
+            recipeViewModel.getRecipeTheme(theme!!)
+            recipeViewModel.recipeThemeResult.collect{
                 when(it){
                     is NetworkState.Success -> {
                         it.data.let { data ->
@@ -89,7 +95,7 @@ class RecipeThemeFragment : BaseFragment<FragmentRecipeThemeBinding>(FragmentRec
                     binding.btnRecipeNewest.isCheckable = true
                 }
                 R.id.btn_recipe_popular -> {
-                    val newList = itemList.sortedBy { it.rating }
+                    val newList = itemList.sortedByDescending { it.rating }
                     adapter.replaceData(newList)
                     binding.btnRecipePopular.isCheckable = true
                 }

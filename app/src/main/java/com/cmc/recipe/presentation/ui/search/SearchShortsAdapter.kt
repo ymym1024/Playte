@@ -28,7 +28,7 @@ class SearchShortsItemHolder(viewBinding: ItemSearchShortsBinding, val clickList
     override fun bind(binding: ItemSearchShortsBinding, item: ShortsContent?) {
         binding.let { view->
             view.ivShortsThumbnail.loadImagesWithGlideRound(item?.video_url!!,20)
-            view.tvShortsTime.text = ""
+            view.tvShortsTime.text = "${item?.video_time}"
             view.tvShortsNick.text = "${item?.writtenBy}"
             view.tvShortsTitle.text = "${item?.shortform_name}"
         }

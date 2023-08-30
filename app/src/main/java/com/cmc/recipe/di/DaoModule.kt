@@ -18,4 +18,8 @@ object DaoModule {
     @Singleton
     @Provides
     fun providesSearchDao(appDatabase: AppDatabase) = appDatabase.searchDao()
+
+    @Singleton
+    @Provides
+    fun providesShortsDao(appDatabase: AppDatabase) = appDatabase.shortsDao()
 }
