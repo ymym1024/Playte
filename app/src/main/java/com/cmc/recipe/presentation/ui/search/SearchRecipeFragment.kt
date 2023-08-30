@@ -64,8 +64,8 @@ class SearchRecipeFragment : BaseFragment<FragmentSearchRecipeBinding>(FragmentS
 
 
     private fun requestRecipeList(keyword:String){
-        searchViewModel.getSearchRecipe(keyword)
         launchWithLifecycle(lifecycle) {
+            searchViewModel.getSearchRecipe(keyword)
             searchViewModel.recipeResult.collect{
                 when(it){
                     is NetworkState.Success -> {
@@ -113,7 +113,7 @@ class SearchRecipeFragment : BaseFragment<FragmentSearchRecipeBinding>(FragmentS
                     binding.btnRecipeNewest.isCheckable = true
                 }
                 R.id.btn_recipe_popular -> {
-                    val newList = itemList.sortedBy { it.rating }
+                    val newList = itemList.sortedByDescending { it.rating }
                     adapter.replaceData(newList)
                     binding.btnRecipePopular.isCheckable = true
                 }

@@ -23,11 +23,11 @@ class RecipeThemeFragment : BaseFragment<FragmentRecipeThemeBinding>(FragmentRec
         var theme = arguments?.getString("theme")
         var theme_name = ""
 
-        if(theme!!.equals(R.string.recipe_theme_1)){
+        if(theme!!.equals(getString(R.string.recipe_theme_1))){
             theme_name = "BudgetHappiness"
-        }else if(theme!!.equals(R.string.recipe_theme_2)){
+        }else if(theme!!.equals(getString(R.string.recipe_theme_2))){
             theme_name = "ForDieting"
-        }else if(theme!!.equals(R.string.recipe_theme_3)){
+        }else if(theme!!.equals(getString(R.string.recipe_theme_3))){
             theme_name = "Housewarming"
         }else{
             theme_name = "LivingAlone"
