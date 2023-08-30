@@ -98,7 +98,11 @@ class MypageNicknameFragment : BaseFragment<FragmentMypageNicknameBinding>(Fragm
                         is NetworkState.Success -> {
                             it.data?.let { data ->
                                 if (data.code == "SUCCESS") {
-                                    showImage(true,data.message)
+                                    if(!data.data.isDuplicated){ // 중복 x
+                                        showImage(true, "사용 가능한 닉네임입니다")
+                                    }else{
+                                        showImage(false, "중복된 닉네임입니다")
+                                    }
                                 } else {
                                     showImage(false,data.message)
                                 }

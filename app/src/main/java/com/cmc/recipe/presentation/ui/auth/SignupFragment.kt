@@ -8,6 +8,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.navArgs
+import com.cmc.recipe.MainApplication
 import com.cmc.recipe.R
 import com.cmc.recipe.databinding.FragmentSignupBinding
 import com.cmc.recipe.presentation.ui.MainActivity
@@ -46,7 +47,6 @@ class SignupFragment : BaseFragment<FragmentSignupBinding>(FragmentSignupBinding
                     showImage(false,"띄어쓰기를 제외한 한글 닉네임으로 작성해주세요")
                 }else{
                     searchJob?.cancel()
-
                     searchJob = CoroutineScope(Dispatchers.Main).launch {
                         delay(500L)
                         requestVerifyNickname(text.toString())
@@ -80,15 +80,20 @@ class SignupFragment : BaseFragment<FragmentSignupBinding>(FragmentSignupBinding
                             is NetworkState.Success -> {
                                 it.data?.let {data ->
                                     if (data.code == "SUCCESS") {
-                                        showImage(true,data.message)
+                                        if(!data.data.isDuplicated){ // 중복 x
+                                            showImage(true, "사용 가능한 닉네임입니다")
+                                        }else{
+                                            showImage(false, "중복된 닉네임입니다")
+                                        }
                                     } else {
-                                        showImage(false,data.message)
+                                        showImage(false,"${data.data}")
                                     }
                                 }
                                 userViewModel._verifyResult.value = NetworkState.Loading
                             }
                             is NetworkState.Error ->{
-                                showToastMessage(it.message.toString())
+                               // showToastMessage("${it.message}")
+                                showImage(false, "${it.message}")
                                 userViewModel._verifyResult.value = NetworkState.Loading
                             }
                             else -> {}
@@ -101,14 +106,15 @@ class SignupFragment : BaseFragment<FragmentSignupBinding>(FragmentSignupBinding
 
     // 회원가입 요청
     private fun requestSignup(nickname: String){
+        authViewModel.signup(args.accessToken,nickname)
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED){
-                authViewModel.signup(args.accessToken,nickname)
                 authViewModel.signupResult.collect{
                     when(it){
                         is NetworkState.Success -> {
                             it.data?.let {data ->
                                 if(data.code == "SUCCESS"){ // TODO : 변경
+                                    saveTokens(data.data.accessToken,data.data.refreshToken)
                                     moveMainActivity()
                                 }else{
                                     Log.d("data","${data.data}")
@@ -130,6 +136,7 @@ class SignupFragment : BaseFragment<FragmentSignupBinding>(FragmentSignupBinding
     private fun moveMainActivity() {
         val intent = Intent(activity, MainActivity::class.java)
         startActivity(intent)
+        requireActivity().finish()
     }
 
     private fun onClickSignup(){
@@ -137,6 +144,11 @@ class SignupFragment : BaseFragment<FragmentSignupBinding>(FragmentSignupBinding
             val nickname = binding.etNickName.text.toString()
             requestSignup(nickname)
         }
+    }
+
+    private fun saveTokens(accessToken: String, refreshToken: String) {
+        MainApplication.tokenManager.saveAccessToken(accessToken)
+        MainApplication.tokenManager.saveRefreshToken(refreshToken)
     }
 
 }

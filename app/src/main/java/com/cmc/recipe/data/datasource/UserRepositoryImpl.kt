@@ -2,6 +2,7 @@ package com.cmc.recipe.data.datasource
 
 import com.cmc.recipe.data.model.response.BaseResponse
 import com.cmc.recipe.data.model.response.MyInfoResponse
+import com.cmc.recipe.data.model.response.NicknameResponse
 import com.cmc.recipe.data.source.remote.api.UserService
 import com.cmc.recipe.data.source.remote.request.RequestNickname
 import com.cmc.recipe.domain.repository.UserRepository
@@ -15,7 +16,7 @@ import javax.inject.Inject
 class UserRepositoryImpl @Inject constructor(
     private val userService : UserService
 ) :UserRepository{
-    override fun getVerifyNickname(nickname: RequestNickname): Flow<NetworkState<BaseResponse>> = flow{
+    override fun getVerifyNickname(nickname: RequestNickname): Flow<NetworkState<NicknameResponse>> = flow{
         val response = userService.verifyNickname(nickname)
         if(response.isSuccessful){
             response.body()?.let {

@@ -1,6 +1,8 @@
 package com.cmc.recipe.presentation.ui.search
 
 import android.util.Log
+import android.view.KeyEvent
+import android.view.inputmethod.EditorInfo
 import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
@@ -16,6 +18,7 @@ import com.cmc.recipe.presentation.ui.recipe.RecipeListAdapter
 import com.cmc.recipe.presentation.viewmodel.RecipeViewModel
 import com.cmc.recipe.presentation.viewmodel.SearchViewModel
 import com.cmc.recipe.utils.CommonTextWatcher
+import com.cmc.recipe.utils.Constant
 import com.cmc.recipe.utils.NetworkState
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.*
@@ -26,8 +29,6 @@ class SearchRecipeFragment : BaseFragment<FragmentSearchRecipeBinding>(FragmentS
     private val searchViewModel : SearchViewModel by viewModels()
     private lateinit var itemList:List<RecipeItem>
 
-    private var searchJob: Job? = null
-
     override fun initFragment() {
         val keyword = arguments?.getString("keyword")
         searchViewModel.insertRecentRecipe(keyword!!) //검색어 저장
@@ -35,37 +36,36 @@ class SearchRecipeFragment : BaseFragment<FragmentSearchRecipeBinding>(FragmentS
         binding.searchView.setText(keyword)
         requestRecipeList(keyword!!)
 
-        binding.searchView.addTextChangedListener(CommonTextWatcher(
-            onChanged = { text,_,_,_ ->
-                searchJob?.cancel()
-                if(text!!.isNotEmpty()){
-                    searchJob = CoroutineScope(Dispatchers.Main).launch {
-                        delay(500L)
-                        requestRecipeList("$text")
-                    }
+        binding.searchView.setOnEditorActionListener{ text, actionId, event ->
+            if (actionId == EditorInfo.IME_ACTION_DONE || event.action == KeyEvent.ACTION_DOWN && event.keyCode == KeyEvent.KEYCODE_ENTER) {
+                if(binding.searchView.text.toString().isNotEmpty()){
+                    requestRecipeList("${binding.searchView.text}")
                 }
+                return@setOnEditorActionListener true
             }
-        ))
+            return@setOnEditorActionListener false
+        }
 
         //뒤로가기 시 activity 삭제
-        requireActivity().onBackPressedDispatcher.addCallback(
-            viewLifecycleOwner,
-            object : OnBackPressedCallback(true) {
-                override fun handleOnBackPressed() {
-                    requireActivity().finish()
-                }
-            }
-        )
+//        requireActivity().onBackPressedDispatcher.addCallback(
+//            viewLifecycleOwner,
+//            object : OnBackPressedCallback(true) {
+//                override fun handleOnBackPressed() {
+//                    requireActivity().finish()
+//                }
+//            }
+//        )
+
+        //버튼 눌렀을 때 뒤로가기
+        binding.btnBack.setOnClickListener {
+            requireActivity().finish()
+        }
     }
 
-    override fun onDestroyView() {
-        super.onDestroyView()
-        searchJob?.cancel()
-    }
 
     private fun requestRecipeList(keyword:String){
+        searchViewModel.getSearchRecipe(keyword)
         launchWithLifecycle(lifecycle) {
-            searchViewModel.getSearchRecipe(keyword)
             searchViewModel.recipeResult.collect{
                 when(it){
                     is NetworkState.Success -> {
@@ -73,8 +73,6 @@ class SearchRecipeFragment : BaseFragment<FragmentSearchRecipeBinding>(FragmentS
                             if(data.code == "SUCCESS"){
                                 itemList = it.data.data.content
                                 recipeRecyclerview()
-                            }else{
-                                Log.d("data","${data.data}")
                             }
                         }
                         searchViewModel._recipeResult.value = NetworkState.Loading
