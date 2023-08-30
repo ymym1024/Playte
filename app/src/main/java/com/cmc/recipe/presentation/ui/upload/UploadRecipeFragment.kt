@@ -9,6 +9,7 @@ import android.util.Log
 import android.view.KeyEvent
 import android.view.View
 import android.view.ViewTreeObserver
+import android.view.WindowManager
 import android.view.inputmethod.EditorInfo
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.viewModels
@@ -130,6 +131,7 @@ class UploadRecipeFragment : BaseFragment<FragmentUploadRecipeBinding>(FragmentU
                         showToastMessage(it.message.toString())
                     }
                     is NetworkState.Loading -> {
+                        binding.uploadView.isClickable = false
                         uploadActivity.showProgressBar(true)
                     }
                     else -> {}
@@ -324,6 +326,9 @@ class UploadRecipeFragment : BaseFragment<FragmentUploadRecipeBinding>(FragmentU
         binding.etRecipeIngredient.setOnItemClickListener { _, v, position, _ ->
             val data = adapter.getItem(position)
             viewDialog(data)
+            binding.etRecipeIngredient.setText("")
+            hideKeyboard(v)
+            binding.etRecipeIngredient.clearFocus()
         }
     }
 

@@ -3,6 +3,7 @@ package com.cmc.recipe.presentation.ui.upload
 import android.graphics.Color
 import android.graphics.drawable.Drawable
 import android.view.View
+import android.view.WindowManager
 import androidx.core.content.ContextCompat
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
@@ -48,10 +49,13 @@ class UploadActivity : BaseActivity<ActivityUploadBinding>({ ActivityUploadBindi
     }
 
     fun showProgressBar(flag:Boolean){
+
         if(flag){
             binding.progressBar.visibility = View.VISIBLE
+            this.window.setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
         }else{
             binding.progressBar.visibility = View.INVISIBLE
+            this.window.clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
         }
     }
 

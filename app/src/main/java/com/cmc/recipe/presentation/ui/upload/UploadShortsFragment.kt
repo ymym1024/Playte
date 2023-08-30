@@ -132,6 +132,7 @@ class UploadShortsFragment : BaseFragment<FragmentUploadShortsBinding>(FragmentU
             binding.etRecipeIngredient.setText("")
             if(ingredientAdapter.itemCount == 4) binding.etRecipeIngredient.isEnabled = false
             hideKeyboard(v)
+            binding.etRecipeIngredient.clearFocus()
         }
     }
 
@@ -310,7 +311,7 @@ class UploadShortsFragment : BaseFragment<FragmentUploadShortsBinding>(FragmentU
                     }
                     is NetworkState.Loading -> {
                         // progress bar 띄우기
-                        Log.d("loading","여기 로딩됨22")
+                        binding.uploadView.isClickable = false
                         uploadActivity.showProgressBar(true)
                     }
                     else -> {
