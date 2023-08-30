@@ -46,12 +46,16 @@ class CommentItemHolder(viewBinding: ItemCommentBinding,val eventListener: OnCom
             view.tvTime.text = item?.created_at?.parseDateTime()?.formatDateRelativeToNow()
             view.tvThumbCnt.text = "${item?.comment_likes}"
         }
+        val textColor1 = ContextCompat.getColor(binding.root.context, R.color.gray_8)
         val textColor = ContextCompat.getColor(binding.root.context, R.color.primary_color)
         if(item?.is_liked!!) {
             binding.ibThumbUp.setImageResource(R.drawable.ic_heart_full)
             binding.tvThumbCnt.setTextColor(textColor)
         }
-        else binding.ibThumbUp.setImageResource(R.drawable.ic_heart_gray)
+        else {
+            binding.ibThumbUp.setImageResource(R.drawable.ic_heart_gray)
+            binding.tvThumbCnt.setTextColor(textColor1)
+        }
 
         binding.ibThumbUp.setOnClickListener {
             eventListener.onFavorite(item?.comment_id!!)

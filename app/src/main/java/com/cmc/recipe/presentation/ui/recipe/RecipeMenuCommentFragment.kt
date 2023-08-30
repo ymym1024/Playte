@@ -36,7 +36,8 @@ class RecipeMenuCommentFragment : BaseFragment<FragmentRecipeMenuCommentBinding>
     private var recipeImg : String = ""
 
     private lateinit var commnetAdapter : CommentAdapter
-
+    private var adapterInitial = 0
+    private var reponseCommentCnt = 0
 
     override fun initFragment() {
         arguments?.let {
@@ -90,7 +91,6 @@ class RecipeMenuCommentFragment : BaseFragment<FragmentRecipeMenuCommentBinding>
                             it.data?.let { data ->
                                 if (data.code == "SUCCESS") {
                                     requestCommentList(recipeId)
-                                 //   commnetAdapter.notifyDataSetChanged()
                                 } else {
                                     Log.d("data", "${data.data}")
                                 }
@@ -111,8 +111,10 @@ class RecipeMenuCommentFragment : BaseFragment<FragmentRecipeMenuCommentBinding>
         val review = findCommentItemById(id)
         if (review != null) {
             if (review.is_liked) {
+                reponseCommentCnt = 0
                 requestCommentUnLike(id)
             } else {
+                reponseCommentCnt = 1
                 requestCommentLike(id)
             }
         }
@@ -127,13 +129,13 @@ class RecipeMenuCommentFragment : BaseFragment<FragmentRecipeMenuCommentBinding>
                         is NetworkState.Success -> {
                             it.data?.let { data ->
                                 if (data.code == "SUCCESS") {
-                                    Log.d("data", "${data}")
-                                    val review = findCommentItemById(id)
-                                    Log.d("review data", "${review}")
-                                    review?.is_liked = true
-                                    review?.comment_likes = review?.comment_likes!! + 1
-                                    commnetAdapter.notifyDataSetChanged()
-
+                                    if(reponseCommentCnt == 1){
+                                        val review = findCommentItemById(id)
+                                        Log.d("review data", "${review}")
+                                        review?.is_liked = true
+                                        review?.comment_likes = review?.comment_likes!! + 1
+                                        commnetAdapter.notifyDataSetChanged()
+                                    }else{}
                                 } else {
                                     Log.d("data", "${data.data}")
                                 }
@@ -191,7 +193,13 @@ class RecipeMenuCommentFragment : BaseFragment<FragmentRecipeMenuCommentBinding>
                     when (it) {
                         is NetworkState.Success -> {
                             if (it.data.code == "SUCCESS") {
-                                initRV(it.data.data.content as ArrayList<CommentContent>)
+                                val item = it.data.data.content as ArrayList<CommentContent>
+                                if(adapterInitial == 0){
+                                    initRV(item)
+                                }else{
+                                    commnetAdapter.replaceData(item)
+                                    binding.tvCommentCnt.text = "${item.size}개"
+                                }
                             }
                             commentViewModel._commentRecipeResult.value = NetworkState.Loading
                         }
@@ -247,6 +255,7 @@ class RecipeMenuCommentFragment : BaseFragment<FragmentRecipeMenuCommentBinding>
             }
 
             override fun onReport(id: Int) {
+                Log.d("id","${id}")
                 requestCommentReport(id)
             }
 
