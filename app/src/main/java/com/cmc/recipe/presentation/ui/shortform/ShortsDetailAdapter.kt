@@ -102,13 +102,19 @@ class ShortsDetailHolder(
                 shortsListener.onFavorite(item.shortform_id)
                 if(favoriteFlag == false){
                     binding.btnHeart.setImageResource(R.drawable.ic_shorts_heart_activate)
-                    binding.tvHeartCnt.text = "${favoriteCount}"
-                    Log.d("favorite favoriteFlag","${favoriteCount}")
+                    if(favoriteCount == 0){
+                        binding.tvHeartCnt.text = "${favoriteCount+1}"
+                    }else{
+                        binding.tvHeartCnt.text = "${favoriteCount}"
+                    }
                     favoriteFlag = !favoriteFlag
                 }else{
                     binding.btnHeart.setImageResource(R.drawable.ic_shorts_heart_deactivate)
-                    binding.tvHeartCnt.text = "${favoriteCount -1}"
-                    Log.d("favorite favoriteFlag","${favoriteCount}")
+                    if(favoriteCount == 0){
+                        binding.tvHeartCnt.text = "${favoriteCount}"
+                    }else{
+                        binding.tvHeartCnt.text = "${favoriteCount-1}"
+                    }
                     favoriteFlag = !favoriteFlag
                 }
             }
@@ -127,12 +133,21 @@ class ShortsDetailHolder(
             btn.setOnClickListener {
                 shortsListener.onSave(item.shortform_id)
                 if(saveFlag == false){  // false
+                    if(saveCount == 0){
+                        binding.tvBookmarkCnt.text = "${saveCount+1}"
+                    }else{
+                        binding.tvBookmarkCnt.text = "${saveCount}"
+                    }
                     btn.setImageResource(R.drawable.ic_shorts_bookmark_activate)
-                    binding.tvBookmarkCnt.text = "${saveCount}"
                     saveFlag = !saveFlag
                 }else{  // true
+
                     btn.setImageResource(R.drawable.ic_shorts_bookmark_deactivate)
-                    binding.tvBookmarkCnt.text = "${saveCount -1}"
+                    if(saveCount == 0){
+                        binding.tvBookmarkCnt.text = "${saveCount}"
+                    }else{
+                        binding.tvBookmarkCnt.text = "${saveCount-1}"
+                    }
                     saveFlag = !saveFlag
                 }
             }

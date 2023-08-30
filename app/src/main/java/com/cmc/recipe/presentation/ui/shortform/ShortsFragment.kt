@@ -310,7 +310,6 @@ class ShortsFragment : BaseFragment<FragmentShortsBinding>(FragmentShortsBinding
 
                             updateValueAtIndex(adapter.getData(),index!!,item)
                         }
-                        showToastMessage("${it.data}")
                     }
                     is NetworkState.Error -> {
                         showToastMessage("${it}")
@@ -384,7 +383,6 @@ class ShortsFragment : BaseFragment<FragmentShortsBinding>(FragmentShortsBinding
                             item?.saved_count = item?.saved_count!! - 1
                             updateValueAtIndex(adapter.getData(),index!!,item)
                         }
-                        showToastMessage("${it.data}")
                     }
                     is NetworkState.Error -> {
                         showToastMessage("${it}")

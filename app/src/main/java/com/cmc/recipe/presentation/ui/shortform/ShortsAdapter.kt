@@ -121,13 +121,21 @@ class ShortsItemHolder(viewBinding: ItemShortsBinding, val context: Context,val 
         // 좋아요
         binding.ibHeart.setOnClickListener {
             shortsListener.onFavorite(item.shortform_id) //서버로 통신하는 로직 추가
-            if(!favoriteFlag){ // false
+            if(favoriteFlag == false){
                 binding.ibHeart.setImageResource(R.drawable.ic_shorts_heart_activate)
-                binding.tvHeartCnt.text = "${favoriteCount}"
+                if(favoriteCount == 0){
+                    binding.tvHeartCnt.text = "${favoriteCount+1}"
+                }else{
+                    binding.tvHeartCnt.text = "${favoriteCount}"
+                }
                 favoriteFlag = !favoriteFlag
-            }else{ // true
+            }else{
                 binding.ibHeart.setImageResource(R.drawable.ic_shorts_heart_deactivate)
-                binding.tvHeartCnt.text = "${favoriteCount-1}"
+                if(favoriteCount == 0){
+                    binding.tvHeartCnt.text = "${favoriteCount}"
+                }else{
+                    binding.tvHeartCnt.text = "${favoriteCount-1}"
+                }
                 favoriteFlag = !favoriteFlag
             }
         }
@@ -140,13 +148,21 @@ class ShortsItemHolder(viewBinding: ItemShortsBinding, val context: Context,val 
         var saveCount = item.saved_count
         binding.ibBookmark.setOnClickListener {
             shortsListener.onSave(item.shortform_id)
-            if(!saveFlag){  // false
+            if(saveFlag == false){  // false
+                if(saveCount == 0){
+                    binding.tvBookmarkCnt.text = "${saveCount+1}"
+                }else{
+                    binding.tvBookmarkCnt.text = "${saveCount}"
+                }
                 binding.ibBookmark.setImageResource(R.drawable.ic_shorts_bookmark_activate)
-                binding.tvBookmarkCnt.text = "${saveCount}"
                 saveFlag = !saveFlag
             }else{  // true
                 binding.ibBookmark.setImageResource(R.drawable.ic_shorts_bookmark_deactivate)
-                binding.tvBookmarkCnt.text = "${saveCount-1}"
+                if(saveCount == 0){
+                    binding.tvBookmarkCnt.text = "${saveCount}"
+                }else{
+                    binding.tvBookmarkCnt.text = "${saveCount-1}"
+                }
                 saveFlag = !saveFlag
             }
         }
