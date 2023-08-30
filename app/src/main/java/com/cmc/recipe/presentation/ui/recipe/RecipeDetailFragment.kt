@@ -2,17 +2,14 @@ package com.cmc.recipe.presentation.ui.recipe
 
 import android.content.Intent
 import android.util.Log
-import android.view.View
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.cmc.recipe.R
 import com.cmc.recipe.data.model.Product
-import com.cmc.recipe.data.model.RecipeItem
 import com.cmc.recipe.data.model.response.*
 import com.cmc.recipe.databinding.FragmentRecipeDetailBinding
 import com.cmc.recipe.presentation.ui.base.BaseFragment
-import com.cmc.recipe.presentation.ui.base.OnClickListener
 import com.cmc.recipe.presentation.ui.common.RecipeSnackBar
 import com.cmc.recipe.presentation.ui.shortform.ShortsProductAdapter
 import com.cmc.recipe.presentation.ui.shortform.ShortsProductItemHolder
@@ -43,6 +40,7 @@ class RecipeDetailFragment : BaseFragment<FragmentRecipeDetailBinding>(FragmentR
 
     override fun onResume() {
         super.onResume()
+        Log.d("여기 확인","onResume")
 
         initMenu()
     }
@@ -51,24 +49,21 @@ class RecipeDetailFragment : BaseFragment<FragmentRecipeDetailBinding>(FragmentR
         val activity = activity as RecipeActivity
         activity.hideToolbar(true)
 
-        // 로딩
         recipeId = arguments?.getInt("id")!!
 
+        recipeViewModel.updateReicpeId(recipeId)
         requestRecipeDetail(recipeId!!)
     }
 
     private fun requestRecipeDetail(id:Int){
-    //    showView(true)
         launchWithLifecycle(lifecycle) {
             recipeViewModel.getRecipesDetail(id)
             recipeViewModel.recipeDetailResult.collect{
-             //   showView(false)
                 when(it){
                     is NetworkState.Success -> {
                         it.data?.let {data ->
                             if(data.code == "SUCCESS"){
-                                recipeData = data.data
-                                initDatabinding(recipeData)
+                                initDatabinding(data.data)
                             }else{
                                 Log.d("data","${data.data}")
                             }
@@ -85,6 +80,7 @@ class RecipeDetailFragment : BaseFragment<FragmentRecipeDetailBinding>(FragmentR
         }
     }
     private fun initDatabinding(data:RecipeDetail){
+
         // 레시피 id
         recipeId = data.recipe_id
         recipeImg = data.recipe_thumbnail_img
@@ -96,7 +92,7 @@ class RecipeDetailFragment : BaseFragment<FragmentRecipeDetailBinding>(FragmentR
         binding.tvRecipeDate.text = data.created_date.parseAndFormatDate()
 
         // 상세정보 바인딩
-        binding.tvScore.text = "${String.format("%.2f",data.rating)}"
+        binding.tvScore.text = "${data.rating}"
         binding.tvPeople.text = "${data.serving_size}인분"
         binding.tvTime.text = "${data.cook_time}분"
 
@@ -116,6 +112,8 @@ class RecipeDetailFragment : BaseFragment<FragmentRecipeDetailBinding>(FragmentR
         }
 
         binding.btnWriteReview.setOnClickListener {
+//            val action = RecipeDetailFragmentDirections.actionRecipeDetailFragmentToReviewRegisterActivity(recipeId = recipeId, recipeImg = recipeImg)
+//            findNavController().navigate(action)
             val intent = Intent(requireContext(), ReviewRegisterActivity::class.java)
             intent.putExtra("recipeId", recipeId)
             intent.putExtra("recipeImg", recipeImg)
@@ -126,6 +124,8 @@ class RecipeDetailFragment : BaseFragment<FragmentRecipeDetailBinding>(FragmentR
         initRecipeIngredientRV(data.ingredients)
         initRecommendRV(data.recommendation_recipes)
         initProductRV(data.ingredients)
+
+        // 이벤트 바인딩
 
     }
 
@@ -149,6 +149,37 @@ class RecipeDetailFragment : BaseFragment<FragmentRecipeDetailBinding>(FragmentR
     }
 
     private fun showBottomSheet(){
+        val dialog = BottomSheetDetailDialog("recipe")
+        dialog.setReportListener {   //신고하기
+            requestRecipeReport(recipeId)
+        }
+        dialog.show(fragmentManager!!, "RemoveBottomSheetFragment")
+    }
+
+    private fun requestRecipeReport(id:Int){
+        recipeViewModel.postRecipeReport(id)
+        launchWithLifecycle(lifecycle) {
+            recipeViewModel.recipeReportResult.collect{
+                when(it){
+                    is NetworkState.Success -> {
+                        it.data?.let {data ->
+                            if(data.code == "SUCCESS"){
+                                requireActivity().onBackPressed()
+                                RecipeSnackBar(binding.root,"신고가 접수되었습니다.").show()
+                            }else{
+                                Log.d("data","${data.data}")
+                            }
+                        }
+                        recipeViewModel._recipeResult.value = NetworkState.Loading
+                    }
+                    is NetworkState.Error ->{
+                        showToastMessage(it.message.toString())
+                        recipeViewModel._recipeResult.value = NetworkState.Loading
+                    }
+                    else -> {}
+                }
+            }
+        }
         val dialog = BottomSheetDetailDialog("recipe")
         dialog.setReportListener {   //신고하기
             requestRecipeReport(recipeId)
@@ -282,12 +313,6 @@ class RecipeDetailFragment : BaseFragment<FragmentRecipeDetailBinding>(FragmentR
 
     private fun initRecommendRV(recommendationRecipes: List<RecommendationRecipe>) {
         val adapter = RecipeRecommendAdapter()
-        adapter.setListener(object : OnClickListener{
-            override fun onMovePage(id: Int) {
-
-            }
-
-        })
         binding.rvRecommendRecipe.adapter = adapter
         binding.rvRecommendRecipe.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
         adapter.replaceData(recommendationRecipes)
