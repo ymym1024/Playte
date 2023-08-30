@@ -108,8 +108,8 @@ class SearchShortsFragment : BaseFragment<FragmentSearchShortsBinding>(FragmentS
                     binding.btnRecipePopular.isCheckable = true
                 }
                 R.id.btn_recipe_minium_time -> {
-                   // val newList = itemList.sortedBy { it. }
-                   // adapter.replaceData(newList)
+                    val newList = itemList.sortedBy { it.video_time }
+                    adapter.replaceData(newList)
                     binding.btnRecipeMiniumTime.isCheckable = true
                 }
             }

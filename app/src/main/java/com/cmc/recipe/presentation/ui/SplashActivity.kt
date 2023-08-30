@@ -2,6 +2,7 @@ package com.cmc.recipe.presentation.ui
 
 import PermissionSupport
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
@@ -30,6 +31,8 @@ class SplashActivity : AppCompatActivity() {
     private val authViewModel : AuthViewModel by viewModels()
     private val userViewModel : UserViewModel by viewModels()
 
+    private var permissionRequested = false
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivitySplashBinding.inflate(layoutInflater)
@@ -37,16 +40,15 @@ class SplashActivity : AppCompatActivity() {
 
         permission = PermissionSupport(this, applicationContext)
 
-        if (!permission.checkPermission()){
-            //권한 요청
-            Log.d("checkPermission","checkPermission")
+        if (!permission.checkPermission()){ //권한 요청
+            permissionRequested = true
             permission.requestPermission()
         }else{
             validateLogin()
         }
     }
 
-    // Request Permission에 대한 결과 값 받아와
+    // Request Permission에 대한 결과 값 받아옴
     override fun onRequestPermissionsResult(
         requestCode: Int,
         permissions: Array<String?>,
@@ -54,13 +56,16 @@ class SplashActivity : AppCompatActivity() {
     ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
 
-        // If return is false, request permission again
-        if (!permission.onRequestPermissionsResult(requestCode, permissions, grantResults)) {
-            permission.requestPermission()
-        }else{
-            Log.d("onRequestPermissionsResult","이상한곳 호출됨")
-            validateLogin()
-       }
+        val allPermissionsGranted = grantResults.all { it == PackageManager.PERMISSION_GRANTED }
+
+        if (allPermissionsGranted) {
+            if (permissionRequested) {
+                permissionRequested = false
+                validateLogin()
+            }
+        } else {
+            handlePermissionDenied()
+        }
     }
 
     private fun handlePermissionDenied() {
