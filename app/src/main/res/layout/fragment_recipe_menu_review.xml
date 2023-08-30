@@ -190,11 +190,13 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="10dp"
+                    android:visibility="invisible"
                     android:text="@string/recipe_order_best" />
 
                 <View
                     android:id="@+id/view1"
                     android:layout_width="1dp"
+                    android:visibility="invisible"
                     android:layout_height="match_parent"
                     android:background="@color/black" />
 
@@ -203,6 +205,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="10dp"
+                    android:visibility="invisible"
                     android:text="@string/recipe_order_recent" />
             </LinearLayout>
 

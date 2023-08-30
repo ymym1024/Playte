@@ -135,32 +135,32 @@ class RecipeMainFragment : BaseFragment<FragmentRecipeMainBinding>(FragmentRecip
             }
         }
 
-        val adapter = RecipeListAdapter(clickListener)
-        adapter.setListener(object :RecipeItemHolder.onActionListener{
+        recipeAdapter = RecipeListAdapter(clickListener)
+        recipeAdapter.setListener(object :RecipeItemHolder.onActionListener{
             override fun action(item: RecipeItem) {
                 requestRecipeSaveOrUnSave(item.recipe_id)
             }
 
         })
-        binding.rvRecipe.adapter = adapter
+        binding.rvRecipe.adapter = recipeAdapter
         binding.rvRecipe.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
-        adapter.replaceData(itemList)
+        recipeAdapter.replaceData(itemList)
 
         binding.chipRecipe.setOnCheckedStateChangeListener { group, checkedIds ->
             when (checkedIds[0]) {
                 R.id.btn_newest -> {
                     val newList = itemList.sortedByDescending { it.created_date }
-                    adapter.replaceData(newList)
+                    recipeAdapter.replaceData(newList)
                     binding.btnNewest.isCheckable = true
                 }
                 R.id.btn_popular -> {
                     val newList = itemList.sortedByDescending { it.rating }
-                    adapter.replaceData(newList)
+                    recipeAdapter.replaceData(newList)
                     binding.btnPopular.isCheckable = true
                 }
                 R.id.btn_minium_time -> {
                     val newList = itemList.sortedBy { it.cook_time }
-                    adapter.replaceData(newList)
+                    recipeAdapter.replaceData(newList)
                     binding.btnPopular.isCheckable = true
                 }
             }
@@ -192,7 +192,7 @@ class RecipeMainFragment : BaseFragment<FragmentRecipeMainBinding>(FragmentRecip
                     is NetworkState.Success -> {
                         it.data?.let {data ->
                             if(data.code == "SUCCESS"){
-                                val item = findRecipeById(id)
+                                val item = findRecipeById(recipeId)
                                 item?.is_saved = true
                                 recipeAdapter.notifyDataSetChanged()
 
@@ -221,11 +221,11 @@ class RecipeMainFragment : BaseFragment<FragmentRecipeMainBinding>(FragmentRecip
                     is NetworkState.Success -> {
                         it.data?.let {data ->
                             if(data.code == "SUCCESS"){
-                                val item = findRecipeById(id)
+                                val item = findRecipeById(recipeId)
                                 item?.is_saved = false
                                 recipeAdapter.notifyDataSetChanged()
 
-                                RecipeSnackBar(binding.rvRecipe,"레시피가 저장되었습니다!").show()
+                                RecipeSnackBar(binding.rvRecipe,"레시피가 저장 취소 되었습니다!").show()
                             }else{
                                 Log.d("data","${data.data}")
                             }
