@@ -37,17 +37,17 @@ class CommentViewModel @Inject constructor(private val commentUseCase: CommentUs
     var _commentRecipeResult: MutableStateFlow<NetworkState<CommentResponse>> = MutableStateFlow(NetworkState.Loading)
     var commentRecipeResult: StateFlow<NetworkState<CommentResponse>> = _commentRecipeResult
 
-    var _reportRecipeResult : MutableSharedFlow<NetworkState<BaseResponse>> = MutableSharedFlow()
-    var reportRecipeResult = _reportRecipeResult.asSharedFlow()
+    var _reportRecipeResult : MutableStateFlow<NetworkState<BaseResponse>> = MutableStateFlow(NetworkState.Loading)
+    var reportRecipeResult : StateFlow<NetworkState<BaseResponse>> = _reportRecipeResult
 
     var _commentRecipeSaveResult : MutableSharedFlow<NetworkState<BaseResponse>> = MutableSharedFlow()
     var commentRecipeSaveResult = _commentRecipeSaveResult.asSharedFlow()
 
-    var _commentRecipeLikeResult : MutableSharedFlow<NetworkState<BaseResponse>> = MutableSharedFlow()
-    var commentRecipeLikeResult = _commentRecipeLikeResult.asSharedFlow()
+    var _commentRecipeLikeResult : MutableStateFlow<NetworkState<BaseResponse>> = MutableStateFlow(NetworkState.Loading)
+    var commentRecipeLikeResult : StateFlow<NetworkState<BaseResponse>> = _commentRecipeLikeResult
 
-    var _commentRecipeUnLikeResult : MutableSharedFlow<NetworkState<BaseResponse>> = MutableSharedFlow()
-    var commentRecipeUnLikeResult = _commentRecipeUnLikeResult.asSharedFlow()
+    var _commentRecipeUnLikeResult : MutableStateFlow<NetworkState<BaseResponse>> = MutableStateFlow(NetworkState.Loading)
+    var commentRecipeUnLikeResult : StateFlow<NetworkState<BaseResponse>> = _commentRecipeLikeResult
 
     fun getShortfromComment(id:Int) = viewModelScope.launch {
         _commentResult.value = NetworkState.Loading
@@ -134,6 +134,7 @@ class CommentViewModel @Inject constructor(private val commentUseCase: CommentUs
     }
 
     fun reportRecipeComment(id:Int) = viewModelScope.launch {
+        Log.d("check","${id}")
         _reportRecipeResult.emit(NetworkState.Loading)
         commentUseCase.reportRecipeComment(id)
             .catch { error ->

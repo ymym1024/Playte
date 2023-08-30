@@ -130,11 +130,12 @@ class RecipeMenuCommentFragment : BaseFragment<FragmentRecipeMenuCommentBinding>
                             it.data?.let { data ->
                                 if (data.code == "SUCCESS") {
                                     if(reponseCommentCnt == 1){
-                                        val review = findCommentItemById(id)
-                                        Log.d("review data", "${review}")
-                                        review?.is_liked = true
-                                        review?.comment_likes = review?.comment_likes!! + 1
-                                        commnetAdapter.notifyDataSetChanged()
+//                                        val review = findCommentItemById(id)
+//                                        Log.d("review data", "${review}")
+//                                        review?.is_liked = true
+//                                        review?.comment_likes = review?.comment_likes!! + 1
+//                                        commnetAdapter.notifyDataSetChanged()
+                                        requestCommentList(recipeId)
                                     }else{}
                                 } else {
                                     Log.d("data", "${data.data}")
@@ -163,10 +164,11 @@ class RecipeMenuCommentFragment : BaseFragment<FragmentRecipeMenuCommentBinding>
                             it.data?.let { data ->
                                 if (data.code == "SUCCESS") {
                                     Log.d("data-unlike", "${data}")
-                                    val review = findCommentItemById(id)
-                                    review?.is_liked = false
-                                    review?.comment_likes = review?.comment_likes!! - 1
-                                    commnetAdapter.notifyDataSetChanged()
+//                                    val review = findCommentItemById(id)
+//                                    review?.is_liked = false
+//                                    review?.comment_likes = review?.comment_likes!! - 1
+//                                    commnetAdapter.notifyDataSetChanged()
+                                    requestCommentList(recipeId)
                                 } else {
                                     Log.d("data", "${data.data}")
                                 }
