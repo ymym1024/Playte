@@ -11,13 +11,8 @@ class MypageTermsFragment : BaseFragment<FragmentMypageTermsBinding>(FragmentMyp
 
         // 이용약관 다운로드
         binding.tvDown.setOnClickListener {
-
             val url =  "${BuildConfig.DOC_URL}"
-
-            val fileDownloaderAndOpener = FileDownloaderAndOpener(
-                context!!,
-                url
-            )
+            val fileDownloaderAndOpener = FileDownloaderAndOpener(context!!, url)
             fileDownloaderAndOpener.downloadAndOpenFile()
         }
     }
