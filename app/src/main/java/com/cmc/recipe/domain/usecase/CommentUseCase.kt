@@ -20,4 +20,14 @@ class CommentUseCase @Inject constructor(
 
     fun postShortfromCommentUnLike(id:Int) = repository.postShortfromCommentUnLike(id)
 
+    fun getRecipeComment(id:Int) = repository.getRecipeComment(id)
+
+    fun postRecipeCommentLike(id:Int) = repository.postRecipeCommentLike(id)
+
+    fun postRecipeCommentSave(id:Int,comment: CommentRequest) = repository.postRecipeCommentSave(id, comment)
+
+    fun reportRecipeComment(id:Int) = repository.reportRecipeComment(id)
+
+    fun postRecipeCommentUnLike(id:Int) = repository.postRecipeCommentUnLike(id)
+
 }

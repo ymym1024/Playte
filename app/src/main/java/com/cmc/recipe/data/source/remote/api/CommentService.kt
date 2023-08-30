@@ -25,5 +25,19 @@ interface CommentService {
     @GET("/api/v1/comments/shortform/unlike/{shortform-comment-id}")
     suspend fun postShortfromCommentUnLike(@Path("shortform-comment-id")id:Int) : Response<BaseResponse>
 
+    @GET("api/v1/comments/recipe/{recipe-id}")
+    suspend fun getRecipeComment(@Path("recipe-id")id:Int,@Query("pageSize") pageSize: Int=100) : Response<CommentResponse>
+
+    @POST("/api/v1/comments/recipe/{comment-id}/report")
+    suspend fun reportRecipeComment(@Path("comment-id")id:Int) : Response<BaseResponse>
+
+    @POST("/api/v1/comments/recipe/{recipe-id}")
+    suspend fun postRecipeCommentSave(@Path("recipe-id")id:Int,@Body comment: CommentRequest) : Response<BaseResponse>
+
+    @GET("/api/v1/comments/recipe/like/{comment-id}")
+    suspend fun postRecipeCommentLike(@Path("comment-id")id:Int) : Response<BaseResponse>
+
+    @GET("/api/v1/comments/recipe/unlike/{comment-id}")
+    suspend fun postRecipeCommentUnLike(@Path("comment-id")id:Int) : Response<BaseResponse>
 
 }

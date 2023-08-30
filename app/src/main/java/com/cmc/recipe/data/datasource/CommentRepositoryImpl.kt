@@ -97,4 +97,82 @@ class CommentRepositoryImpl @Inject constructor(
         }
     }
 
+    override fun getRecipeComment(id: Int): Flow<NetworkState<CommentResponse>> =flow{
+        val response = service.getRecipeComment(id)
+        if(response.isSuccessful){
+            response.body()?.let {
+                emit(NetworkState.Success(it))
+            }
+        }else{
+            try {
+                emit(NetworkState.Error(response.code(),response.errorBody()!!.string()))
+            }catch (e: IOException) {
+                e.printStackTrace()
+            }
+        }
+    }
+
+    override fun reportRecipeComment(id: Int): Flow<NetworkState<BaseResponse>> =flow{
+        val response = service.reportRecipeComment(id)
+        if(response.isSuccessful){
+            response.body()?.let {
+                emit(NetworkState.Success(it))
+            }
+        }else{
+            try {
+                emit(NetworkState.Error(response.code(),response.errorBody()!!.string()))
+            }catch (e: IOException) {
+                e.printStackTrace()
+            }
+        }
+    }
+
+    override fun postRecipeCommentSave(
+        id: Int,
+        comment: CommentRequest
+    ): Flow<NetworkState<BaseResponse>> =flow{
+        val response = service.postRecipeCommentSave(id,comment)
+        if(response.isSuccessful){
+            response.body()?.let {
+                emit(NetworkState.Success(it))
+            }
+        }else{
+            try {
+                emit(NetworkState.Error(response.code(),response.errorBody()!!.string()))
+            }catch (e: IOException) {
+                e.printStackTrace()
+            }
+        }
+    }
+
+    override fun postRecipeCommentLike(id: Int): Flow<NetworkState<BaseResponse>> =flow{
+        val response = service.postRecipeCommentLike(id)
+        if(response.isSuccessful){
+            response.body()?.let {
+                emit(NetworkState.Success(it))
+            }
+        }else{
+            try {
+                emit(NetworkState.Error(response.code(),response.errorBody()!!.string()))
+            }catch (e: IOException) {
+                e.printStackTrace()
+            }
+        }
+    }
+
+    override fun postRecipeCommentUnLike(id: Int): Flow<NetworkState<BaseResponse>> =flow{
+        val response = service.postRecipeCommentUnLike(id)
+        if(response.isSuccessful){
+            response.body()?.let {
+                emit(NetworkState.Success(it))
+            }
+        }else{
+            try {
+                emit(NetworkState.Error(response.code(),response.errorBody()!!.string()))
+            }catch (e: IOException) {
+                e.printStackTrace()
+            }
+        }
+    }
+
 }
