@@ -102,6 +102,7 @@ class ShortsFragment : BaseFragment<FragmentShortsBinding>(FragmentShortsBinding
     }
 
     private fun moveShortsPage(position:Int){
+        shortsViewModel.insertRecentShorts(itemList[position]!!)
         val intent = Intent(requireContext(), ShortsDetailActivity::class.java)
         intent.putExtra("position",position)
         startActivity(intent)

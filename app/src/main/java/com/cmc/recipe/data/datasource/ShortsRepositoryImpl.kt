@@ -3,9 +3,12 @@ package com.cmc.recipe.data.datasource
 import android.util.Log
 import com.cmc.recipe.data.model.RecipeItem
 import com.cmc.recipe.data.model.RecipeMapper.toEntity
+import com.cmc.recipe.data.model.ShortsMapper.toEntity
 import com.cmc.recipe.data.model.entity.RecipeEntity
+import com.cmc.recipe.data.model.entity.ShortsEntity
 import com.cmc.recipe.data.model.response.*
 import com.cmc.recipe.data.source.local.dao.RecipeDao
+import com.cmc.recipe.data.source.local.dao.ShortsDao
 import com.cmc.recipe.data.source.remote.api.RecipeService
 import com.cmc.recipe.data.source.remote.api.ShortsService
 import com.cmc.recipe.data.source.remote.request.ReviewRequest
@@ -20,6 +23,7 @@ import kotlin.math.ceil
 
 class ShortsRepositoryImpl @Inject constructor(
     private val service: ShortsService,
+    private val dao:ShortsDao
 ) : ShortsRepository {
 
     override fun getRecipesShortform(): Flow<NetworkState<ShortsResponse>> = flow {
@@ -138,6 +142,23 @@ class ShortsRepositoryImpl @Inject constructor(
                 emit(NetworkState.Error(response.code(),response.errorBody()!!.string()))
             }catch (e: IOException) {
                 e.printStackTrace()
+            }
+        }
+    }
+
+    override suspend fun insertRecentShorts(item: ShortsContent): Boolean {
+        return try{
+            dao.insert(item.toEntity())
+            true
+        }catch (e: IOException) {
+            false
+        }
+    }
+
+    override fun loadRecentShorts(): Flow<List<ShortsEntity>> {
+        return flow {
+            dao.selectAll().collect { list ->
+                emit(list)
             }
         }
     }

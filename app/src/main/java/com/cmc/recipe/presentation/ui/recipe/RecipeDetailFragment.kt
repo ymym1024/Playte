@@ -2,6 +2,7 @@ package com.cmc.recipe.presentation.ui.recipe
 
 import android.content.Intent
 import android.util.Log
+import android.view.View
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -22,7 +23,6 @@ class RecipeDetailFragment : BaseFragment<FragmentRecipeDetailBinding>(FragmentR
     private val recipeViewModel : RecipeViewModel by viewModels()
     private var recipeId : Int = 0
     private var recipeImg : String = ""
-
     // id 전달 받기
     override fun onDestroyView() {
         super.onDestroyView()
@@ -38,7 +38,6 @@ class RecipeDetailFragment : BaseFragment<FragmentRecipeDetailBinding>(FragmentR
 
     override fun onResume() {
         super.onResume()
-        Log.d("여기 확인","onResume")
 
         initMenu()
     }
@@ -47,16 +46,18 @@ class RecipeDetailFragment : BaseFragment<FragmentRecipeDetailBinding>(FragmentR
         val activity = activity as RecipeActivity
         activity.hideToolbar(true)
 
+        // 로딩
         recipeId = arguments?.getInt("id")!!
 
-        recipeViewModel.updateReicpeId(recipeId)
         requestRecipeDetail(recipeId!!)
     }
 
     private fun requestRecipeDetail(id:Int){
+    //    showView(true)
         launchWithLifecycle(lifecycle) {
             recipeViewModel.getRecipesDetail(id)
             recipeViewModel.recipeDetailResult.collect{
+             //   showView(false)
                 when(it){
                     is NetworkState.Success -> {
                         it.data?.let {data ->
@@ -78,7 +79,6 @@ class RecipeDetailFragment : BaseFragment<FragmentRecipeDetailBinding>(FragmentR
         }
     }
     private fun initDatabinding(data:RecipeDetail){
-
         // 레시피 id
         recipeId = data.recipe_id
         recipeImg = data.recipe_thumbnail_img
@@ -116,8 +116,6 @@ class RecipeDetailFragment : BaseFragment<FragmentRecipeDetailBinding>(FragmentR
         initRecipeIngredientRV(data.ingredients)
         initRecommendRV(data.recommendation_recipes)
         initProductRV(data.ingredients)
-
-        // 이벤트 바인딩
 
     }
 
