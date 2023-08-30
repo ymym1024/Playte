@@ -23,7 +23,7 @@ data class ShortsData(
 )
 
 data class ShortsContent(
-    val comments_count: Int,
+    var comments_count: Int,
     val created_date: String,
     val ingredients: List<Ingredient>,
     var is_liked: Boolean,

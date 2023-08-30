@@ -257,11 +257,11 @@ class ShortsFragment : BaseFragment<FragmentShortsBinding>(FragmentShortsBinding
                     is NetworkState.Success -> {
                         if (it.data.code == "SUCCESS") {
                             val item = findShortsItemById(id)
+                            val index = findShortsItemIndex(id)
                             item?.is_liked = true
                             item?.likes_count = item?.likes_count!! + 1
-                            favoriteFlag = true
 
-                            adapter.getData().add(id,item)
+                            updateValueAtIndex(adapter.getData(),index!!,item)
                         }
                     }
                     is NetworkState.Error -> {
@@ -278,6 +278,24 @@ class ShortsFragment : BaseFragment<FragmentShortsBinding>(FragmentShortsBinding
         }
     }
 
+    fun updateValueAtIndex(list: MutableList<ShortsContent>, index: Int, newValue: ShortsContent) {
+        if (index in 0 until list.size) {
+            list[index] = newValue
+        } else {
+            0
+        }
+    }
+
+    private fun findShortsItemIndex(shortId: Int): Int? {
+        val dataList = adapter.getData()
+        for ((index, item) in dataList.withIndex()) {
+            if (item.shortform_id == shortId) {
+                return index
+            }
+        }
+        return null
+    }
+
     private fun requestUnFavorite(id:Int) {
         shortsViewModel.postShortformUnLike(id)
         launchWithLifecycle(lifecycle){
@@ -286,11 +304,11 @@ class ShortsFragment : BaseFragment<FragmentShortsBinding>(FragmentShortsBinding
                     is NetworkState.Success -> {
                         if (it.data.code == "SUCCESS") {
                             val item = findShortsItemById(id)
+                            val index = findShortsItemIndex(id)
                             item?.is_liked = false
                             item?.likes_count = item?.likes_count!! - 1
-                            favoriteFlag = false
 
-                            adapter.getData().add(id,item)
+                            updateValueAtIndex(adapter.getData(),index!!,item)
                         }
                         showToastMessage("${it.data}")
                     }
@@ -333,11 +351,10 @@ class ShortsFragment : BaseFragment<FragmentShortsBinding>(FragmentShortsBinding
                     is NetworkState.Success -> {
                         if (it.data.code == "SUCCESS") {
                             val item = findShortsItemById(id)
+                            val index = findShortsItemIndex(id)
                             item?.is_saved = true
                             item?.saved_count = item?.saved_count!! + 1
-                            saveFlag = true
-
-                            adapter.getData().add(id,item)
+                            updateValueAtIndex(adapter.getData(),index!!,item)
                         }
                     }
                     is NetworkState.Error -> {
@@ -362,11 +379,10 @@ class ShortsFragment : BaseFragment<FragmentShortsBinding>(FragmentShortsBinding
                     is NetworkState.Success -> {
                         if (it.data.code == "SUCCESS") {
                             val item = findShortsItemById(id)
+                            val index = findShortsItemIndex(id)
                             item?.is_saved = false
                             item?.saved_count = item?.saved_count!! - 1
-                            saveFlag = false
-
-                            adapter.getData().add(id,item)
+                            updateValueAtIndex(adapter.getData(),index!!,item)
                         }
                         showToastMessage("${it.data}")
                     }

@@ -28,6 +28,13 @@ class CommentAdapter:
         this.commentListener = commentListener
     }
 
+    fun removeItem(id:Int){
+        val itemList = getData()
+        val itemToRemove = itemList.find { it.comment_id == id }
+        itemList.remove(itemToRemove)
+        notifyDataSetChanged()
+    }
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CommentItemHolder {
         return CommentItemHolder(
             ItemCommentBinding.inflate(LayoutInflater.from(parent.context), parent, false),

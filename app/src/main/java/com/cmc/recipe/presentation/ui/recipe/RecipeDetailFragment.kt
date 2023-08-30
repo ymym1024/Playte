@@ -8,6 +8,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.cmc.recipe.R
 import com.cmc.recipe.data.model.Product
+import com.cmc.recipe.data.model.RecipeItem
 import com.cmc.recipe.data.model.response.*
 import com.cmc.recipe.databinding.FragmentRecipeDetailBinding
 import com.cmc.recipe.presentation.ui.base.BaseFragment
@@ -24,6 +25,9 @@ class RecipeDetailFragment : BaseFragment<FragmentRecipeDetailBinding>(FragmentR
     private val recipeViewModel : RecipeViewModel by viewModels()
     private var recipeId : Int = 0
     private var recipeImg : String = ""
+
+    private lateinit var recipeData : RecipeDetail
+
     // id 전달 받기
     override fun onDestroyView() {
         super.onDestroyView()
@@ -63,7 +67,8 @@ class RecipeDetailFragment : BaseFragment<FragmentRecipeDetailBinding>(FragmentR
                     is NetworkState.Success -> {
                         it.data?.let {data ->
                             if(data.code == "SUCCESS"){
-                                initDatabinding(data.data)
+                                recipeData = data.data
+                                initDatabinding(recipeData)
                             }else{
                                 Log.d("data","${data.data}")
                             }
@@ -97,6 +102,10 @@ class RecipeDetailFragment : BaseFragment<FragmentRecipeDetailBinding>(FragmentR
 
         if(!data.is_saved) binding.ibBookmark.setImageResource(R.drawable.ic_bookmark_deactive)
         else binding.ibBookmark.setImageResource(R.drawable.ic_bookmark_activate)
+
+        binding.ibBookmark.setOnClickListener {
+            requestRecipeSaveOrUnSave(recipeId)
+        }
 
         binding.tvPeople.setOnClickListener {
             showBottomSheet()
@@ -157,6 +166,71 @@ class RecipeDetailFragment : BaseFragment<FragmentRecipeDetailBinding>(FragmentR
                             if(data.code == "SUCCESS"){
                                 requireActivity().onBackPressed()
                                 RecipeSnackBar(binding.root,"신고가 접수되었습니다.").show()
+                            }else{
+                                Log.d("data","${data.data}")
+                            }
+                        }
+                        recipeViewModel._recipeResult.value = NetworkState.Loading
+                    }
+                    is NetworkState.Error ->{
+                        showToastMessage(it.message.toString())
+                        recipeViewModel._recipeResult.value = NetworkState.Loading
+                    }
+                    else -> {}
+                }
+            }
+        }
+    }
+
+
+    private fun requestRecipeSaveOrUnSave(id: Int) {
+        if (recipeData != null) {
+            if (recipeData.is_saved) {
+                requestRecipeUnSave(id)
+            } else {
+                requestRecipeSave(id)
+            }
+        }
+    }
+
+    private fun requestRecipeSave(recipeId: Int) {
+        recipeViewModel.postRecipesSave(recipeId)
+        launchWithLifecycle(lifecycle) {
+            recipeViewModel.recipeSaveResult.collect{
+                when(it){
+                    is NetworkState.Success -> {
+                        it.data?.let {data ->
+                            if(data.code == "SUCCESS"){
+                                recipeData?.is_saved = true
+                                binding.ibBookmark.setImageResource(R.drawable.ic_bookmark_activate)
+                                RecipeSnackBar(binding.root,"레시피가 저장되었습니다!").show()
+                            }else{
+                                Log.d("data","${data.data}")
+                            }
+                        }
+                        recipeViewModel._recipeResult.value = NetworkState.Loading
+                    }
+                    is NetworkState.Error ->{
+                        showToastMessage(it.message.toString())
+                        recipeViewModel._recipeResult.value = NetworkState.Loading
+                    }
+                    else -> {}
+                }
+            }
+        }
+    }
+
+    private fun requestRecipeUnSave(recipeId: Int) {
+        recipeViewModel.postRecipesNotSave(recipeId)
+        launchWithLifecycle(lifecycle) {
+            recipeViewModel.recipeUnSaveResult.collect{
+                when(it){
+                    is NetworkState.Success -> {
+                        it.data?.let {data ->
+                            if(data.code == "SUCCESS"){
+                                recipeData?.is_saved = false
+                                binding.ibBookmark.setImageResource(R.drawable.ic_bookmark_deactive)
+                                RecipeSnackBar(binding.root,"레시피가 저장 취소 되었습니다!").show()
                             }else{
                                 Log.d("data","${data.data}")
                             }

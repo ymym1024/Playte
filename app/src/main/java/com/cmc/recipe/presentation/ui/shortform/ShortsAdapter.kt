@@ -117,14 +117,17 @@ class ShortsItemHolder(viewBinding: ItemShortsBinding, val context: Context,val 
         binding.ibBookmark.scaleType = ImageView.ScaleType.CENTER_CROP
 
         var favoriteFlag = item.is_liked
+        var favoriteCount = item.likes_count
         // 좋아요
         binding.ibHeart.setOnClickListener {
             shortsListener.onFavorite(item.shortform_id) //서버로 통신하는 로직 추가
             if(!favoriteFlag){ // false
                 binding.ibHeart.setImageResource(R.drawable.ic_shorts_heart_activate)
+                binding.tvHeartCnt.text = "${favoriteCount}"
                 favoriteFlag = !favoriteFlag
             }else{ // true
                 binding.ibHeart.setImageResource(R.drawable.ic_shorts_heart_deactivate)
+                binding.tvHeartCnt.text = "${favoriteCount-1}"
                 favoriteFlag = !favoriteFlag
             }
         }
@@ -134,13 +137,16 @@ class ShortsItemHolder(viewBinding: ItemShortsBinding, val context: Context,val 
         }
         // 북마크
         var saveFlag = item.is_liked
+        var saveCount = item.saved_count
         binding.ibBookmark.setOnClickListener {
             shortsListener.onSave(item.shortform_id)
             if(!saveFlag){  // false
                 binding.ibBookmark.setImageResource(R.drawable.ic_shorts_bookmark_activate)
+                binding.tvBookmarkCnt.text = "${saveCount}"
                 saveFlag = !saveFlag
             }else{  // true
                 binding.ibBookmark.setImageResource(R.drawable.ic_shorts_bookmark_deactivate)
+                binding.tvBookmarkCnt.text = "${saveCount-1}"
                 saveFlag = !saveFlag
             }
         }

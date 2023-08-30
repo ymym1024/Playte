@@ -35,9 +35,6 @@ class ShortsDetailAdapter(private val context:Context,val videoPreparedListener:
     private lateinit var onShortsListener : onShortsListener
 
 
-    private lateinit var commentList : MutableList<CommentContent>
-    private var commentAdapter : CommentAdapter = CommentAdapter()
-
     fun setShortsListener(onShortsListener:onShortsListener){
         this.onShortsListener = onShortsListener
     }
@@ -49,19 +46,12 @@ class ShortsDetailAdapter(private val context:Context,val videoPreparedListener:
         notifyDataSetChanged()
     }
 
-    fun initCommentList(newCommentList: List<CommentContent>) {
-        commentList = newCommentList.toMutableList()
-        commentAdapter.replaceData(commentList)
-
-    }
-
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ShortsDetailHolder {
         return ShortsDetailHolder(
             ItemShortsDetailBinding.inflate(LayoutInflater.from(parent.context), parent, false),
             context,
             videoPreparedListener,
             onShortsListener,
-            commentAdapter
         )
     }
 }
@@ -71,7 +61,6 @@ class ShortsDetailHolder(
     val context: Context,
     val videoPreparedListener: ShortsItemHolder.OnVideoPreparedListener,
     val shortsListener: onShortsListener,
-    var commentAdapter: CommentAdapter
 )
     :BaseHolder<ShortsContent, ItemShortsDetailBinding>(viewBinding){
   //  private lateinit var bottomSheetBehavior: BottomSheetBehavior<View>
@@ -100,21 +89,26 @@ class ShortsDetailHolder(
         // 댓글
         // 좋아요
         var favoriteFlag = item.is_liked
-        if(!favoriteFlag){
-            binding.btnHeart.setImageResource(R.drawable.ic_shorts_heart_deactivate)
-        }else{
+        var favoriteCount = item.likes_count
+        if(item.is_liked){
             binding.btnHeart.setImageResource(R.drawable.ic_shorts_heart_activate)
+        }else{
+            binding.btnHeart.setImageResource(R.drawable.ic_shorts_heart_deactivate)
         }
         binding.btnHeart.scaleType = ImageView.ScaleType.CENTER_CROP
 
         binding.btnHeart.let { btn->
             btn.setOnClickListener{
                 shortsListener.onFavorite(item.shortform_id)
-                if(!favoriteFlag){
-                    binding.btnHeart.setImageResource(R.drawable.ic_shorts_heart_deactivate)
+                if(favoriteFlag == false){
+                    binding.btnHeart.setImageResource(R.drawable.ic_shorts_heart_activate)
+                    binding.tvHeartCnt.text = "${favoriteCount}"
+                    Log.d("favorite favoriteFlag","${favoriteCount}")
                     favoriteFlag = !favoriteFlag
                 }else{
-                    binding.btnHeart.setImageResource(R.drawable.ic_shorts_heart_activate)
+                    binding.btnHeart.setImageResource(R.drawable.ic_shorts_heart_deactivate)
+                    binding.tvHeartCnt.text = "${favoriteCount -1}"
+                    Log.d("favorite favoriteFlag","${favoriteCount}")
                     favoriteFlag = !favoriteFlag
                 }
             }
@@ -122,7 +116,8 @@ class ShortsDetailHolder(
 
         // 북마크
         var saveFlag = item.is_liked
-        if(!saveFlag){
+        var saveCount = item.saved_count
+        if(!item.is_liked){
             binding.btnBookmark.setImageResource(R.drawable.ic_shorts_bookmark_deactivate)
         }else{
             binding.btnBookmark.setImageResource(R.drawable.ic_shorts_bookmark_activate)
@@ -131,58 +126,22 @@ class ShortsDetailHolder(
         binding.btnBookmark.let { btn ->
             btn.setOnClickListener {
                 shortsListener.onSave(item.shortform_id)
-                if(!saveFlag){  // false
+                if(saveFlag == false){  // false
                     btn.setImageResource(R.drawable.ic_shorts_bookmark_activate)
+                    binding.tvBookmarkCnt.text = "${saveCount}"
                     saveFlag = !saveFlag
                 }else{  // true
                     btn.setImageResource(R.drawable.ic_shorts_bookmark_deactivate)
+                    binding.tvBookmarkCnt.text = "${saveCount -1}"
                     saveFlag = !saveFlag
                 }
             }
         }
         // 댓글
-//        binding.bottomSheetComment.post {
-//            val bottomSheetVisibleHeight =  binding.bottomSheetComment.height -  binding.bottomSheetComment.top
-//            binding.buttonLayout.y =
-//                (bottomSheetVisibleHeight -  binding.bottomSheetComment.height).toFloat()
-//        }
-//        bottomSheetBehavior.addBottomSheetCallback(object :BottomSheetBehavior.BottomSheetCallback(){
-//            override fun onStateChanged(bottomSheet: View, newState: Int) {
-//                Log.d("newState","${newState}")
-//                if (newState == BottomSheetBehavior.STATE_EXPANDED) {
-//                    Log.d("newState","${newState}")
-//                } else if (newState == BottomSheetBehavior.STATE_COLLAPSED) {
-//                    Log.d("newState","${newState}")
-//                }
-//            }
-//
-//            override fun onSlide(bottomSheet: View, slideOffset: Float) {
-//                val bottomSheetVisibleHeight = bottomSheet.height - bottomSheet.top
-//                binding.buttonLayout.translationY =
-//                    (bottomSheetVisibleHeight - binding.buttonLayout.height).toFloat()
-//            }
-//        })
-
-//        binding.bottomSheetComment.setOnTouchListener { _, event ->
-//            binding.bottomSheetComment.parent.requestDisallowInterceptTouchEvent(true)
-//            false
-//        }
 
         binding.btnComment.setOnClickListener {
              shortsListener.onComment(item.shortform_id)
-
-//            BottomSheetCommentFragment(commentAdapter).show(this,"bottomsheet")
-
-//             binding.tvCommentSheetCnt.text = "댓글 ${commentAdapter.itemCount}개"
-//            if (bottomSheetBehavior.state == BottomSheetBehavior.STATE_HIDDEN) {
-//                val itemHeight = itemView.height /3
-//                bottomSheetBehavior.peekHeight = itemHeight * 2 +100
-//                bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
-//            } else {
-//                bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
-//            }
         }
-
 
         binding.btnBookmark.scaleType = ImageView.ScaleType.CENTER_CROP
         // 텍스트 접기
