@@ -28,11 +28,26 @@ class CommentViewModel @Inject constructor(private val commentUseCase: CommentUs
     var _commentSaveResult : MutableSharedFlow<NetworkState<BaseResponse>> = MutableSharedFlow()
     var commentSaveResult = _commentSaveResult.asSharedFlow()
 
-    var _commentLikeResult : MutableSharedFlow<NetworkState<BaseResponse>> = MutableSharedFlow()
-    var commentLikeResult = _commentLikeResult.asSharedFlow()
+    var _commentLikeResult : MutableStateFlow<NetworkState<BaseResponse>> = MutableStateFlow(NetworkState.Loading)
+    var commentLikeResult :StateFlow<NetworkState<BaseResponse>> = _commentLikeResult
 
-    var _commentUnLikeResult : MutableSharedFlow<NetworkState<BaseResponse>> = MutableSharedFlow()
-    var commentUnLikeResult = _commentUnLikeResult.asSharedFlow()
+    var _commentUnLikeResult : MutableStateFlow<NetworkState<BaseResponse>> = MutableStateFlow(NetworkState.Loading)
+    var commentUnLikeResult : StateFlow<NetworkState<BaseResponse>> = _commentUnLikeResult
+
+    var _commentRecipeResult: MutableStateFlow<NetworkState<CommentResponse>> = MutableStateFlow(NetworkState.Loading)
+    var commentRecipeResult: StateFlow<NetworkState<CommentResponse>> = _commentRecipeResult
+
+    var _reportRecipeResult : MutableStateFlow<NetworkState<BaseResponse>> = MutableStateFlow(NetworkState.Loading)
+    var reportRecipeResult : StateFlow<NetworkState<BaseResponse>> = _reportRecipeResult
+
+    var _commentRecipeSaveResult : MutableSharedFlow<NetworkState<BaseResponse>> = MutableSharedFlow()
+    var commentRecipeSaveResult = _commentRecipeSaveResult.asSharedFlow()
+
+    var _commentRecipeLikeResult : MutableStateFlow<NetworkState<BaseResponse>> = MutableStateFlow(NetworkState.Loading)
+    var commentRecipeLikeResult : StateFlow<NetworkState<BaseResponse>> = _commentRecipeLikeResult
+
+    var _commentRecipeUnLikeResult : MutableStateFlow<NetworkState<BaseResponse>> = MutableStateFlow(NetworkState.Loading)
+    var commentRecipeUnLikeResult : StateFlow<NetworkState<BaseResponse>> = _commentRecipeLikeResult
 
     fun getShortfromComment(id:Int) = viewModelScope.launch {
         _commentResult.value = NetworkState.Loading
@@ -80,26 +95,97 @@ class CommentViewModel @Inject constructor(private val commentUseCase: CommentUs
         _commentLikeResult.emit(NetworkState.Loading)
         commentUseCase.postShortfromCommentLike(id)
             .catch { error ->
-                _commentLikeResult.emit(NetworkState.Error(400,"${error.message}"))
+                _commentLikeResult.value = NetworkState.Error(400,"${error.message}")
             }.collect { values ->
                 if (values is NetworkState.Error) {
-                    _commentLikeResult.emit(NetworkState.Error(values.code,"${values.message}"))
+                    _commentLikeResult.value = NetworkState.Error(values.code,"${values.message}")
                 } else if (values is NetworkState.Success) {
-                    _commentSaveResult.emit(values)
+                    _commentLikeResult.value = values
                 }
             }
     }
 
     fun postShortfromCommentUnLike(id:Int) = viewModelScope.launch {
-        _commentUnLikeResult.emit(NetworkState.Loading)
+        _commentUnLikeResult.value = NetworkState.Loading
         commentUseCase.postShortfromCommentUnLike(id)
             .catch { error ->
-                _commentUnLikeResult.emit(NetworkState.Error(400,"${error.message}"))
+                _commentUnLikeResult.value = NetworkState.Error(400,"${error.message}")
             }.collect { values ->
                 if (values is NetworkState.Error) {
-                    _commentUnLikeResult.emit(NetworkState.Error(values.code,"${values.message}"))
+                    _commentUnLikeResult.value = NetworkState.Error(values.code,"${values.message}")
                 } else if (values is NetworkState.Success) {
-                    _commentUnLikeResult.emit(values)
+                    _commentUnLikeResult.value = values
+                }
+            }
+    }
+
+    fun getRecipeComment(id:Int) = viewModelScope.launch {
+        _commentRecipeResult.value = NetworkState.Loading
+        commentUseCase.getRecipeComment(id)
+            .catch { error ->
+                _commentRecipeResult.value = NetworkState.Error(400,"${error.message}")
+            }.collect { values ->
+                if (values is NetworkState.Error) {
+                    _commentRecipeResult.emit(NetworkState.Error(values.code,"${values.message}"))
+                } else if (values is NetworkState.Success) {
+                    _commentRecipeResult.emit(values)
+                }
+            }
+    }
+
+    fun reportRecipeComment(id:Int) = viewModelScope.launch {
+        Log.d("check","${id}")
+        _reportRecipeResult.emit(NetworkState.Loading)
+        commentUseCase.reportRecipeComment(id)
+            .catch { error ->
+                _reportRecipeResult.emit(NetworkState.Error(400,"${error.message}"))
+            }.collect { values ->
+                if (values is NetworkState.Error) {
+                    _reportRecipeResult.emit(NetworkState.Error(values.code,"${values.message}"))
+                } else if (values is NetworkState.Success) {
+                    _reportRecipeResult.emit(values)
+                }
+            }
+    }
+
+    fun postRecipeCommentSave(id:Int,comment:CommentRequest) = viewModelScope.launch {
+        _commentRecipeSaveResult.emit(NetworkState.Loading)
+        commentUseCase.postRecipeCommentSave(id,comment)
+            .catch { error ->
+                _commentRecipeSaveResult.emit(NetworkState.Error(400,"${error.message}"))
+            }.collect { values ->
+                if (values is NetworkState.Error) {
+                    _commentRecipeSaveResult.emit(NetworkState.Error(values.code,"${values.message}"))
+                } else if (values is NetworkState.Success) {
+                    _commentRecipeSaveResult.emit(values)
+                }
+            }
+    }
+
+    fun postRecipeCommentLike(id:Int) = viewModelScope.launch {
+        _commentRecipeLikeResult.emit(NetworkState.Loading)
+        commentUseCase.postRecipeCommentLike(id)
+            .catch { error ->
+                _commentRecipeLikeResult.emit(NetworkState.Error(400,"${error.message}"))
+            }.collect { values ->
+                if (values is NetworkState.Error) {
+                    _commentRecipeLikeResult.emit(NetworkState.Error(values.code,"${values.message}"))
+                } else if (values is NetworkState.Success) {
+                    _commentRecipeLikeResult.emit(values)
+                }
+            }
+    }
+
+    fun postRecipeCommentUnLike(id:Int) = viewModelScope.launch {
+        _commentRecipeUnLikeResult.emit(NetworkState.Loading)
+        commentUseCase.postRecipeCommentUnLike(id)
+            .catch { error ->
+                _commentRecipeUnLikeResult.emit(NetworkState.Error(400,"${error.message}"))
+            }.collect { values ->
+                if (values is NetworkState.Error) {
+                    _commentRecipeUnLikeResult.emit(NetworkState.Error(values.code,"${values.message}"))
+                } else if (values is NetworkState.Success) {
+                    _commentRecipeUnLikeResult.emit(values)
                 }
             }
     }

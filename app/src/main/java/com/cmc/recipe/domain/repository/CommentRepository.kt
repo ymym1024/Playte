@@ -21,4 +21,14 @@ interface CommentRepository {
 
     fun postShortfromCommentUnLike(id:Int) : Flow<NetworkState<BaseResponse>>
 
+    fun getRecipeComment(id:Int) : Flow<NetworkState<CommentResponse>>
+
+    fun reportRecipeComment(id:Int) : Flow<NetworkState<BaseResponse>>
+
+    fun postRecipeCommentSave(id:Int,comment:CommentRequest) : Flow<NetworkState<BaseResponse>>
+
+    fun postRecipeCommentLike(id:Int) : Flow<NetworkState<BaseResponse>>
+
+    fun postRecipeCommentUnLike(id:Int) : Flow<NetworkState<BaseResponse>>
+
 }

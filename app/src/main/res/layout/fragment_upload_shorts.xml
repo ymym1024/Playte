@@ -8,6 +8,7 @@
     android:layout_width="match_parent">
 
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/upload_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:context=".presentation.ui.upload.UploadShortsFragment">

@@ -47,6 +47,7 @@
         android:layout_marginEnd="8dp"
         android:text="22"
         android:textFontWeight="400"
+        android:textColor="@color/gray_8"
         android:textSize="12sp"
         app:layout_constraintEnd_toStartOf="@+id/ib_report"
         app:layout_constraintTop_toTopOf="parent" />

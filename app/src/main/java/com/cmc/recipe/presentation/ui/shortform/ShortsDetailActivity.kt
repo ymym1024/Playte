@@ -21,6 +21,7 @@ import com.cmc.recipe.databinding.ActivityShortsDetailBinding
 import com.cmc.recipe.presentation.ui.MainActivity
 import com.cmc.recipe.presentation.ui.common.CommentAdapter
 import com.cmc.recipe.presentation.ui.common.OnCommentListener
+import com.cmc.recipe.presentation.ui.common.RecipeSnackBar
 import com.cmc.recipe.presentation.ui.recipe.BottomSheetDetailDialog
 import com.cmc.recipe.presentation.viewmodel.CommentViewModel
 import com.cmc.recipe.presentation.viewmodel.ShortsViewModel
@@ -204,7 +205,8 @@ class ShortsDetailActivity : AppCompatActivity() {
 
         binding.vpExoplayer.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
             override fun onPageSelected(position: Int) {
-                currentId = adapter.getData().get(position).shortform_id
+                Log.d("position","${position}")
+                currentId = adapter.getData()[position].shortform_id
 
                 val previousIndex = exoPlayerItems.indexOfFirst { it.exoPlayer.isPlaying }
 
@@ -231,6 +233,61 @@ class ShortsDetailActivity : AppCompatActivity() {
         return adapter.getData().find { it.shortform_id == shortsId }
     }
 
+    private fun findCommentItemById(shortsId: Int): CommentContent? {
+        return commnetAdapter.getData().find { it.comment_id == shortsId }
+    }
+
+
+    private fun findShortsItemIndex(shortId: Int): Int? {
+        val dataList = adapter.getData()
+        for ((index, item) in dataList.withIndex()) {
+            if (item.shortform_id == shortId) {
+                return index
+            }
+        }
+        return null
+    }
+
+    private fun findCommentItemIndex(shortId: Int): Int? {
+        val dataList = commnetAdapter.getData()
+        for ((index, item) in dataList.withIndex()) {
+            if (item.comment_id == shortId) {
+                return index
+            }
+        }
+        return null
+    }
+
+    private fun requestCommentReport(id:Int) {
+        commentViewModel.reportShortfromComment(id)
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                commentViewModel.reportResult.collect{
+                    when (it) {
+                        is NetworkState.Success -> {
+                            if (it.data.code == "SUCCESS") {
+                                commnetAdapter.removeItem(id)
+                                dialog.setCommentCount(commentItemList.size)
+                                Toast.makeText(applicationContext, "신고가 접수되었습니다.", Toast.LENGTH_SHORT)
+                                    .show()
+                            }
+                        }
+                        is NetworkState.Error -> {
+                            Toast.makeText(applicationContext, "${it.message}", Toast.LENGTH_SHORT)
+                                .show()
+                        }
+                        is NetworkState.Loading -> {
+                            // 프로그레스바 띄우기
+                        }
+                        else -> {
+
+                        }
+                    }
+                }
+            }
+        }
+    }
+
     private fun requestFavorite(id:Int) {
         shortsViewModel.postShortformLike(id)
         lifecycleScope.launch {
@@ -240,10 +297,10 @@ class ShortsDetailActivity : AppCompatActivity() {
                         is NetworkState.Success -> {
                             if (it.data.code == "SUCCESS") {
                                 val item = findShortsItemById(id)
+                                val index = findShortsItemIndex(id)
                                 item?.is_liked = true
                                 item?.likes_count = item?.likes_count!! + 1
-
-                                adapter.getData().add(id,item)
+                                updateValueAtIndex(adapter.getData(),index!!,item)
                             }
                         }
                         is NetworkState.Error -> {
@@ -300,11 +357,6 @@ class ShortsDetailActivity : AppCompatActivity() {
         }
     }
 
-    private fun findCommentItemById(reviewId: Int): CommentContent? {
-        return commnetAdapter.getData().find { it.comment_id == reviewId }
-    }
-
-
     private fun requestCommentLikeOrUnLike(id: Int) {
         val review = findCommentItemById(id)
         if (review != null) {
@@ -325,13 +377,15 @@ class ShortsDetailActivity : AppCompatActivity() {
                         is NetworkState.Success -> {
                             it.data?.let { data ->
                                 if (data.code == "SUCCESS") {
-                                    Log.d("data", "${data}")
-                                    val review = findCommentItemById(id)
-                                    Log.d("review data", "${review}")
-                                    review?.is_liked = true
-                                    review?.comment_likes = review?.comment_likes!! + 1
+                                    val item = findCommentItemById(id)
+                                    val index = findCommentItemIndex(id)
+                                    Log.d("item","${item}")
+                                    item?.is_liked = true
+                                    item?.comment_likes = item?.comment_likes!! + 1
+                                    updateValueAtCommentIndex(commnetAdapter.getData(),index!!,item)
                                     commnetAdapter.notifyDataSetChanged()
-
+                                    Log.d("item","${commnetAdapter.getData()}")
+                                    dialog.setCommentCount(commnetAdapter.getData().size)
                                 } else {
                                     Log.d("data", "${data.data}")
                                 }
@@ -358,11 +412,12 @@ class ShortsDetailActivity : AppCompatActivity() {
                         is NetworkState.Success -> {
                             it.data?.let { data ->
                                 if (data.code == "SUCCESS") {
-                                    Log.d("data-unlike", "${data}")
-                                    val review = findCommentItemById(id)
-                                    review?.is_liked = false
-                                    review?.comment_likes = review?.comment_likes!! - 1
-                                    commnetAdapter.notifyDataSetChanged()
+                                    val item = findCommentItemById(id)
+                                    val index = findCommentItemIndex(id)
+                                    item?.is_liked = false
+                                    item?.comment_likes = item?.comment_likes!! - 1
+                                    updateValueAtCommentIndex(commnetAdapter.getData(),index!!,item)
+                                    dialog.setCommentCount(commnetAdapter.getData().size)
                                 } else {
                                     Log.d("data", "${data.data}")
                                 }
@@ -390,7 +445,7 @@ class ShortsDetailActivity : AppCompatActivity() {
             }
 
             override fun onReport(id: Int) {
-                //신고기능
+                requestCommentReport(id)
             }
 
             override fun writeReply(id: Int) {
@@ -407,6 +462,22 @@ class ShortsDetailActivity : AppCompatActivity() {
             }
         })
         dialog.show()
+    }
+
+    fun updateValueAtIndex(list: MutableList<ShortsContent>, index: Int, newValue: ShortsContent) {
+        if (index in 0 until list.size) {
+            list[index] = newValue
+        } else {
+            0
+        }
+    }
+
+    fun updateValueAtCommentIndex(list: MutableList<CommentContent>, index: Int, newValue: CommentContent) {
+        if (index in 0 until list.size) {
+            list[index] = newValue
+        } else {
+            0
+        }
     }
 
     private fun requestSaveComment(data:String) {
@@ -446,10 +517,10 @@ class ShortsDetailActivity : AppCompatActivity() {
                         is NetworkState.Success -> {
                             if (it.data.code == "SUCCESS") {
                                 val item = findShortsItemById(id)
+                                val index = findShortsItemIndex(id)
                                 item?.is_liked = false
                                 item?.likes_count = item?.likes_count!! - 1
-
-                                adapter.getData().add(id,item)
+                                updateValueAtIndex(adapter.getData(),index!!,item)
                             }
                         }
                         is NetworkState.Error -> {
@@ -476,12 +547,20 @@ class ShortsDetailActivity : AppCompatActivity() {
                     when (it) {
                         is NetworkState.Success -> {
                             if (it.data.code == "SUCCESS") {
+
                                 val nextItem: Int = (currentPosition + 1) % itemSize
                                 binding.vpExoplayer.setCurrentItem(nextItem, true)
+
                                 itemSize--
-                                adapter.removeItem(currentId)
-                                Toast.makeText(applicationContext, "해당 숏폼은 신고 되었습니다", Toast.LENGTH_SHORT)
-                                    .show()
+                                if(itemSize == 0 ){
+                                    exitActivity()
+                                    Toast.makeText(applicationContext, "해당 숏폼은 신고 되었습니다", Toast.LENGTH_SHORT)
+                                        .show()
+                                }else{
+                                    adapter.removeItem(currentId)
+                                    Toast.makeText(applicationContext, "해당 숏폼은 신고 되었습니다", Toast.LENGTH_SHORT)
+                                        .show()
+                                }
                             }
                         }
                         is NetworkState.Error -> {
@@ -511,9 +590,15 @@ class ShortsDetailActivity : AppCompatActivity() {
                                 val nextItem: Int = (currentPosition + 1) % itemSize
                                 binding.vpExoplayer.setCurrentItem(nextItem, true)
                                 itemSize--
-                                adapter.removeItem(currentId)
-                                Toast.makeText(applicationContext, "해당 숏폼은 관심없음 처리 되었습니다", Toast.LENGTH_SHORT)
-                                    .show()
+                                if(itemSize == 0 ){
+                                    exitActivity()
+                                    Toast.makeText(applicationContext, "해당 숏폼은 관심없음 처리 되었습니다", Toast.LENGTH_SHORT)
+                                        .show()
+                                }else{
+                                    adapter.removeItem(currentId)
+                                    Toast.makeText(applicationContext, "해당 숏폼은 관심없음 처리 되었습니다", Toast.LENGTH_SHORT)
+                                        .show()
+                                }
                             }
                         }
                         is NetworkState.Error -> {
@@ -530,6 +615,10 @@ class ShortsDetailActivity : AppCompatActivity() {
                 }
             }
         }
+    }
+
+    private fun exitActivity(){
+        finish()
     }
     fun requestShortsLikeOrUnLike(id: Int) {
         val item = findShortsItemById(id)
@@ -573,11 +662,10 @@ class ShortsDetailActivity : AppCompatActivity() {
                         is NetworkState.Success -> {
                             if (it.data.code == "SUCCESS") {
                                 val item = findShortsItemById(id)
+                                val index = findShortsItemIndex(id)
                                 item?.is_saved = true
                                 item?.saved_count = item?.saved_count!! + 1
-                                saveFlag = true
-
-                                adapter.getData().add(id, item)
+                                updateValueAtIndex(adapter.getData(),index!!,item)
                             }
                         }
                         is NetworkState.Error -> {
@@ -604,11 +692,10 @@ class ShortsDetailActivity : AppCompatActivity() {
                         is NetworkState.Success -> {
                             if (it.data.code == "SUCCESS") {
                                 val item = findShortsItemById(id)
+                                val index = findShortsItemIndex(id)
                                 item?.is_saved = false
                                 item?.saved_count = item?.saved_count!! - 1
-                                saveFlag = false
-
-                                adapter.getData().add(id, item)
+                                updateValueAtIndex(adapter.getData(),index!!,item)
                             }
                             //showToastMessage("${it.data}")
                         }

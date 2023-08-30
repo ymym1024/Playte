@@ -2,9 +2,14 @@ package com.cmc.recipe.presentation.ui.auth
 
 import android.app.Activity
 import android.content.Intent
+import android.graphics.Paint
+import android.os.Build
+import android.text.*
 import android.util.Log
+import android.widget.TextView
 import androidx.activity.addCallback
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.annotation.RequiresApi
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
@@ -17,6 +22,7 @@ import com.cmc.recipe.presentation.ui.MainActivity
 import com.cmc.recipe.presentation.ui.base.BaseFragment
 import com.cmc.recipe.presentation.viewmodel.AuthViewModel
 import com.cmc.recipe.presentation.viewmodel.GoogleViewModel
+import com.cmc.recipe.utils.FileDownloaderAndOpener
 import com.cmc.recipe.utils.NetworkState
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
@@ -43,9 +49,30 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(FragmentLoginBinding::i
         googleAuth = FirebaseAuth.getInstance()
         initListener()
 
+        showTerms()
+
         requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) {
             requireActivity().finish()
         }
+    }
+
+    private fun showTerms(){
+        binding.tvTerms1.paintFlags = binding.tvTerms1.paintFlags or Paint.UNDERLINE_TEXT_FLAG
+        binding.tvTerms2.paintFlags = binding.tvTerms2.paintFlags or Paint.UNDERLINE_TEXT_FLAG
+
+        binding.tvTerms1.setOnClickListener {
+            downloadFile()
+        }
+
+        binding.tvTerms2.setOnClickListener {
+            downloadFile()
+        }
+    }
+
+    private fun downloadFile(){
+        val url = "${BuildConfig.DOC_URL}"
+        val fileDownloaderAndOpener = FileDownloaderAndOpener(context!!, url)
+        fileDownloaderAndOpener.downloadAndOpenFile()
     }
 
     private fun initListener(){
