@@ -1,6 +1,8 @@
 package com.cmc.recipe.presentation.ui.search
 
 import android.util.Log
+import android.view.KeyEvent
+import android.view.inputmethod.EditorInfo
 import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.GridLayoutManager
@@ -21,7 +23,6 @@ import kotlinx.coroutines.Job
 class SearchShortsFragment : BaseFragment<FragmentSearchShortsBinding>(FragmentSearchShortsBinding::inflate) {
 
     private val searchViewModel : SearchViewModel by viewModels()
-    private var searchJob: Job? = null
     private lateinit var itemList:List<ShortsContent>
 
     override fun initFragment() {
@@ -31,20 +32,34 @@ class SearchShortsFragment : BaseFragment<FragmentSearchShortsBinding>(FragmentS
         binding.searchView.setText(keyword)
         requestRecipeList(keyword!!)
 
-        //뒤로가기 시 activity 삭제
-        requireActivity().onBackPressedDispatcher.addCallback(
-            viewLifecycleOwner,
-            object : OnBackPressedCallback(true) {
-                override fun handleOnBackPressed() {
-                    requireActivity().finish()
+        binding.searchView.setOnEditorActionListener{ text, actionId, event ->
+            if (actionId == EditorInfo.IME_ACTION_DONE || event.action == KeyEvent.ACTION_DOWN && event.keyCode == KeyEvent.KEYCODE_ENTER) {
+                if(binding.searchView.text.toString().isNotEmpty()){
+                    requestRecipeList("${binding.searchView.text}")
                 }
+                return@setOnEditorActionListener true
             }
-        )
+            return@setOnEditorActionListener false
+        }
+
+        //뒤로가기 시 activity 삭제
+//        requireActivity().onBackPressedDispatcher.addCallback(
+//            viewLifecycleOwner,
+//            object : OnBackPressedCallback(true) {
+//                override fun handleOnBackPressed() {
+//                    requireActivity().finish()
+//                }
+//            }
+//        )
+        //버튼 눌렀을 때 뒤로가기
+        binding.btnBack.setOnClickListener {
+            requireActivity().finish()
+        }
     }
 
     private fun requestRecipeList(keyword:String){
         launchWithLifecycle(lifecycle) {
-            searchViewModel.getSearchRecipe(keyword)
+            searchViewModel.getSearchShortform(keyword)
             searchViewModel.shortsResult.collect{
                 when(it){
                     is NetworkState.Success -> {
@@ -66,11 +81,6 @@ class SearchShortsFragment : BaseFragment<FragmentSearchShortsBinding>(FragmentS
                 }
             }
         }
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        searchJob?.cancel()
     }
 
     private fun recipeRecyclerview(){

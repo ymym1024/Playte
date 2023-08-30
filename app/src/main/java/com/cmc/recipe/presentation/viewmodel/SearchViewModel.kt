@@ -3,6 +3,7 @@ package com.cmc.recipe.presentation.viewmodel
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.cmc.recipe.data.model.ErrorMessage
 import com.cmc.recipe.data.model.RecipeItem
 import com.cmc.recipe.data.model.entity.RecipeEntity
 import com.cmc.recipe.data.model.entity.SearchEntity
@@ -12,6 +13,7 @@ import com.cmc.recipe.domain.usecase.AuthUseCase
 import com.cmc.recipe.domain.usecase.RecipeUseCase
 import com.cmc.recipe.domain.usecase.SearchUseCase
 import com.cmc.recipe.utils.NetworkState
+import com.google.gson.Gson
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.*
@@ -40,7 +42,13 @@ class SearchViewModel @Inject constructor(private val searchUseCase: SearchUseCa
             .catch { error ->
                 _recipeResult.value = NetworkState.Error(400,"${error.message}")
             }.collect { values ->
-                _recipeResult.value = values
+                if(values is NetworkState.Error){
+                    val msg = Gson().fromJson("${values.message}", ErrorMessage::class.java)
+                    _recipeResult.emit(NetworkState.Error(msg.code.toInt(),"${msg.message}"))
+                } else if (values is NetworkState.Success) {
+                    _recipeResult.value = values
+                }
+
             }
     }
 
@@ -50,7 +58,12 @@ class SearchViewModel @Inject constructor(private val searchUseCase: SearchUseCa
             .catch { error ->
                 _shortsResult.value = NetworkState.Error(400,"${error.message}")
             }.collect { values ->
-                _shortsResult.value = values
+                if(values is NetworkState.Error){
+                    val msg = Gson().fromJson("${values.message}", ErrorMessage::class.java)
+                    _shortsResult.emit(NetworkState.Error(msg.code.toInt(),"${msg.message}"))
+                } else if (values is NetworkState.Success) {
+                    _shortsResult.value = values
+                }
             }
     }
 

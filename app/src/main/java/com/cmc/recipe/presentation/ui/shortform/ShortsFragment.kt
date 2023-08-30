@@ -94,7 +94,6 @@ class ShortsFragment : BaseFragment<FragmentShortsBinding>(FragmentShortsBinding
 
     private fun movePage(current:String,destination:String,keyword:String?){
         binding.searchView.setText("")
-        requireActivity().finish()
         val intent = Intent(requireContext(), SearchActivity::class.java)
         intent.putExtra("startDestination", destination)
         intent.putExtra("currentDestination", current)
@@ -103,7 +102,6 @@ class ShortsFragment : BaseFragment<FragmentShortsBinding>(FragmentShortsBinding
     }
 
     private fun moveShortsPage(position:Int){
-        requireActivity().finish()
         val intent = Intent(requireContext(), ShortsDetailActivity::class.java)
         intent.putExtra("position",position)
         startActivity(intent)

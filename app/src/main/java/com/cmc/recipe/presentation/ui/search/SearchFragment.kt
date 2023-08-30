@@ -48,11 +48,16 @@ class SearchFragment : BaseFragment<FragmentSearchBinding>(FragmentSearchBinding
             var itemList = mutableListOf<String>()
             searchViewModel.recentKeywordResult.collect{ list ->
                 for(item in list) itemList.add(item.keyword)
-                Log.d("recentRecipeResult--2","${itemList}")
+
                 binding.rvRecent.adapter = adapter
                 binding.rvRecent.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL,false)
                 adapter.replaceData(itemList)
             }
+        }
+
+        //버튼 눌렀을 때 뒤로가기
+        binding.btnBack.setOnClickListener {
+            requireActivity().finish()
         }
 
         requestKeywordList()

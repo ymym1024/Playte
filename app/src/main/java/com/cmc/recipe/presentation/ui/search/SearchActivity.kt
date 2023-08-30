@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import androidx.navigation.NavController
+import androidx.navigation.NavOptions
 import androidx.navigation.fragment.NavHostFragment
 import com.cmc.recipe.R
 import com.cmc.recipe.databinding.ActivitySearchBinding
@@ -36,10 +37,8 @@ class SearchActivity : BaseActivity<ActivitySearchBinding>({ ActivitySearchBindi
         prevDestination = intent.getStringExtra("currentDestination")!!
         val keyword = intent.getStringExtra("keyword")
 
-        Log.d("key","${keyword?.isNullOrBlank()}")
 
         if(keyword?.isNullOrBlank()==null){
-            Log.d("key","여기호출")
             graph.setStartDestination(R.id.searchFragment)
             navController.graph = graph
 
@@ -50,17 +49,20 @@ class SearchActivity : BaseActivity<ActivitySearchBinding>({ ActivitySearchBindi
             if(startDestination == Constant.RECIPE){
                 graph.setStartDestination(R.id.searchRecipeFragment)
                 navController.graph = graph
-                navController.navigate(R.id.searchRecipeFragment,bundle)
+                val navOptions = NavOptions.Builder()
+                    .setLaunchSingleTop(true)  // 이미 스택에 해당 프래그먼트가 있다면 재사용
+                    .setPopUpTo(R.id.searchRecipeFragment, false) // 백스택에서 해당 프래그먼트 위로 모두 제거
+                    .build()
+                navController.navigate(R.id.searchRecipeFragment, bundle,navOptions)
             }else if(startDestination == Constant.SHORTS){
                 graph.setStartDestination(R.id.searchShortsFragment)
                 navController.graph = graph
-                navController.navigate(R.id.searchShortsFragment,bundle)
+                val navOptions = NavOptions.Builder()
+                    .setLaunchSingleTop(true)  // 이미 스택에 해당 프래그먼트가 있다면 재사용
+                    .setPopUpTo(R.id.searchShortsFragment, false) // 백스택에서 해당 프래그먼트 위로 모두 제거
+                    .build()
+                navController.navigate(R.id.searchShortsFragment, bundle,navOptions)
             }
         }
     }
-
-    override fun onSupportNavigateUp(): Boolean {
-        return navController.navigateUp() || super.onSupportNavigateUp()
-    }
-
 }
