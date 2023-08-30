@@ -11,6 +11,7 @@ import com.cmc.recipe.data.model.Product
 import com.cmc.recipe.data.model.response.*
 import com.cmc.recipe.databinding.FragmentRecipeDetailBinding
 import com.cmc.recipe.presentation.ui.base.BaseFragment
+import com.cmc.recipe.presentation.ui.base.OnClickListener
 import com.cmc.recipe.presentation.ui.common.RecipeSnackBar
 import com.cmc.recipe.presentation.ui.shortform.ShortsProductAdapter
 import com.cmc.recipe.presentation.ui.shortform.ShortsProductItemHolder
@@ -211,6 +212,12 @@ class RecipeDetailFragment : BaseFragment<FragmentRecipeDetailBinding>(FragmentR
 
     private fun initRecommendRV(recommendationRecipes: List<RecommendationRecipe>) {
         val adapter = RecipeRecommendAdapter()
+        adapter.setListener(object : OnClickListener{
+            override fun onMovePage(id: Int) {
+
+            }
+
+        })
         binding.rvRecommendRecipe.adapter = adapter
         binding.rvRecommendRecipe.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
         adapter.replaceData(recommendationRecipes)

@@ -1,6 +1,7 @@
 package com.cmc.recipe.presentation.ui.mypage
 
 
+import android.content.Intent
 import android.util.Log
 import android.view.Menu
 import android.view.MenuInflater
@@ -18,6 +19,7 @@ import com.cmc.recipe.data.model.response.RecommendationRecipe
 import com.cmc.recipe.databinding.FragmentMypageBinding
 import com.cmc.recipe.presentation.ui.base.BaseFragment
 import com.cmc.recipe.presentation.ui.base.OnClickListener
+import com.cmc.recipe.presentation.ui.recipe.RecipeActivity
 import com.cmc.recipe.presentation.ui.recipe.RecipeRecommendAdapter
 import com.cmc.recipe.presentation.viewmodel.*
 import com.cmc.recipe.utils.NetworkState
@@ -85,6 +87,12 @@ class MypageFragment : BaseFragment<FragmentMypageBinding>(FragmentMypageBinding
         findNavController().navigate(action)
     }
 
+    private fun moveDetailPage(id:Int){
+        val intent = Intent(requireContext(), RecipeActivity::class.java)
+        intent.putExtra("id", id)
+        startActivity(intent)
+    }
+
     private fun initMenu(){
         val menuHost: MenuHost = requireActivity()
         menuHost.addMenuProvider(object : MenuProvider {
@@ -107,6 +115,11 @@ class MypageFragment : BaseFragment<FragmentMypageBinding>(FragmentMypageBinding
 
     private fun recipeRecyclerview(){
         val adapter = RecipeRecommendAdapter()
+        adapter.setListener(object : OnClickListener{
+            override fun onMovePage(id: Int) {
+                moveDetailPage(id)
+            }
+        })
 
         launchWithLifecycle(lifecycle){
             recipeViewModel.loadRecentRecipes()
@@ -116,7 +129,6 @@ class MypageFragment : BaseFragment<FragmentMypageBinding>(FragmentMypageBinding
                 for (item in list){
                     itemList.add(item.toRecipe())
                 }
-                Log.d("recentRecipeResult--2","${itemList}")
                 binding.rvViewRecipe.adapter = adapter
                 binding.rvViewRecipe.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL,false)
                 adapter.replaceData(itemList)
