@@ -4,7 +4,7 @@ data class RecipeItem(
     val comment_count: Int,
     val cook_time:Int,
     val created_date: String,
-    val is_saved: Boolean,
+    var is_saved: Boolean,
     val nickname: String,
     val rating: Double,
     val recipe_id: Int,

@@ -32,6 +32,9 @@
         <action
             android:id="@+id/action_recipeMenuFragment_to_reviewRegisterActivity"
             app:destination="@id/reviewRegisterActivity" />
+        <argument
+            android:name="recipeImg"
+            app:argType="string" />
     </fragment>
     <activity
         android:id="@+id/imageReviewActivity"

@@ -89,7 +89,7 @@ class RecipeDetailFragment : BaseFragment<FragmentRecipeDetailBinding>(FragmentR
         binding.tvRecipeDate.text = data.created_date.parseAndFormatDate()
 
         // 상세정보 바인딩
-        binding.tvScore.text = "${data.rating}"
+        binding.tvScore.text = "${String.format("%.2f",data.rating)}"
         binding.tvPeople.text = "${data.serving_size}인분"
         binding.tvTime.text = "${data.cook_time}분"
 
@@ -100,13 +100,11 @@ class RecipeDetailFragment : BaseFragment<FragmentRecipeDetailBinding>(FragmentR
             showBottomSheet()
         }
         binding.btnReview.setOnClickListener {
-            val action = RecipeDetailFragmentDirections.actionRecipeDetailFragmentToRecipeMenuFragment(recipeId)
+            val action = RecipeDetailFragmentDirections.actionRecipeDetailFragmentToRecipeMenuFragment(recipeId,recipeImg)
             findNavController().navigate(action)
         }
 
         binding.btnWriteReview.setOnClickListener {
-//            val action = RecipeDetailFragmentDirections.actionRecipeDetailFragmentToReviewRegisterActivity(recipeId = recipeId, recipeImg = recipeImg)
-//            findNavController().navigate(action)
             val intent = Intent(requireContext(), ReviewRegisterActivity::class.java)
             intent.putExtra("recipeId", recipeId)
             intent.putExtra("recipeImg", recipeImg)

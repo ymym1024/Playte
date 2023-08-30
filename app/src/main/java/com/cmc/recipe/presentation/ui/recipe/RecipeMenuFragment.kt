@@ -18,7 +18,7 @@ class RecipeMenuFragment : BaseFragment<FragmentRecipeMenuBinding>(FragmentRecip
 
     override fun initFragment() {
         // id 전달 받기
-        val viewPager2Adapter = RecipeViewPager2Adapter(parentFragmentManager, lifecycle, args.recipeId)
+        val viewPager2Adapter = RecipeViewPager2Adapter(parentFragmentManager, lifecycle, args.recipeId,args.recipeImg)
         binding.viewPager.adapter = viewPager2Adapter
 
         TabLayoutMediator(binding.tabLayout, binding.viewPager) { tab, position ->
@@ -35,7 +35,8 @@ class RecipeMenuFragment : BaseFragment<FragmentRecipeMenuBinding>(FragmentRecip
 class RecipeViewPager2Adapter(
     fragmentManager: FragmentManager,
     lifecycle: Lifecycle,
-    private val recipeId: Int
+    private val recipeId: Int,
+    private val recipeImg: String,
 ) : FragmentStateAdapter(fragmentManager, lifecycle) {
     override fun getItemCount(): Int = 2
 
@@ -45,6 +46,7 @@ class RecipeViewPager2Adapter(
                 val fragment = RecipeMenuReviewFragment()
                 fragment.arguments = Bundle().apply {
                     putInt("recipeId", recipeId)
+                    putString("recipeImg", recipeImg)
                 }
                 fragment
             }

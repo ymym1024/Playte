@@ -9,6 +9,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.cmc.recipe.R
 import com.cmc.recipe.data.model.RecipeItem
+import com.cmc.recipe.data.model.response.CommentContent
 import com.cmc.recipe.databinding.FragmentRecipeMainBinding
 import com.cmc.recipe.presentation.ui.base.BaseFragment
 import com.cmc.recipe.presentation.ui.base.OnClickListener
@@ -25,6 +26,8 @@ class RecipeMainFragment : BaseFragment<FragmentRecipeMainBinding>(FragmentRecip
 
     private val recipeViewModel : RecipeViewModel by viewModels()
     private lateinit var itemList:List<RecipeItem>
+
+    private lateinit var recipeAdapter : RecipeListAdapter
 
 
     override fun initFragment() {
@@ -135,7 +138,7 @@ class RecipeMainFragment : BaseFragment<FragmentRecipeMainBinding>(FragmentRecip
         val adapter = RecipeListAdapter(clickListener)
         adapter.setListener(object :RecipeItemHolder.onActionListener{
             override fun action(item: RecipeItem) {
-                requestRecipeSave(item.recipe_id)
+                requestRecipeSaveOrUnSave(item.recipe_id)
             }
 
         })
@@ -151,7 +154,7 @@ class RecipeMainFragment : BaseFragment<FragmentRecipeMainBinding>(FragmentRecip
                     binding.btnNewest.isCheckable = true
                 }
                 R.id.btn_popular -> {
-                    val newList = itemList.sortedBy { it.rating }
+                    val newList = itemList.sortedByDescending { it.rating }
                     adapter.replaceData(newList)
                     binding.btnPopular.isCheckable = true
                 }
@@ -166,6 +169,21 @@ class RecipeMainFragment : BaseFragment<FragmentRecipeMainBinding>(FragmentRecip
 
     }
 
+    private fun findRecipeById(reviewId: Int): RecipeItem? {
+        return recipeAdapter.getData().find { it.recipe_id == reviewId }
+    }
+
+    private fun requestRecipeSaveOrUnSave(id: Int) {
+        val review = findRecipeById(id)
+        if (review != null) {
+            if (review.is_saved) {
+                requestRecipeUnSave(id)
+            } else {
+                requestRecipeSave(id)
+            }
+        }
+    }
+
     private fun requestRecipeSave(recipeId: Int) {
         recipeViewModel.postRecipesSave(recipeId)
         launchWithLifecycle(lifecycle) {
@@ -174,6 +192,39 @@ class RecipeMainFragment : BaseFragment<FragmentRecipeMainBinding>(FragmentRecip
                     is NetworkState.Success -> {
                         it.data?.let {data ->
                             if(data.code == "SUCCESS"){
+                                val item = findRecipeById(id)
+                                item?.is_saved = true
+                                recipeAdapter.notifyDataSetChanged()
+
+                                RecipeSnackBar(binding.rvRecipe,"레시피가 저장되었습니다!").show()
+                            }else{
+                                Log.d("data","${data.data}")
+                            }
+                        }
+                        recipeViewModel._recipeResult.value = NetworkState.Loading
+                    }
+                    is NetworkState.Error ->{
+                        showToastMessage(it.message.toString())
+                        recipeViewModel._recipeResult.value = NetworkState.Loading
+                    }
+                    else -> {}
+                }
+            }
+        }
+    }
+
+    private fun requestRecipeUnSave(recipeId: Int) {
+        recipeViewModel.postRecipesNotSave(recipeId)
+        launchWithLifecycle(lifecycle) {
+            recipeViewModel.recipeUnSaveResult.collect{
+                when(it){
+                    is NetworkState.Success -> {
+                        it.data?.let {data ->
+                            if(data.code == "SUCCESS"){
+                                val item = findRecipeById(id)
+                                item?.is_saved = false
+                                recipeAdapter.notifyDataSetChanged()
+
                                 RecipeSnackBar(binding.rvRecipe,"레시피가 저장되었습니다!").show()
                             }else{
                                 Log.d("data","${data.data}")
