@@ -45,7 +45,7 @@ class RecipeThemeFragment : BaseFragment<FragmentRecipeThemeBinding>(FragmentRec
     private fun requestRecipeList(theme: String?) {
         launchWithLifecycle(lifecycle) {
             recipeViewModel.getRecipeTheme(theme!!)
-            recipeViewModel.recipeResult.collect{
+            recipeViewModel.recipeThemeResult.collect{
                 when(it){
                     is NetworkState.Success -> {
                         it.data.let { data ->

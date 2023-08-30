@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.cmc.recipe.data.model.RecipeItem
 import com.cmc.recipe.data.model.entity.RecipeEntity
+import com.cmc.recipe.data.model.entity.ShortsEntity
 import com.cmc.recipe.data.model.response.*
 import com.cmc.recipe.data.source.remote.request.RequestNickname
 import com.cmc.recipe.data.source.remote.request.ReviewRequest
@@ -50,6 +51,10 @@ class ShortsViewModel @Inject constructor(private val shortsUseCase: ShortsUseCa
 
     var _noInterestResult : MutableSharedFlow<NetworkState<BaseResponse>> = MutableSharedFlow()
     var noInterestResult = _noInterestResult.asSharedFlow()
+
+    private val _recentShortsResult = MutableSharedFlow<List<ShortsEntity>>()
+    val recentShortsResult: Flow<List<ShortsEntity>>
+        get() = _recentShortsResult
 
     fun getRecipesShortform() = viewModelScope.launch {
         _recipeShortsResult.value = NetworkState.Loading
@@ -128,6 +133,20 @@ class ShortsViewModel @Inject constructor(private val shortsUseCase: ShortsUseCa
                 _noInterestResult.emit(NetworkState.Error(400,"${error.message}"))
             }.collect { values ->
                 _noInterestResult.emit(values)
+            }
+    }
+
+    //최근 본 레시피
+    fun insertRecentShorts(item:ShortsContent){
+        viewModelScope.launch (Dispatchers.IO){
+            shortsUseCase.insertRecentShorts(item)
+        }
+    }
+
+    fun loadRecentRecipes() = viewModelScope.launch {
+        shortsUseCase.loadRecentShorts()
+            .collect{ values ->
+                _recentShortsResult.emit(values)
             }
     }
 }
