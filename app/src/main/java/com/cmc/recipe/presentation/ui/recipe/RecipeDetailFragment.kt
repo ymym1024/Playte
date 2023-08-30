@@ -10,6 +10,7 @@ import com.cmc.recipe.data.model.Product
 import com.cmc.recipe.data.model.response.*
 import com.cmc.recipe.databinding.FragmentRecipeDetailBinding
 import com.cmc.recipe.presentation.ui.base.BaseFragment
+import com.cmc.recipe.presentation.ui.common.RecipeSnackBar
 import com.cmc.recipe.presentation.ui.shortform.ShortsProductAdapter
 import com.cmc.recipe.presentation.ui.shortform.ShortsProductItemHolder
 import com.cmc.recipe.presentation.viewmodel.RecipeViewModel
@@ -140,7 +141,37 @@ class RecipeDetailFragment : BaseFragment<FragmentRecipeDetailBinding>(FragmentR
     }
 
     private fun showBottomSheet(){
-        BottomSheetDetailDialog().show(fragmentManager!!, "RemoveBottomSheetFragment")
+        val dialog = BottomSheetDetailDialog("recipe")
+        dialog.setReportListener {   //신고하기
+            requestRecipeReport(recipeId)
+        }
+        dialog.show(fragmentManager!!, "RemoveBottomSheetFragment")
+    }
+
+    private fun requestRecipeReport(id:Int){
+        recipeViewModel.postRecipeReport(id)
+        launchWithLifecycle(lifecycle) {
+            recipeViewModel.recipeReportResult.collect{
+                when(it){
+                    is NetworkState.Success -> {
+                        it.data?.let {data ->
+                            if(data.code == "SUCCESS"){
+                                requireActivity().onBackPressed()
+                                RecipeSnackBar(binding.root,"신고가 접수되었습니다.").show()
+                            }else{
+                                Log.d("data","${data.data}")
+                            }
+                        }
+                        recipeViewModel._recipeResult.value = NetworkState.Loading
+                    }
+                    is NetworkState.Error ->{
+                        showToastMessage(it.message.toString())
+                        recipeViewModel._recipeResult.value = NetworkState.Loading
+                    }
+                    else -> {}
+                }
+            }
+        }
     }
 
     private fun initRecipeIngredientRV(itemList:List<RecipeIngredient>){

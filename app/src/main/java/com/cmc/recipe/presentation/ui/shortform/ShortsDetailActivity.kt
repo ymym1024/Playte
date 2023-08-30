@@ -160,7 +160,7 @@ class ShortsDetailActivity : AppCompatActivity() {
     }
 
     private fun showBottomSheet(){
-        val dialog = BottomSheetDetailDialog()
+        val dialog = BottomSheetDetailDialog("")
         dialog.setReportListener {   //신고하기
             requestReport(currentId)
         }
