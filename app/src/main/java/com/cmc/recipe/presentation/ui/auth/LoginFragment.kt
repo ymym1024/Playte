@@ -172,6 +172,7 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(FragmentLoginBinding::i
     private fun moveMainActivity() {
         val intent = Intent(activity, MainActivity::class.java)
         startActivity(intent)
+        activity!!.finish()
     }
 
     private fun saveTokens(accessToken: String, refreshToken: String) {
