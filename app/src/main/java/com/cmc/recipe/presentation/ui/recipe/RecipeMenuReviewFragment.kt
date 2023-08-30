@@ -2,7 +2,9 @@ package com.cmc.recipe.presentation.ui.recipe
 
 import android.content.Intent
 import android.util.Log
+import android.view.View
 import androidx.core.content.ContextCompat
+import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.DividerItemDecoration
@@ -36,13 +38,17 @@ import java.util.*
 class RecipeMenuReviewFragment : BaseFragment<FragmentRecipeMenuReviewBinding>(FragmentRecipeMenuReviewBinding::inflate) {
     private val recipeViewModel : RecipeViewModel by viewModels()
     private var recipeId: Int = 0
+    private var recipeImg : String = ""
+
     private lateinit var reviewAdapter : RecipeMenuReviewAdapter
     private lateinit var reviewItemList : ArrayList<ReviewContent>
 
     override fun initFragment() {
         arguments?.let {
             recipeId = it.getInt("recipeId", -1)
+            recipeImg = it.getString("recipeImg","")
         }
+
         requestScore(recipeId)
         requestReview(recipeId)
     }
@@ -55,7 +61,7 @@ class RecipeMenuReviewFragment : BaseFragment<FragmentRecipeMenuReviewBinding>(F
                     is NetworkState.Success -> {
                         it.data?.let { data ->
                             if (data.code == "SUCCESS") {
-                                binding.tvRating.text = "${data.data.totalRating}"
+                                binding.tvRating.text = "${String.format("%.2f",data.data.totalRating)}"
                                 binding.ratingbar.rating = data.data.totalRating.toFloat()
                                 initBarChart(binding.reviewChart)
                                 setChartData(binding.reviewChart, data.data)
@@ -105,6 +111,9 @@ class RecipeMenuReviewFragment : BaseFragment<FragmentRecipeMenuReviewBinding>(F
 
         val filteredImages: List<String> = data.content.filter { it.review_images.isNotEmpty() }.flatMap { it.review_images }
         initImageRV(filteredImages)
+        if(filteredImages.count()==0){
+            binding.btnImgReview.visibility = View.INVISIBLE
+        }
         binding.tvReviewImageCnt.text = "${filteredImages.count()}개"
         binding.tvReviewCount.text  = "${data.content.count()}개"
 
@@ -113,7 +122,10 @@ class RecipeMenuReviewFragment : BaseFragment<FragmentRecipeMenuReviewBinding>(F
         }
 
         binding.btnWriteReview.setOnClickListener {
-           // movePage(R.id.action_recipeMenuFragment_to_recipeReviewFragment)
+            val intent = Intent(requireContext(), ReviewRegisterActivity::class.java)
+            intent.putExtra("recipeId", recipeId)
+            intent.putExtra("recipeImg", recipeImg)
+            startActivity(intent)
         }
     }
 
@@ -163,6 +175,7 @@ class RecipeMenuReviewFragment : BaseFragment<FragmentRecipeMenuReviewBinding>(F
                                 // 리뷰 신고 시 해당 리뷰 안보이게
                                 reviewAdapter.removeItem(id)
                                 binding.tvReviewCount.text = "${reviewAdapter.itemCount}개"
+                                requestScore(recipeId)
                                 RecipeSnackBar(binding.btnWriteReview,"리뷰가 정상적으로 신고되었습니다").show()
                             }
                         }
@@ -249,21 +262,15 @@ class RecipeMenuReviewFragment : BaseFragment<FragmentRecipeMenuReviewBinding>(F
         barChart.legend.isEnabled = false
         barChart.setMaxVisibleValueCount(5)
 
-        val xLabels: MutableList<String> = ArrayList()
-
-        for (i in 6 downTo 1) {
-            xLabels.add("${i}점")
-        }
 
         // 바텀 좌표 값
         barChart.xAxis.run { // 아래 라벨 x축
-            isEnabled = true // 라벨 표시 설정
-            position = XAxis.XAxisPosition.BOTTOM // 라벨 위치 설정
-            setDrawGridLines(false) // 격자구조
-            granularity = 1f // 간격 설정
-            setDrawAxisLine(false) // 그림
-            textSize = 12f // 라벨 크기
-            valueFormatter = IndexAxisValueFormatter(xLabels) // 라벨 포맷
+            isEnabled = true
+            position = XAxis.XAxisPosition.BOTTOM // X축 라벨을 아래쪽에 표시
+            setDrawGridLines(false)
+            granularity = 1f
+            setDrawAxisLine(false)
+            textSize = 12f
             textColor = ContextCompat.getColor(requireContext(), R.color.primary_color)
         }
 
@@ -288,11 +295,12 @@ class RecipeMenuReviewFragment : BaseFragment<FragmentRecipeMenuReviewBinding>(F
 
         val values: ArrayList<BarEntry> = ArrayList()
 
-        values.add(BarEntry(5f, data.fivePoint.toFloat()))
-        values.add(BarEntry(4f, data.fourPoint.toFloat()))
-        values.add(BarEntry(3f, data.threePoint.toFloat()))
-        values.add(BarEntry(2f, data.twoPoint.toFloat()))
-        values.add(BarEntry(1f, data.onePoint.toFloat()))
+        values.add(BarEntry(5f, data.onePoint))
+        values.add(BarEntry(4f, data.twoPoint))
+        values.add(BarEntry(3f, data.threePoint))
+        values.add(BarEntry(2f, data.fourPoint))
+        values.add(BarEntry(1f, data.fivePoint))
+
 
         // BarDataSet 설정
         val set2 = BarDataSet(values, "")
