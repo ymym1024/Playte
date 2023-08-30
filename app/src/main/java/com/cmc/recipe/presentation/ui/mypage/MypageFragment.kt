@@ -117,7 +117,7 @@ class MypageFragment : BaseFragment<FragmentMypageBinding>(FragmentMypageBinding
         val adapter = RecipeRecommendAdapter()
         adapter.setListener(object : OnClickListener{
             override fun onMovePage(id: Int) {
-                moveDetailPage(id)
+             //   moveDetailPage(id)
             }
         })
 
