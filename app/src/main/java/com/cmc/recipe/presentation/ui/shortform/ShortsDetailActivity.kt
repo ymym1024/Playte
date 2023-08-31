@@ -13,6 +13,7 @@ import androidx.lifecycle.repeatOnLifecycle
 import androidx.viewpager2.widget.ViewPager2
 import com.cmc.recipe.R
 import com.cmc.recipe.data.model.ExoPlayerItem
+import com.cmc.recipe.data.model.ShortsMapper.toContent
 import com.cmc.recipe.data.model.response.CommentContent
 import com.cmc.recipe.data.model.response.ReviewContent
 import com.cmc.recipe.data.model.response.ShortsContent
@@ -58,9 +59,14 @@ class ShortsDetailActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         //position 전달 받음
-        currentPosition = intent.getIntExtra("position",0)
+        if(intent.hasExtra("detailId")){
+            currentPosition = intent.getIntExtra("detailId",0)
+            requestRecipeDetail(currentPosition)
+        }else{
+            currentPosition = intent.getIntExtra("position",0)
+            requestRecipeList()
+        }
 
-        requestRecipeList()
         initMenu()
     }
 
@@ -117,6 +123,32 @@ class ShortsDetailActivity : AppCompatActivity() {
                                 if (data.code == "SUCCESS") {
                                     itemSize = response.data.data.content.size
                                     initVideo(response.data.data.content as ArrayList<ShortsContent>)
+                                }
+                            }
+                            shortsViewModel._recipeShortsResult.value = NetworkState.Loading
+                        }
+                        is NetworkState.Error -> {
+                            shortsViewModel._recipeShortsResult.value = NetworkState.Loading
+                        }
+                        else -> {}
+                    }
+                }
+            }
+        }
+    }
+
+    private fun requestRecipeDetail(id:Int) {
+        shortsViewModel.getRecipesShortformDetail(id)
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                shortsViewModel.recipeShortsDetailResult.collect { response ->
+                    when (response) {
+                        is NetworkState.Success -> {
+                            response.data?.let { data ->
+                                if (data.code == "SUCCESS") {
+                                    itemSize = 1
+                                    val itemList = arrayListOf(response.data.data.toContent())
+                                    initVideo(itemList)
                                 }
                             }
                             shortsViewModel._recipeShortsResult.value = NetworkState.Loading

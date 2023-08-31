@@ -1,5 +1,6 @@
 package com.cmc.recipe.presentation.ui.search
 
+import android.content.Intent
 import android.util.Log
 import android.view.KeyEvent
 import android.view.inputmethod.EditorInfo
@@ -14,7 +15,9 @@ import com.cmc.recipe.data.model.response.ShortsData
 import com.cmc.recipe.databinding.FragmentSearchShortsBinding
 import com.cmc.recipe.presentation.ui.base.BaseFragment
 import com.cmc.recipe.presentation.ui.base.OnClickListener
+import com.cmc.recipe.presentation.ui.shortform.ShortsDetailActivity
 import com.cmc.recipe.presentation.viewmodel.SearchViewModel
+import com.cmc.recipe.presentation.viewmodel.ShortsViewModel
 import com.cmc.recipe.utils.NetworkState
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Job
@@ -23,6 +26,7 @@ import kotlinx.coroutines.Job
 class SearchShortsFragment : BaseFragment<FragmentSearchShortsBinding>(FragmentSearchShortsBinding::inflate) {
 
     private val searchViewModel : SearchViewModel by viewModels()
+    private val shortsViewModel : ShortsViewModel by viewModels()
     private lateinit var itemList:List<ShortsContent>
 
     override fun initFragment() {
@@ -57,6 +61,13 @@ class SearchShortsFragment : BaseFragment<FragmentSearchShortsBinding>(FragmentS
         }
     }
 
+    private fun moveShortsPage(position:Int){
+        shortsViewModel.insertRecentShorts(itemList[position]!!)
+        val intent = Intent(requireContext(), ShortsDetailActivity::class.java)
+        intent.putExtra("detailId",position)
+        startActivity(intent)
+    }
+
     private fun requestRecipeList(keyword:String){
         launchWithLifecycle(lifecycle) {
             searchViewModel.getSearchShortform(keyword)
@@ -86,7 +97,7 @@ class SearchShortsFragment : BaseFragment<FragmentSearchShortsBinding>(FragmentS
     private fun recipeRecyclerview(){
         val clickListener = object : OnClickListener {
             override fun onMovePage(id: Int) {
-                // findNavController().navigate(R.id.action_recipeMainFragment_to_recipeDetailFragment)
+                moveShortsPage(id)
             }
         }
 
