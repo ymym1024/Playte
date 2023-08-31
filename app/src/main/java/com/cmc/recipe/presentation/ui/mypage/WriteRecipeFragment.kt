@@ -1,5 +1,6 @@
 package com.cmc.recipe.presentation.ui.mypage
 
+import android.content.Intent
 import android.util.Log
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
@@ -9,6 +10,7 @@ import com.cmc.recipe.databinding.FragmentWriteRecipeBinding
 import com.cmc.recipe.presentation.ui.base.BaseFragment
 import com.cmc.recipe.presentation.ui.base.OnClickListener
 import com.cmc.recipe.presentation.ui.common.CustomBottomSheetFragment
+import com.cmc.recipe.presentation.ui.recipe.RecipeActivity
 import com.cmc.recipe.presentation.ui.recipe.RecipeItemHolder
 import com.cmc.recipe.presentation.ui.recipe.RecipeListAdapter
 import com.cmc.recipe.presentation.viewmodel.MyPageViewModel
@@ -86,7 +88,7 @@ class WriteRecipeFragment : BaseFragment<FragmentWriteRecipeBinding>(FragmentWri
     private fun recipeRecyclerview(itemList:ArrayList<RecipeItem>){
         val clickListener = object : OnClickListener {
             override fun onMovePage(id: Int) {
-
+                moveDetailPage(id)
             }
         }
 
@@ -105,6 +107,12 @@ class WriteRecipeFragment : BaseFragment<FragmentWriteRecipeBinding>(FragmentWri
         binding.rvRecipe.adapter = adapter
         binding.rvRecipe.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
         adapter.replaceData(itemList)
+    }
+
+    private fun moveDetailPage(id:Int){
+        val intent = Intent(requireContext(), RecipeActivity::class.java)
+        intent.putExtra("id", id)
+        startActivity(intent)
     }
 
     fun CustomBottomSheetFragment.setItemToDelete(item:RecipeItem) {

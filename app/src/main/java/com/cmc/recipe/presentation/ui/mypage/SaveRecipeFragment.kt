@@ -1,5 +1,6 @@
 package com.cmc.recipe.presentation.ui.mypage
 
+import android.content.Intent
 import android.util.Log
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -9,6 +10,7 @@ import com.cmc.recipe.presentation.ui.base.BaseFragment
 import com.cmc.recipe.presentation.ui.base.OnClickListener
 import com.cmc.recipe.presentation.ui.common.CustomBottomSheetFragment
 import com.cmc.recipe.presentation.ui.common.RecipeSnackBar
+import com.cmc.recipe.presentation.ui.recipe.RecipeActivity
 import com.cmc.recipe.presentation.ui.recipe.RecipeItemHolder
 import com.cmc.recipe.presentation.ui.recipe.RecipeListAdapter
 import com.cmc.recipe.presentation.viewmodel.MyPageViewModel
@@ -88,6 +90,7 @@ class SaveRecipeFragment : BaseFragment<FragmentSaveRecipeBinding>(FragmentSaveR
         val clickListener = object : OnClickListener {
             override fun onMovePage(id: Int) {
                 // 페이지 이동 구현
+                moveDetailPage(id)
             }
         }
 
@@ -101,5 +104,11 @@ class SaveRecipeFragment : BaseFragment<FragmentSaveRecipeBinding>(FragmentSaveR
         binding.rvRecipe.adapter = adapter
         binding.rvRecipe.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
         adapter.replaceData(itemList)
+    }
+
+    private fun moveDetailPage(id:Int){
+        val intent = Intent(requireContext(), RecipeActivity::class.java)
+        intent.putExtra("id", id)
+        startActivity(intent)
     }
 }
