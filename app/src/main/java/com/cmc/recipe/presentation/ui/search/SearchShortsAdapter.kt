@@ -31,6 +31,10 @@ class SearchShortsItemHolder(viewBinding: ItemSearchShortsBinding, val clickList
             view.tvShortsTime.text = "${item?.video_time}"
             view.tvShortsNick.text = "${item?.writtenBy}"
             view.tvShortsTitle.text = "${item?.shortform_name}"
+
+            view.recipeItem.setOnClickListener {
+                clickListener.onMovePage(item.shortform_id)
+            }
         }
     }
 }

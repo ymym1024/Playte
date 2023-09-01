@@ -37,6 +37,10 @@ class MypageShortsItemHolder(viewBinding: ItemMypageShortsBinding, val clickList
         binding.let { view->
             view.ivShortsThumbnail.loadImagesWithGlideRound(item?.recipe_thumbnail_img!!,20)
             view.tvShortsNick.text = "${item?.shortform_name}"
+
+            view.shortsItem.setOnClickListener {
+                clickListener.onMovePage(item.shorts_id)
+            }
         }
     }
 }
