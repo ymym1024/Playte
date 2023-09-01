@@ -21,6 +21,7 @@ import com.cmc.recipe.presentation.ui.base.BaseFragment
 import com.cmc.recipe.presentation.ui.base.OnClickListener
 import com.cmc.recipe.presentation.ui.recipe.RecipeActivity
 import com.cmc.recipe.presentation.ui.recipe.RecipeRecommendAdapter
+import com.cmc.recipe.presentation.ui.shortform.ShortsDetailActivity
 import com.cmc.recipe.presentation.viewmodel.*
 import com.cmc.recipe.utils.NetworkState
 import dagger.hilt.android.AndroidEntryPoint
@@ -117,7 +118,7 @@ class MypageFragment : BaseFragment<FragmentMypageBinding>(FragmentMypageBinding
         val adapter = RecipeRecommendAdapter()
         adapter.setListener(object : OnClickListener{
             override fun onMovePage(id: Int) {
-             //   moveDetailPage(id)
+                moveDetailPage(id)
             }
         })
 
@@ -140,7 +141,7 @@ class MypageFragment : BaseFragment<FragmentMypageBinding>(FragmentMypageBinding
         val adapter = MypageShortsAdapter()
         adapter.setListener(object : OnClickListener{
             override fun onMovePage(id: Int) {
-
+                moveShortsPage(id)
             }
 
         })
@@ -159,6 +160,12 @@ class MypageFragment : BaseFragment<FragmentMypageBinding>(FragmentMypageBinding
                 adapter.replaceData(itemList)
             }
         }
+    }
+
+    private fun moveShortsPage(position:Int){
+        val intent = Intent(requireContext(), ShortsDetailActivity::class.java)
+        intent.putExtra("detailId",position)
+        startActivity(intent)
     }
 
 }

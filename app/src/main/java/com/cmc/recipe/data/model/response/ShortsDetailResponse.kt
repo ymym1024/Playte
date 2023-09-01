@@ -20,3 +20,4 @@ data class ShortsDetailData(
     val video_url: String,
     val writtenby: String
 )
+

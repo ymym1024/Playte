@@ -1,5 +1,6 @@
 package com.cmc.recipe.presentation.ui.search
 
+import android.content.Intent
 import android.util.Log
 import android.view.KeyEvent
 import android.view.inputmethod.EditorInfo
@@ -27,6 +28,7 @@ import kotlinx.coroutines.*
 class SearchRecipeFragment : BaseFragment<FragmentSearchRecipeBinding>(FragmentSearchRecipeBinding::inflate) {
 
     private val searchViewModel : SearchViewModel by viewModels()
+    private val recipeViewModel : RecipeViewModel by viewModels()
     private lateinit var itemList:List<RecipeItem>
 
     override fun initFragment() {
@@ -62,6 +64,10 @@ class SearchRecipeFragment : BaseFragment<FragmentSearchRecipeBinding>(FragmentS
         }
     }
 
+    private fun saveLocalDB(id:Int){
+        val item = itemList.find { it.recipe_id == id }
+        recipeViewModel.insertRecentRecipe(item!!)
+    }
 
     private fun requestRecipeList(keyword:String){
         launchWithLifecycle(lifecycle) {
@@ -90,7 +96,8 @@ class SearchRecipeFragment : BaseFragment<FragmentSearchRecipeBinding>(FragmentS
     private fun recipeRecyclerview(){
         val clickListener = object : OnClickListener {
             override fun onMovePage(id: Int) {
-               // findNavController().navigate(R.id.action_recipeMainFragment_to_recipeDetailFragment)
+                moveDetailPage(id)
+                saveLocalDB(id)
             }
         }
 
@@ -124,6 +131,12 @@ class SearchRecipeFragment : BaseFragment<FragmentSearchRecipeBinding>(FragmentS
                 }
             }
         }
+    }
+
+    private fun moveDetailPage(id:Int){
+        val intent = Intent(requireContext(), RecipeActivity::class.java)
+        intent.putExtra("id", id)
+        startActivity(intent)
     }
 
 }
