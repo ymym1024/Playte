@@ -34,6 +34,9 @@ interface RecipeService {
     @GET("/api/v1/recipes/recipe/{recipe-id}/report")
     suspend fun postRecipeReport(@Path("recipe-id")id:Int) : Response<BaseResponse>
 
+    @GET("/api/v1/recipes/recipe/not-interest/{recipe-id}")
+    suspend fun getNoInterestRecipe(@Path("recipe-id")id:Int) : Response<BaseResponse>
+
     //레시피 리뷰
     @GET("/api/v1/reviews/recipe/{recipe-id}")
     suspend fun getRecipesReview(@Path("recipe-id")id:Int) : Response<ReviewResponse>

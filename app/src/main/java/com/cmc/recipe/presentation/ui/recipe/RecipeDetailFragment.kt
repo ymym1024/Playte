@@ -150,9 +150,12 @@ class RecipeDetailFragment : BaseFragment<FragmentRecipeDetailBinding>(FragmentR
     }
 
     private fun showBottomSheet(){
-        val dialog = BottomSheetDetailDialog("recipe")
+        val dialog = BottomSheetDetailDialog()
         dialog.setReportListener {   //신고하기
             requestRecipeReport(recipeId)
+        }
+        dialog.setNoshowListener {
+            requestRecipeNoInterest(recipeId)
         }
         dialog.show(fragmentManager!!, "RemoveBottomSheetFragment")
     }
@@ -183,6 +186,30 @@ class RecipeDetailFragment : BaseFragment<FragmentRecipeDetailBinding>(FragmentR
         }
     }
 
+
+    private fun requestRecipeNoInterest(id:Int){
+        recipeViewModel.getNoInterestRecipe(id)
+        launchWithLifecycle(lifecycle) {
+            recipeViewModel.recipeNoInterestResult.collect{
+                when(it){
+                    is NetworkState.Success -> {
+                        it.data?.let {data ->
+                            if(data.code == "SUCCESS"){
+                                requireActivity().onBackPressed()
+                                RecipeSnackBar(binding.root,"해당 레시피는 앞으로 추천되지 않습니다.").show()
+                            }else{
+                                Log.d("data","${data.data}")
+                            }
+                        }
+                    }
+                    is NetworkState.Error ->{
+                        showToastMessage(it.message.toString())
+                    }
+                    else -> {}
+                }
+            }
+        }
+    }
 
     private fun requestRecipeSaveOrUnSave(id: Int) {
         if (recipeData != null) {

@@ -68,6 +68,9 @@ class RecipeViewModel @Inject constructor(private val recipeUseCase: RecipeUseCa
     var _recipeReportResult : MutableSharedFlow<NetworkState<BaseResponse>> = MutableSharedFlow()
     var recipeReportResult = _recipeReportResult.asSharedFlow()
 
+    var _recipeNoInterestResult : MutableSharedFlow<NetworkState<BaseResponse>> = MutableSharedFlow()
+    var recipeNoInterestResult = _recipeNoInterestResult.asSharedFlow()
+
     //최근 본 레시피
     private val _recentRecipeResult = MutableSharedFlow<List<RecipeEntity>>()
     val recentRecipeResult: Flow<List<RecipeEntity>>
@@ -229,6 +232,16 @@ class RecipeViewModel @Inject constructor(private val recipeUseCase: RecipeUseCa
                 _recipeReportResult.emit(NetworkState.Error(400,"${error.message}"))
             }.collect { values ->
                 _recipeReportResult.emit(values)
+            }
+    }
+
+    fun getNoInterestRecipe(id:Int) = viewModelScope.launch {
+        _recipeNoInterestResult.emit(NetworkState.Loading)
+        recipeUseCase.getNoInterestRecipe(id)
+            .catch { error ->
+                _recipeNoInterestResult.emit(NetworkState.Error(400,"${error.message}"))
+            }.collect { values ->
+                _recipeNoInterestResult.emit(values)
             }
     }
 

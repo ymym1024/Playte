@@ -10,7 +10,7 @@ import com.cmc.recipe.R
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 
 
-class BottomSheetDetailDialog(private val type:String) : BottomSheetDialogFragment() {
+class BottomSheetDetailDialog() : BottomSheetDialogFragment() {
 
     private var reportListener: (() -> Unit)? = null
     private var noshowListener: (() -> Unit)? = null
@@ -32,10 +32,6 @@ class BottomSheetDetailDialog(private val type:String) : BottomSheetDialogFragme
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val noFavoriteButton: ConstraintLayout = view.findViewById(R.id.btn_no_favorite)
-
-        if(type == "recipe"){
-            noFavoriteButton.visibility = View.GONE
-        }
 
         noFavoriteButton.setOnClickListener {
             noshowListener?.invoke()
