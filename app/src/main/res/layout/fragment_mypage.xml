@@ -40,11 +40,11 @@
         android:id="@+id/tv_email"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="22dp"
-        android:layout_marginTop="10dp"
+        android:layout_marginStart="7dp"
+        android:layout_marginTop="9dp"
         android:text="       "
         android:textFontWeight="400"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/imageView18"
         app:layout_constraintTop_toBottomOf="@+id/tv_nick" />
 
     <LinearLayout
@@ -186,5 +186,15 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView42" />
+
+    <ImageView
+        android:id="@+id/imageView18"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="9dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tv_nick"
+        app:srcCompat="@drawable/ic_google_mini" />
 </androidx.constraintlayout.widget.ConstraintLayout>
 </ScrollView>
