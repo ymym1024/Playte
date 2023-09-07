@@ -32,6 +32,8 @@ class RecipeUseCase @Inject constructor(
 
     fun postRecipeReport(id:Int)  = repository.postRecipeReport(id)
 
+    fun getNoInterestRecipe(id:Int)  = repository.getNoInterestRecipe(id)
+
     // 리뷰
     fun getRecipesReview(id:Int) = repository.getRecipesReview(id)
 
