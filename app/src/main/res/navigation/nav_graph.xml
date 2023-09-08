@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/shortsFragment">
+
+    <fragment
+        android:id="@+id/uploadFragment"
+        android:name="com.cmc.recipe.presentation.ui.upload.UploadFragment"
+        android:label=""
+        tools:layout="@layout/fragment_upload"/>
+
+    <fragment
+        android:id="@+id/recipeMainFragment"
+        android:name="com.cmc.recipe.presentation.ui.recipe.RecipeMainFragment"
+        android:label="@string/recipe"
+        tools:layout="@layout/fragment_recipe_main" >
+        <action
+            android:id="@+id/action_recipeMainFragment_to_recipeActivity"
+            app:destination="@id/recipeActivity" />
+        <action
+            android:id="@+id/action_recipeMainFragment_to_searchRecipeFragment"
+            app:destination="@id/searchRecipeFragment" />
+        <argument
+            android:name="theme"
+            app:argType="string" />
+    </fragment>
+
+    <activity
+        android:id="@+id/recipeActivity"
+        android:name="com.cmc.recipe.presentation.ui.recipe.RecipeActivity"
+        android:label="recipeActivity"
+        tools:layout="@layout/activity_recipe">
+        <argument
+            android:name="theme"
+            app:argType="string"
+            app:nullable="true"
+            android:defaultValue=""/>
+    </activity>
+    <fragment
+        android:id="@+id/shortsFragment"
+        android:name="com.cmc.recipe.presentation.ui.shortform.ShortsFragment"
+        android:label="@string/shortform"
+        tools:layout="@layout/fragment_shorts" >
+        <action
+            android:id="@+id/action_shortsFragment_to_shortsDetailActivity"
+            app:destination="@id/shortsDetailActivity" />
+        <action
+            android:id="@+id/action_shortsFragment_to_searchShortsFragment"
+            app:destination="@id/searchShortsFragment" />
+    </fragment>
+    <activity
+        android:id="@+id/shortsDetailActivity"
+        android:name="com.cmc.recipe.presentation.ui.shortform.ShortsDetailActivity"
+        android:label="activity_shorts_detail"
+        tools:layout="@layout/activity_shorts_detail" >
+        <argument
+            android:name="id"
+            app:argType="integer"
+            android:defaultValue="0" />
+    </activity>
+    <fragment
+        android:id="@+id/mypageFragment"
+        android:name="com.cmc.recipe.presentation.ui.mypage.MypageFragment"
+        android:label="MypageFragment" >
+        <action
+            android:id="@+id/action_mypageFragment_to_mypageActivity"
+            app:destination="@id/mypageActivity" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/searchRecipeFragment"
+        android:name="com.cmc.recipe.presentation.ui.search.SearchRecipeFragment"
+        android:label="fragment_search_recipe"
+        tools:layout="@layout/fragment_search_recipe" />
+    <fragment
+        android:id="@+id/searchShortsFragment"
+        android:name="com.cmc.recipe.presentation.ui.search.SearchShortsFragment"
+        android:label="fragment_search_shorts"
+        tools:layout="@layout/fragment_search_shorts" />
+    <activity
+        android:id="@+id/mypageActivity"
+        android:name="com.cmc.recipe.presentation.ui.mypage.MypageActivity"
+        android:label="activity_mypage"
+        tools:layout="@layout/activity_mypage" >
+        <argument
+            android:name="destination"
+            app:argType="string"
+            android:defaultValue="writeRecipeFragment" />
+    </activity>
+</navigation>

@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_recipe_graph"
+    app:startDestination="@id/recipeDetailFragment">
+
+    <fragment
+        android:id="@+id/recipeDetailFragment"
+        android:name="com.cmc.recipe.presentation.ui.recipe.RecipeDetailFragment"
+        android:label="토마토어쩌고"
+        tools:layout="@layout/fragment_recipe_detail" >
+        <action
+            android:id="@+id/action_recipeDetailFragment_to_recipeMenuFragment"
+            app:destination="@id/recipeMenuFragment" />
+        <action
+            android:id="@+id/action_recipeDetailFragment_to_reviewRegisterActivity"
+            app:destination="@id/reviewRegisterActivity" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/recipeMenuFragment"
+        android:name="com.cmc.recipe.presentation.ui.recipe.RecipeMenuFragment"
+        android:label="@string/recipe_review"
+        tools:layout="@layout/fragment_recipe_menu" >
+        <argument
+            android:name="recipeId"
+            app:argType="integer" />
+        <action
+            android:id="@+id/action_recipeMenuFragment_to_imageReviewActivity"
+            app:destination="@id/imageReviewActivity" />
+        <action
+            android:id="@+id/action_recipeMenuFragment_to_reviewRegisterActivity"
+            app:destination="@id/reviewRegisterActivity" />
+        <argument
+            android:name="recipeImg"
+            app:argType="string" />
+    </fragment>
+    <activity
+        android:id="@+id/imageReviewActivity"
+        android:name="com.cmc.recipe.presentation.ui.recipe.ImageReviewActivity"
+        android:label="activity_image_review"
+        tools:layout="@layout/activity_image_review" />
+    <fragment
+        android:id="@+id/recipeRegisterFragment"
+        android:name="com.cmc.recipe.presentation.ui.upload.UploadRecipeFragment"
+        android:label="fragment_recipe_register"
+        tools:layout="@layout/fragment_upload_recipe" />
+
+    <fragment
+        android:id="@+id/recipeThemeFragment"
+        android:name="com.cmc.recipe.presentation.ui.recipe.RecipeThemeFragment"
+        android:label=""
+        tools:layout="@layout/fragment_recipe_theme" >
+        <action
+            android:id="@+id/action_recipeThemeFragment_to_recipeDetailFragment"
+            app:destination="@id/recipeDetailFragment" />
+    </fragment>
+    <activity
+        android:id="@+id/reviewRegisterActivity"
+        android:name="com.cmc.recipe.presentation.ui.recipe.ReviewRegisterActivity"
+        android:label="activity_review_register"
+        tools:layout="@layout/activity_review_register" >
+        <argument
+            android:name="recipeId"
+            app:argType="integer"
+            android:defaultValue="0" />
+        <argument
+            android:name="recipeImg"
+            app:argType="string" />
+    </activity>
+</navigation>

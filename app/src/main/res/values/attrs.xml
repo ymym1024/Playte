@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="RecommendThemeButton">
+        <attr name="borderColor" format="reference|color" />
+        <attr name="backgroundColor" format="reference|color" />
+        <attr name="bgTitle" format="reference|string"/>
+        <attr name="bgImg" format="reference|integer"/>
+    </declare-styleable>
+    <declare-styleable name="CustomEditText">
+        <attr name="hint" format="reference|string" />
+        <attr name="maxLength" format="reference|integer" />
+    </declare-styleable>
+    <declare-styleable name="RoundedBarChart">
+        <attr name="radius" format="dimension" />
+    </declare-styleable>
+</resources>

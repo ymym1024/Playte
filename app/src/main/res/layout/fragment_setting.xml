@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    tools:context=".presentation.ui.mypage.SettingFragment">
+
+
+    <LinearLayout
+        android:id="@+id/menu_nick"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="19dp">
+
+        <TextView
+            android:id="@+id/textView50"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="16sp"
+            android:layout_weight="1"
+            android:text="@string/mypage_setting_nick" />
+
+        <TextView
+            android:id="@+id/tv_nick"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="16sp" />
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/menu_info"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="16sp"
+        android:padding="19dp"
+        android:text="@string/mypage_setting_info" />
+
+    <TextView
+        android:id="@+id/menu_terms"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="16sp"
+        android:layout_weight="1"
+        android:padding="19dp"
+        android:text="@string/mypage_setting_terms_of_use" />
+
+    <TextView
+        android:id="@+id/menu_qna"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="16sp"
+        android:layout_weight="1"
+        android:padding="19dp"
+        android:text="@string/mypage_setting_qna" />
+
+    <TextView
+        android:id="@+id/menu_logout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="16sp"
+        android:layout_weight="1"
+        android:padding="19dp"
+        android:textColor="@color/primary_color"
+        android:text="@string/mypage_setting_logout" />
+
+    <TextView
+        android:id="@+id/menu_withdrawal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:textSize="16sp"
+        android:padding="19dp"
+        android:textColor="@color/gray_13"
+        android:text="@string/mypage_setting_withdrawal" />
+</LinearLayout>
