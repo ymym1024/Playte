@@ -12,6 +12,7 @@ import com.cmc.recipe.databinding.ItemShortsProductBinding
 import com.cmc.recipe.presentation.ui.base.BaseAdapter
 import com.cmc.recipe.presentation.ui.base.BaseHolder
 import com.cmc.recipe.utils.loadImagesWithGlideRound
+import com.cmc.recipe.utils.toCurrencyFormat
 
 class ShortsProductAdapter:
     BaseAdapter<Product, ItemShortsProductBinding, ShortsProductItemHolder>() {
@@ -32,7 +33,7 @@ class ShortsProductItemHolder(viewBinding: ItemShortsProductBinding):
     override fun bind(binding: ItemShortsProductBinding, item: Product?) {
         binding.ivProductMain.loadImagesWithGlideRound(item?.image,8)
         binding.tvProductName.text = item?.name
-        binding.tvProductPrice.text = item?.price.toString()
+        binding.tvProductPrice.text = "${item?.price?.toCurrencyFormat()} ~"
 
         binding.product.setOnClickListener {
             if (isCoupangAppInstalled()) {

@@ -26,6 +26,7 @@ import com.bumptech.glide.load.resource.bitmap.CenterCrop
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.cmc.recipe.R
 import com.cmc.recipe.presentation.ui.common.CustomBottomSheetFragment
+import java.text.NumberFormat
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -210,4 +211,9 @@ fun Context.highlightText(full: String, highlight: String): CharSequence {
         )
     }
     return spannableString
+}
+
+fun Int.toCurrencyFormat(): String {
+    val formatter = NumberFormat.getInstance(Locale.KOREA)
+    return "₩ ${formatter.format(this)}"
 }
