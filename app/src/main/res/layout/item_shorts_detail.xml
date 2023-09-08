@@ -164,7 +164,7 @@
 
             <TextView
                 android:id="@+id/tv_short_content"
-                android:layout_width="match_parent"
+                android:layout_width="250dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:ellipsize="end"
@@ -172,13 +172,12 @@
                 android:text="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed faucibus mauris vel nisi tincidunt, a interdum dui volutpat. Vivamus hendrerit tristique libero, id suscipit ex gravida nec. Suspendisse potenti. Nullam tincidunt justo sed turpis feugiat, in pulvinar quam facilisis. Donec id libero arcu. In id risus quis velit bibendum ullamcorper ut vel nulla. Nulla facilisi. Sed interdum urna a nunc hendrerit, in mattis nisl tincidunt. Aliquam malesuada quam nec finibus fermentum. Pellentesque facilisis lacinia est, eget cursus nunc venenatis vel. Sed varius eros non mi blandit, vel dictum purus varius. Fusce nec ex sit amet nunc fermentum aliquet."
                 android:textColor="@color/white"
                 android:textSize="14sp" />
-
             <TextView
-                android:id="@+id/tv_showMore"
+                android:id="@+id/view_more"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="bottom"
-                android:text=""
+                android:text="더보기"
+                android:visibility="gone"
                 android:textColor="@color/white"
                 android:textSize="14sp" />
         </LinearLayout>

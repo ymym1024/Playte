@@ -32,10 +32,10 @@ class RecipeOrderItemHolder(viewBinding: ItemRecipeOrderBinding):
                     view.ivThumbnail.loadImagesWithGlideRound(order.stage_image_url,8)
                 }
 
-                view.tvOrder.text = if (position < 10) {
-                    String.format("%02d", position)
+                view.tvOrder.text = if (position+1 < 10) {
+                    String.format("%02d", position+1)
                 } else {
-                    position.toString()
+                    (position+1).toString()
                 }
                 view.tvOrderTitle.text = order.stage_description
             }

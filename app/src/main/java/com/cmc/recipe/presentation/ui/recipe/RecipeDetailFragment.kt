@@ -41,7 +41,6 @@ class RecipeDetailFragment : BaseFragment<FragmentRecipeDetailBinding>(FragmentR
 
     override fun onResume() {
         super.onResume()
-        Log.d("여기 확인","onResume")
 
         initMenu()
     }
@@ -85,6 +84,8 @@ class RecipeDetailFragment : BaseFragment<FragmentRecipeDetailBinding>(FragmentR
         // 레시피 id
         recipeId = data.recipe_id
         recipeImg = data.recipe_thumbnail_img
+
+        recipeData = data
 
         binding.ivThumb.loadImagesWithGlide(recipeImg)
         binding.tvNickname.text = data.writtenby
@@ -214,12 +215,10 @@ class RecipeDetailFragment : BaseFragment<FragmentRecipeDetailBinding>(FragmentR
     }
 
     private fun requestRecipeSaveOrUnSave(id: Int) {
-        if (recipeData != null) {
-            if (recipeData.is_saved) {
-                requestRecipeUnSave(id)
-            } else {
-                requestRecipeSave(id)
-            }
+        if (recipeData.is_saved) {
+            requestRecipeUnSave(id)
+        } else {
+            requestRecipeSave(id)
         }
     }
 

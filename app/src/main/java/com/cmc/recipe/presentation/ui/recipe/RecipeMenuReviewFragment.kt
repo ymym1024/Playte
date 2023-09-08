@@ -111,7 +111,7 @@ class RecipeMenuReviewFragment : BaseFragment<FragmentRecipeMenuReviewBinding>(F
 
         val filteredImages: List<String> = data.content.filter { it.review_images.isNotEmpty() }.flatMap { it.review_images }
         initImageRV(filteredImages)
-        if(filteredImages.count()==0){
+        if(filteredImages.isEmpty()){
             binding.btnImgReview.visibility = View.INVISIBLE
         }
         binding.tvReviewImageCnt.text = "${filteredImages.count()}개"
@@ -126,6 +126,16 @@ class RecipeMenuReviewFragment : BaseFragment<FragmentRecipeMenuReviewBinding>(F
             intent.putExtra("recipeId", recipeId)
             intent.putExtra("recipeImg", recipeImg)
             startActivity(intent)
+        }
+
+        binding.tvBest.setOnClickListener {
+            val newList = reviewItemList.sortedByDescending { it.rating }
+            reviewAdapter.replaceData(newList)
+        }
+
+        binding.tvRecent.setOnClickListener {
+            val newList = reviewItemList.sortedByDescending { it.modified_at }
+            reviewAdapter.replaceData(newList)
         }
     }
 
