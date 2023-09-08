@@ -5,11 +5,18 @@ import android.content.Context
 import android.net.Uri
 import android.os.Handler
 import android.os.Looper
+import android.text.SpannableString
+import android.text.SpannableStringBuilder
+import android.text.method.LinkMovementMethod
+import android.text.style.ClickableSpan
+import android.text.style.ForegroundColorSpan
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.ViewTreeObserver
 import android.widget.ImageView
+import android.widget.TextView
 import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.cmc.recipe.R
@@ -33,7 +40,6 @@ class ShortsDetailAdapter(private val context:Context,val videoPreparedListener:
     BaseAdapter<ShortsContent, ItemShortsDetailBinding, ShortsDetailHolder>() {
 
     private lateinit var onShortsListener : onShortsListener
-
 
     fun setShortsListener(onShortsListener:onShortsListener){
         this.onShortsListener = onShortsListener
@@ -63,13 +69,13 @@ class ShortsDetailHolder(
     val shortsListener: onShortsListener,
 )
     :BaseHolder<ShortsContent, ItemShortsDetailBinding>(viewBinding){
-  //  private lateinit var bottomSheetBehavior: BottomSheetBehavior<View>
+
+    private var isExpanded = false
 
     override fun bind(binding: ItemShortsDetailBinding, item: ShortsContent?) {
      //   bottomSheetBehavior = BottomSheetBehavior.from(binding.bottomSheetComment)
 
         binding.tvNick.text = item?.writtenBy
-        binding.tvShortContent.text = item?.shortform_description
         binding.tvHeartCnt.text = item?.likes_count.toString()
         binding.tvCommentCnt.text = item?.comments_count.toString()
         binding.tvBookmarkCnt.text = item?.saved_count.toString()
@@ -80,8 +86,6 @@ class ShortsDetailHolder(
         // product recyclerview
         initProductAdapter(binding,item!!.ingredients)
 
-        //댓글 설정
-        initCommentAdapter(binding,item!!.shortform_id)
 
         //exoplayer 설정
         initShorts(binding)
@@ -159,23 +163,22 @@ class ShortsDetailHolder(
         }
 
         binding.btnBookmark.scaleType = ImageView.ScaleType.CENTER_CROP
-        // 텍스트 접기
-        val originalMaxLines = binding.tvShortContent.maxLines
-        val expandedMaxLines = Int.MAX_VALUE
 
-        Log.d("maxLine","${binding.tvShortContent.maxLines}")
-        binding.tvShowMore.setOnClickListener {
-            if(binding.tvShortContent.maxLines > 1){
-                if (binding.tvShortContent.maxLines == originalMaxLines) {
-                    binding.tvShortContent.maxLines = expandedMaxLines
-                    binding.tvShowMore.text = ""
-                } else {
-                    binding.tvShortContent.maxLines = originalMaxLines
-                    binding.tvShowMore.text = "더보기"
+        binding.tvShortContent.text = item?.shortform_description
+        binding.tvShortContent.post {
+            val lineCount = binding.tvShortContent.layout.lineCount
+            if (lineCount > 0) {
+                if (binding.tvShortContent.layout.getEllipsisCount(lineCount - 1) > 0) {
+                    // 더보기 표시
+                    binding.viewMore.visibility = View.VISIBLE
+
+                    // 더보기 클릭 이벤트
+                    binding.viewMore.setOnClickListener {
+                        binding.tvShortContent.maxLines = Int.MAX_VALUE
+                        binding.viewMore.visibility = View.GONE
+                    }
                 }
             }
-
-
         }
     }
 
@@ -201,24 +204,6 @@ class ShortsDetailHolder(
         adapter.replaceData(itemList)
     }
 
-    private fun initCommentAdapter(binding:ItemShortsDetailBinding,shortformId: Int){
-//        commentAdapter.setCommentListener(object : OnCommentListener{
-//            override fun onFavorite(id: Int) {
-//
-//            }
-//
-//            override fun onReport(id: Int) {
-//
-//            }
-//
-//            override fun writeReply(id: Int) {
-//
-//            }
-//
-//        })
-//        binding.rvComment.adapter = commentAdapter
-//        binding.rvComment.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
-    }
 
     private fun initShorts(binding:ItemShortsDetailBinding){
         var exoPlayer = ExoPlayer.Builder(context).build()
