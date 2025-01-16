@@ -2,12 +2,12 @@
 
 <br>
 
-<img src="https://github.com/user-attachments/assets/67b86e99-d27a-4636-afd0-874f69e072cf" width="290"/>&nbsp;&nbsp;
-<img src="https://github.com/user-attachments/assets/75b084da-b738-4d76-b88b-86bc71cc3318" width="290"/>&nbsp;&nbsp;
-<img src="https://github.com/user-attachments/assets/e548c053-ab06-4f76-b6b4-db7421249af7" width="290"/>
-<img src="https://github.com/user-attachments/assets/0b0b1b26-741a-4665-83a7-4e554b2141af" width="290"/>&nbsp;&nbsp;
-<img src="https://github.com/user-attachments/assets/a6725ba4-0ae0-4841-bdbb-475785abf8c5" width="290"/>&nbsp;&nbsp;
-<img src="https://github.com/user-attachments/assets/8edfc28e-6472-4fc7-b647-6958c4f1086a" width="290"/>
+<img src="https://github.com/user-attachments/assets/67b86e99-d27a-4636-afd0-874f69e072cf" width="260"/>&nbsp;&nbsp;
+<img src="https://github.com/user-attachments/assets/75b084da-b738-4d76-b88b-86bc71cc3318" width="260"/>&nbsp;&nbsp;
+<img src="https://github.com/user-attachments/assets/e548c053-ab06-4f76-b6b4-db7421249af7" width="260"/>
+<img src="https://github.com/user-attachments/assets/0b0b1b26-741a-4665-83a7-4e554b2141af" width="260"/>&nbsp;&nbsp;
+<img src="https://github.com/user-attachments/assets/a6725ba4-0ae0-4841-bdbb-475785abf8c5" width="260"/>&nbsp;&nbsp;
+<img src="https://github.com/user-attachments/assets/8edfc28e-6472-4fc7-b647-6958c4f1086a" width="260"/>
 <br>
 > 레시피, 이제는 읽지말고 플레이하자! <br>
 > 숏폼을 이용한 레시피 간편 제공 커뮤니티 "플레이트" <br>
